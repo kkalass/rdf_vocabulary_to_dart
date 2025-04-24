@@ -20,12 +20,14 @@
     .feature h3 { margin-top: 0; color: #4f46e5; }
     .quickstart, .advanced { background: white; border-radius: 1rem; box-shadow: 0 2px 16px #0001; margin: 2rem auto; max-width: 700px; padding: 2rem; }
     pre { background: #f3f4f6; padding: 1rem; border-radius: 0.5rem; overflow-x: auto; }
+    code { font-family: 'Fira Mono', 'Menlo', 'Monaco', 'Consolas', monospace; font-size: 1em; }
     .links { margin: 2rem 0; text-align: center; }
     .links a { display: inline-block; margin: 0.5rem 1rem; color: #06b6d4; font-weight: 500; text-decoration: none; }
     .links a:hover { text-decoration: underline; }
     footer { text-align: center; color: #888; font-size: 1rem; margin: 3rem 0 1rem 0; }
     @media (max-width: 800px) { .features { flex-direction: column; align-items: stretch; } }
   </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" type="image/png" href="favicon.png" sizes="32x32">
 </head>
@@ -118,5 +120,8 @@ print(turtle); // Outputs the same as doc
       <a href="https://www.w3.org/TR/rdf11-concepts/">RDF 1.1 Concepts</a> | <a href="api/">API Docs</a>
     </div>
   </footer>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
 </body>
 </html>
