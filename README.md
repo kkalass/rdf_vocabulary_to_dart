@@ -9,6 +9,10 @@
 [![codecov](https://codecov.io/gh/kkalass/rdf_core/branch/main/graph/badge.svg)](https://codecov.io/gh/kkalass/rdf_core)
 [![license](https://img.shields.io/github/license/kkalass/rdf_core.svg)](https://github.com/kkalass/rdf_core/blob/main/LICENSE)
 
+---
+
+[🌐 **Official Homepage**](https://kkalass.github.io/rdf_core/)
+
 A type-safe, and extensible Dart library for representing and manipulating RDF data without any further dependencies.
 
 ---
