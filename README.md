@@ -1,50 +1,48 @@
-# SolidTask
+# rdf_core
 
-A very simple cross-platform (flutter) Task-List app which can be connected to a SOLID Pod for cloud sync.
+A type-safe, modular Dart library for representing and manipulating RDF data.
 
-The goal is, to create a fully synced, offline first collaborative application. The usecase is a todo list, but the main point here is the technology. I view it as a collaborative activity since a user may use multiple devices with some of them possibly being offline - think of taking a short break, realizing that you did not track time yet and doing it on your mobile which happens to not have a network connection in your current location.
+## Features
 
-I want to explore the following in this project:
+- Clean, type-safe RDF model (IRIs, Literals, Triples, etc.)
+- Serialization-agnostic: does not mix RDF with Turtle/JSON-LD
+- Foundation for building higher-level libraries (ORM, Solid sync, etc.)
+- Designed for extensibility and clarity
 
-* how is it to code with heavy AI usage? (try out windsurf, cursor etc)
-* Can AI also help with very non-standard architecture
-* Dive deep into SOLID (Social Linked Data)
-* Get a deeper understanding of CRDT
+## Example
 
- So basically, I want to combine technologies that seem to be a really good match: Flutter for cross-platform, CRDT for distributed editing and conflict resolution, SOLID for cloud syncing where the users bring their storage service themselves, and AI assisted coding. All of this should be perfect for "hobby projects" where the developer is not interested in having direct access to the users data at all, has limited coding time and does not want to pay for some kind of servers.
+```dart
+import 'package:rdf_core/rdf_core.dart';
 
-## Status
+void main() {
+  final subject = Iri('http://example.org/alice');
+  final predicate = Iri('http://xmlns.com/foaf/0.1/name');
+  final object = Literal('Alice', language: 'en');
 
-**THIS IS WORK IN PROGRESS!!!**
+  final triple = Triple(subject, predicate, object);
 
-This is not even really a 0.0.1 release, it is a complete work in progress
+  print('${triple.subject} ${triple.predicate} ${triple.object}');
+}
+```
+
+## Philosophy
+
+- **Separation of Concerns:** RDF model is kept clean and distinct from serialization formats.
+- **Type Safety:** Dart types for all RDF concepts.
+- **Extensible:** Designed to be the foundation for more advanced libraries, including ORM and Solid integrations.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+1. Add `rdf_core` to your `pubspec.yaml`.
+2. Import and use the RDF model classes.
 
-A few resources to get you started if this is your first Flutter project:
+## Roadmap
 
-* [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-* [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Collections (Graph, Dataset)
+- Blank nodes
+- Parsing/serialization adapters (in other packages)
+- Integration with ORM and Solid libraries
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
 
-## Building
-
-```sh
-flutter gen-l10n # only needed when i18n was changed
-flutter run -d macos
-```
-
-## Required Rights
-
-### NSAllowsArbitraryLoads
-
-This is necessary because:
-
-* Users can enter any Solid Pod provider URL
-* The app needs to fetch favicons from these URLs
-* The app needs to communicate with the Pod for authentication and data synchronization
+Contributions welcome!
