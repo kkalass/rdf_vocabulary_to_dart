@@ -6,7 +6,25 @@
 /// ```dart
 /// import 'package:rdf_core/graph/rdf_graph.dart';
 /// final graph = RdfGraph(triples: [triple]);
+///
+/// // Advanced: merging two graphs
+/// final merged = graph.merge(otherGraph);
+///
+/// // Pattern query: find all triples with a specific subject
+/// final matches = graph.findTriples(subject: subject);
+///
+/// // Blank node handling: add a triple with a blank node subject
+/// final blankNode = BlankNodeTerm('b1');
+/// graph.add(Triple(blankNode, predicate, object));
 /// ```
+///
+/// Performance:
+/// - [findTriples] is O(n) in the number of triples.
+/// - [merge] creates a new graph and is O(n + m).
+///
+/// Error handling:
+/// - Adding invalid triples will throw [ArgumentError].
+/// - Querying with nulls is supported for wildcards.
 ///
 /// See: [RDF 1.1 Concepts - Graphs](https://www.w3.org/TR/rdf11-concepts/#section-rdf-graph)
 library rdf_graph;

@@ -6,9 +6,26 @@
 /// ```dart
 /// import 'package:rdf_core/graph/rdf_term.dart';
 /// final subject = IriTerm('http://example.org/subject');
+///
+/// // Advanced: create a blank node (must provide a label)
+/// final bnode = BlankNodeTerm('b1');
+///
+/// // Advanced: create a literal
+/// final literal = LiteralTerm('42', datatype: XsdConstants.intIri);
+///
+/// // Type checking
+/// if (term is IriTerm) print('It is an IRI!');
+///
+/// // Equality
+/// final a = IriTerm('x');
+/// final b = IriTerm('x');
+/// assert(a == b);
 /// ```
-/// - Predicates are always IRIs
-/// - Objects can be IRIs, blank nodes, or literals
+///
+/// Performance:
+/// - Term equality and hashCode are O(1).
+///
+/// See: [RDF 1.1 Concepts - RDF Terms](https://www.w3.org/TR/rdf11-concepts/#section-rdf-terms) IRIs, blank nodes, or literals
 ///
 /// This hierarchy of classes uses Dart's sealed classes to enforce the constraints
 /// of the RDF specification regarding which terms can appear in which positions.

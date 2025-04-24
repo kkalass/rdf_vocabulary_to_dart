@@ -6,7 +6,21 @@
 /// ```dart
 /// import 'package:rdf_core/graph/triple.dart';
 /// final triple = Triple(subject, predicate, object);
+///
+/// // Advanced: blank node as subject
+/// final bnode = BlankNodeTerm('b1');
+/// final triple2 = Triple(bnode, predicate, object);
+///
+/// // Advanced: literal as object
+/// final literal = LiteralTerm('Alice', datatype: XsdConstants.stringIri);
+/// final triple3 = Triple(subject, predicate, literal);
 /// ```
+///
+/// Error handling:
+/// - Throws [ArgumentError] if subject, predicate, or object are null.
+///
+/// Performance:
+/// - Triple equality and hashCode are O(1).
 ///
 /// See: [RDF 1.1 Concepts - Triples](https://www.w3.org/TR/rdf11-concepts/#section-triples)
 library rdf_triple;
