@@ -8,13 +8,46 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     body { font-family: 'Inter', system-ui, sans-serif; margin: 0; background: #f9fafb; color: #222; }
-    header { background: linear-gradient(90deg, #4f46e5 0%, #06b6d4 100%); color: white; padding: 3rem 0 2rem 0; text-align: center; }
-    header h1 { font-size: 2.5rem; margin: 0 0 0.5rem 0; }
-    header p { font-size: 1.3rem; margin: 0 0 1.5rem 0; }
-    .badges img { margin: 0 0.3rem; vertical-align: middle; }
-    nav { margin: 2rem 0 0 0; text-align: center; }
-    nav a { color: #4f46e5; text-decoration: none; font-weight: 500; margin: 0 1.2rem; }
-    nav a:hover { text-decoration: underline; }
+    header {
+  background: #fff;
+  color: #222;
+  padding: 2.5rem 0 1.5rem 0;
+  text-align: center;
+  border-bottom: 2px solid #f3f4f6;
+  box-shadow: 0 2px 8px #0001;
+}
+header h1 {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem 0;
+  color: #4f46e5;
+  letter-spacing: -1px;
+}
+header .tagline {
+  font-size: 1.3rem;
+  margin: 0 0 1.5rem 0;
+  color: #888;
+}
+.badges img { margin: 0 0.3rem; vertical-align: middle; }
+nav {
+  margin: 2rem 0 0 0;
+  text-align: center;
+}
+nav a {
+  color: #4f46e5;
+  text-decoration: none;
+  font-weight: 500;
+  margin: 0 1.2rem;
+  padding: 0.2em 0.4em;
+  border-radius: 0.3em;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+nav a:hover, nav a:focus {
+  color: #fff;
+  background: linear-gradient(90deg, #4f46e5, #06b6d4);
+  box-shadow: 0 2px 8px #06b6d433;
+  text-decoration: none;
+}
+
     .features { display: flex; flex-wrap: wrap; justify-content: center; margin: 3rem 0 2rem 0; gap: 2rem; }
     .feature { background: white; border-radius: 1rem; box-shadow: 0 2px 16px #0001; padding: 2rem; max-width: 340px; flex: 1 1 250px; }
     .feature h3 { margin-top: 0; color: #4f46e5; }
@@ -37,7 +70,7 @@
       <img src="https://kkalass.github.io/rdf_core/logo.svg" alt="rdf_core logo" width="64" height="64" style="display:inline-block;"/>
     </div>
     <h1>rdf_core</h1>
-    <p>A type-safe, extensible Dart library for RDF data manipulation</p>
+    <p class="tagline">A type-safe, extensible Dart library for RDF data manipulation</p>
     <div class="badges">
       <a href="https://pub.dev/packages/rdf_core"><img src="https://img.shields.io/pub/v/rdf_core.svg" alt="pub package"></a>
       <a href="https://github.com/kkalass/rdf_core/actions"><img src="https://github.com/kkalass/rdf_core/actions/workflows/ci.yml/badge.svg" alt="build"></a>
