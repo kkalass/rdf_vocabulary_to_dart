@@ -1,9 +1,19 @@
-/// RDF Validation Exceptions - Specialized exceptions for RDF data validation
+/// RDF Validation Exception Hierarchy
 ///
-/// This library defines exceptions related to RDF data validation, allowing
-/// applications to handle cases where RDF data does not conform to expected constraints
-/// or data models. These exceptions focus on semantic errors rather than syntax errors,
-/// dealing with issues in the structure and types of the RDF data.
+/// Defines exceptions for RDF data validation, allowing applications to handle cases where RDF data
+/// does not conform to expected constraints or data models. Focuses on semantic errors and structure issues.
+///
+/// Example usage:
+/// ```dart
+/// import 'package:rdf_core/exceptions/rdf_validation_exception.dart';
+/// try {
+///   // validate RDF graph
+/// } catch (e) {
+///   if (e is RdfValidationException) print(e);
+/// }
+/// ```
+///
+/// See also: [SHACL - Shapes Constraint Language](https://www.w3.org/TR/shacl/)
 library ext.rdf.core.exceptions.validation;
 
 import 'rdf_exception.dart';

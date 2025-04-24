@@ -1,8 +1,14 @@
-/// RDF Triple - The fundamental unit of RDF data
+/// RDF Triple Implementation
 ///
-/// This file defines the Triple class, which represents the atomic data unit in RDF:
-/// a single statement about a resource. RDF represents information as a collection
-/// of these subject-predicate-object statements.
+/// Defines the [Triple] class, the atomic unit of RDF data, consisting of subject, predicate, and object.
+///
+/// Example usage:
+/// ```dart
+/// import 'package:rdf_core/graph/triple.dart';
+/// final triple = Triple(subject, predicate, object);
+/// ```
+///
+/// See: [RDF 1.1 Concepts - Triples](https://www.w3.org/TR/rdf11-concepts/#section-triples)
 library rdf_triple;
 
 import 'package:rdf_core/graph/rdf_term.dart';

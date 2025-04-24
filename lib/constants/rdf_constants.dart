@@ -1,12 +1,17 @@
-/// RDF Core Vocabulary - Constants for the W3C RDF specification
+/// RDF Core Vocabulary Constants
 ///
-/// This file provides constant definitions for core RDF vocabulary terms defined
-/// in the W3C RDF 1.1 Concepts and Abstract Syntax specification. These constants
-/// are used throughout the RDF library to ensure consistency and correctness when
-/// referring to standard RDF terms.
+/// Provides constants for the [W3C RDF 1.1 Concepts and Abstract Syntax specification](https://www.w3.org/TR/rdf11-concepts/).
+///
+/// Example usage:
+/// ```dart
+/// import 'package:rdf_core/constants/rdf_constants.dart';
+/// final typePredicate = RdfConstants.typeIri;
+/// ```
 ///
 /// All constants are pre-constructed as IriTerm objects to enable direct use in
 /// constructing RDF graphs without repeated string concatenation or term creation.
+///
+/// [Specification Reference](https://www.w3.org/TR/rdf11-concepts/)
 library rdf_constants;
 
 import 'package:rdf_core/graph/rdf_term.dart';
@@ -24,12 +29,11 @@ class RdfConstants {
   const RdfConstants._();
 
   /// Base IRI for RDF vocabulary
-  ///
-  /// This namespace is defined by the W3C for the core RDF terms.
-  /// See: https://www.w3.org/1999/02/22-rdf-syntax-ns#
+  /// [Spec](https://www.w3.org/1999/02/22-rdf-syntax-ns#)
   static const String namespace = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
 
   /// IRI for rdf:type predicate
+  /// [Spec](https://www.w3.org/TR/rdf11-concepts/#section-triples)
   ///
   /// Represents the relationship between a resource and its type/class.
   /// This is one of the most commonly used properties in RDF.

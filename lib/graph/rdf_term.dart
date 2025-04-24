@@ -1,11 +1,12 @@
-/// RDF Terms - Fundamental building blocks of the RDF data model
+/// RDF Term Types
 ///
-/// This file defines the core RDF term types as specified by the W3C RDF 1.1 Concepts
-/// specification. These types form the foundation of the RDF data model and are used
-/// to represent subjects, predicates, and objects in RDF triples.
+/// Defines the core RDF term types: [RdfTerm], [RdfSubject], [RdfPredicate], [RdfObject], [IriTerm], [BlankNodeTerm], [LiteralTerm].
 ///
-/// In RDF, information is expressed as triples of subject-predicate-object, where:
-/// - Subjects are IRIs or blank nodes
+/// Example usage:
+/// ```dart
+/// import 'package:rdf_core/graph/rdf_term.dart';
+/// final subject = IriTerm('http://example.org/subject');
+/// ```
 /// - Predicates are always IRIs
 /// - Objects can be IRIs, blank nodes, or literals
 ///

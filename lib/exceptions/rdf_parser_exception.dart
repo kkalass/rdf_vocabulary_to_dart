@@ -1,9 +1,19 @@
-/// RDF Parser Exceptions - Specialized exceptions for RDF parsing operations
+/// RDF Parser Exception Hierarchy
 ///
-/// This library defines a hierarchy of exceptions specific to RDF parsing operations,
-/// allowing applications to handle different types of parsing errors with fine-grained
-/// control. These exceptions provide detailed information about format-specific errors
-/// that can occur when parsing RDF documents.
+/// Defines a hierarchy of exceptions specific to RDF parsing operations, allowing applications
+/// to handle different types of parsing errors with fine-grained control.
+///
+/// Example usage:
+/// ```dart
+/// import 'package:rdf_core/exceptions/rdf_parser_exception.dart';
+/// try {
+///   // parse RDF data
+/// } catch (e) {
+///   if (e is RdfParserException) print(e);
+/// }
+/// ```
+///
+/// See also: [RDF 1.1 Concepts - Syntax](https://www.w3.org/TR/rdf11-concepts/#section-syntax)
 library ext.rdf.core.exceptions.parser;
 
 import 'rdf_exception.dart';

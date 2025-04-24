@@ -1,8 +1,14 @@
-/// RDF Graph - A collection of related RDF triples
+/// RDF Graph Implementation
 ///
-/// This file defines the RdfGraph class, which represents a set of RDF triples that
-/// collectively express related statements about resources. RDF graphs are the primary
-/// data structure for working with RDF data and form the basis for knowledge representation.
+/// Defines the [RdfGraph] class for managing collections of RDF triples and related utilities.
+///
+/// Example usage:
+/// ```dart
+/// import 'package:rdf_core/graph/rdf_graph.dart';
+/// final graph = RdfGraph(triples: [triple]);
+/// ```
+///
+/// See: [RDF 1.1 Concepts - Graphs](https://www.w3.org/TR/rdf11-concepts/#section-rdf-graph)
 library rdf_graph;
 
 import 'package:rdf_core/graph/rdf_term.dart';

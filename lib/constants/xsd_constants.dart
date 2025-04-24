@@ -1,14 +1,16 @@
-/// XML Schema Datatypes - Constants for XSD datatypes used in RDF
+/// XML Schema Datatype Constants
 ///
-/// This file provides constant definitions for XML Schema Definition (XSD) datatypes
-/// that are commonly used in RDF for typing literal values. These constants ensure
-/// consistent references to standard datatypes across the library.
+/// Provides constants for [XML Schema Definition (XSD) datatypes](https://www.w3.org/TR/xmlschema-2/) as used in RDF.
 ///
-/// The XSD datatypes form the basis for RDF's type system, allowing literals to be
-/// assigned specific datatypes like strings, numbers, dates, etc. to enable proper
-/// interpretation of their values.
+/// Example usage:
+/// ```dart
+/// import 'package:rdf_core/constants/xsd_constants.dart';
+/// final intType = XsdConstants.intIri;
+/// ```
 ///
 /// All constants are pre-constructed as IriTerm objects for direct use in the library.
+///
+/// [Specification Reference](https://www.w3.org/TR/xmlschema-2/)
 library xsd_constants;
 
 import 'package:rdf_core/graph/rdf_term.dart';
@@ -27,12 +29,11 @@ class XsdConstants {
   const XsdConstants._();
 
   /// Base IRI for XMLSchema datatypes
-  ///
-  /// This is the namespace URI defined by W3C for XML Schema definitions.
-  /// See: https://www.w3.org/TR/xmlschema-2/
+  /// [Spec](https://www.w3.org/TR/xmlschema-2/)
   static const String namespace = 'http://www.w3.org/2001/XMLSchema#';
 
   /// IRI for xsd:string datatype
+  /// [Spec](https://www.w3.org/TR/xmlschema-2/#string)
   ///
   /// Represents character strings in XML Schema and RDF.
   /// This is the default datatype for string literals in RDF when no type is specified.

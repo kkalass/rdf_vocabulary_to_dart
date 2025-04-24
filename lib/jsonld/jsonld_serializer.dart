@@ -1,9 +1,15 @@
-// JSON-LD Serializer - Converts RDF graphs to JSON-LD format
-//
-// This serializer implements the logic for transforming RDF graph data into
-// the JSON-LD (JavaScript Object Notation for Linked Data) format, which
-// represents linked data using standard JSON syntax.
-
+/// JSON-LD Serializer Implementation
+///
+/// Implements the [JsonLdSerializer] class to convert RDF graphs to JSON-LD format.
+///
+/// Example usage:
+/// ```dart
+/// import 'package:rdf_core/jsonld/jsonld_serializer.dart';
+/// final serializer = JsonLdSerializer();
+/// final jsonld = serializer.write(graph);
+/// ```
+///
+/// See: [JSON-LD 1.1 Specification](https://www.w3.org/TR/json-ld11/)
 import 'dart:convert';
 
 import 'package:logging/logging.dart';

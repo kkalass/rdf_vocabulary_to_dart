@@ -111,12 +111,9 @@ abstract interface class RdfSerializerFactoryBase {
 /// final turtleSerializer = factory.createSerializer(contentType: 'text/turtle');
 ///
 /// // Or serialize directly
-/// final turtle = factory.write(
-///   graph,
-///   contentType: 'text/turtle',
-///   customPrefixes: {'foaf': 'http://xmlns.com/foaf/0.1/'}
-/// );
 /// ```
+///
+/// See: [RDF 1.1 Concepts - Serialization](https://www.w3.org/TR/rdf11-concepts/#section-serialization)
 final class RdfSerializerFactory implements RdfSerializerFactoryBase {
   final RdfFormatRegistry _registry;
 

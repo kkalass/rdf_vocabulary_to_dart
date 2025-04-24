@@ -33,13 +33,14 @@ const _format = "JSON-LD";
 ///     "name": "John Doe"
 ///   }
 /// ''', baseUri: 'http://example.com/');
-/// final triples = parser.parse();
 /// ```
+///
+/// See: [JSON-LD 1.1 Processing Algorithms and API](https://www.w3.org/TR/json-ld11-api/)
 class JsonLdParser {
   final String _input;
   final String? _baseUri;
 
-  // Common prefixes used in JSON-LD documents
+  /// Common prefixes used in JSON-LD documents
   static const Map<String, String> _commonPrefixes = {
     'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
     'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',

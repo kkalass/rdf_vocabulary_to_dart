@@ -9,11 +9,18 @@ import 'package:rdf_core/rdf_serializer.dart';
 
 final _log = Logger("rdf.turtle");
 
-/// Serializer for serializing RDF graphs to Turtle syntax.
+/// Turtle Serializer Implementation
 ///
-/// Turtle is a text-based format for RDF data that is designed to be more
-/// readable than other RDF serialization formats. This class implements
-/// the serialization logic following the Turtle specification.
+/// Implements the [TurtleSerializer] class for serializing RDF graphs to Turtle syntax.
+///
+/// Example usage:
+/// ```dart
+/// import 'package:rdf_core/turtle/turtle_serializer.dart';
+/// final serializer = TurtleSerializer();
+/// final turtle = serializer.write(graph);
+/// ```
+///
+/// See: [Turtle - Terse RDF Triple Language](https://www.w3.org/TR/turtle/)
 class TurtleSerializer implements RdfSerializer {
   /// A map of well-known common RDF prefixes used in Turtle serialization.
   /// These prefixes provide shorthand notation for commonly used RDF namespaces

@@ -1,8 +1,15 @@
-/// RDF Parser Framework - Components for parsing RDF data in various formats
+/// RDF Parser Interface & Utilities
 ///
-/// This file defines the interfaces and implementations related to parsing RDF data
-/// from various serialization formats. It provides a common parsing API regardless
-/// of the underlying serialization format.
+/// Defines the interface and utilities for parsing RDF data from various formats.
+///
+/// Example usage:
+/// ```dart
+/// import 'package:rdf_core/rdf_parser.dart';
+/// final parser = RdfParserFactory.createParser('text/turtle');
+/// final graph = parser.parse(document);
+/// ```
+///
+/// See: [RDF 1.1 Concepts - Syntax](https://www.w3.org/TR/rdf11-concepts/#section-syntax)
 library rdf_parser;
 
 import 'package:logging/logging.dart';

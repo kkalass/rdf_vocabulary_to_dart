@@ -1,9 +1,19 @@
-/// RDF Exception Framework - Error handling for RDF operations
+/// RDF Exception Framework
 ///
-/// This library defines a comprehensive exception hierarchy for RDF processing,
-/// providing structured error information for various failure scenarios that
-/// can occur when working with RDF data. It enables detailed error reporting
-/// with source location information to assist in debugging and error handling.
+/// Provides a comprehensive exception hierarchy for RDF processing, enabling detailed error reporting
+/// with source location information for debugging and robust error handling.
+///
+/// Example usage:
+/// ```dart
+/// import 'package:rdf_core/exceptions/rdf_exception.dart';
+/// try {
+///   // some RDF operation
+/// } catch (e) {
+///   if (e is RdfException) print(e);
+/// }
+/// ```
+///
+/// See also: [Dart Exception Guidelines](https://dart.dev/guides/libraries/library-tour#exceptions)
 library ext.rdf.core.exceptions;
 
 /// Base exception class for all RDF-related errors.

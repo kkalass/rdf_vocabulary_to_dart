@@ -1,9 +1,13 @@
-/// Turtle Tokenizer - Lexical analysis for Turtle RDF syntax
+/// Turtle Tokenizer Implementation
 ///
-/// This file defines the lexical analyzer (tokenizer) for the Turtle RDF serialization
-/// format as specified in the W3C recommendation. It breaks down Turtle input text
-/// into a sequence of tokens that can be consumed by a parser.
+/// Implements the [TurtleTokenizer] class for lexical analysis of Turtle syntax.
 ///
+/// Example usage:
+/// ```dart
+/// import 'package:rdf_core/turtle/turtle_tokenizer.dart';
+/// final tokenizer = TurtleTokenizer(input);
+/// final token = tokenizer.nextToken();
+/// ```
 /// The tokenizer is responsible for:
 /// 1. Identifying the basic lexical elements of Turtle (IRIs, literals, etc.)
 /// 2. Handling whitespace, comments, and line breaks

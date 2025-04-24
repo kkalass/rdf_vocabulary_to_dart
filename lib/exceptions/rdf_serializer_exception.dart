@@ -1,9 +1,19 @@
-/// RDF Serializer Exceptions - Specialized exceptions for RDF serialization operations
+/// RDF Serializer Exception Hierarchy
 ///
-/// This library defines exceptions specific to RDF serialization operations,
-/// allowing applications to handle errors that occur when converting RDF graphs
-/// to specific serialization formats. These exceptions provide detailed information
-/// about format-specific limitations and errors that can occur during serialization.
+/// Defines exceptions specific to RDF serialization operations, allowing applications to handle
+/// errors that occur when converting RDF graphs to specific serialization formats.
+///
+/// Example usage:
+/// ```dart
+/// import 'package:rdf_core/exceptions/rdf_serializer_exception.dart';
+/// try {
+///   // serialize RDF graph
+/// } catch (e) {
+///   if (e is RdfSerializerException) print(e);
+/// }
+/// ```
+///
+/// See also: [RDF 1.1 Concepts - Serialization](https://www.w3.org/TR/rdf11-concepts/#section-serialization)
 library ext.rdf.core.exceptions.serializer;
 
 import 'rdf_exception.dart';
