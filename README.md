@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="logo.svg" alt="rdf_core logo" width="96" height="96"/>
+  <img src="https://kkalass.github.io/rdf_core/logo.svg" alt="rdf_core logo" width="96" height="96"/>
 </div>
 
 # rdf_core
