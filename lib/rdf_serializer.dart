@@ -123,7 +123,7 @@ final class RdfSerializerFactory implements RdfSerializerFactoryBase {
   /// to create serializers for different content types.
   ///
   /// Parameters:
-  /// - [registry] The format registry containing available RDF format implementations.
+  /// - [_registry] The format registry containing available RDF format implementations.
   RdfSerializerFactory(this._registry);
 
   @override

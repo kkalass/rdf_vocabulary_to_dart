@@ -11,7 +11,7 @@
 ///   if (e is RdfException) print(e);
 /// }
 /// ```
-library ext.rdf.core.exceptions;
+library rdf_core.exceptions.all;
 
 export 'rdf_exception.dart';
 export 'rdf_parser_exception.dart';

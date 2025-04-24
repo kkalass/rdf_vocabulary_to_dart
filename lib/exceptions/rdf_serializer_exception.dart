@@ -14,7 +14,7 @@
 /// ```
 ///
 /// See also: [RDF 1.1 Concepts - Serialization](https://www.w3.org/TR/rdf11-concepts/#section-serialization)
-library ext.rdf.core.exceptions.serializer;
+library rdf_core.exceptions.serializer;
 
 import 'rdf_exception.dart';
 

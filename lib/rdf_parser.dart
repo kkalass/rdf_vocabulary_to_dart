@@ -112,7 +112,7 @@ final class RdfParserFactory implements RdfParserFactoryBase {
   /// to create parsers for different content types.
   ///
   /// Parameters:
-  /// - [registry] The format registry containing available RDF format implementations.
+  /// - [_registry] The format registry containing available RDF format implementations.
   RdfParserFactory(this._registry);
 
   @override

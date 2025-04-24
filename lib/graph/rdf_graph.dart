@@ -19,8 +19,8 @@
 /// ```
 ///
 /// Performance:
-/// - [findTriples] is O(n) in the number of triples.
-/// - [merge] creates a new graph and is O(n + m).
+/// - [RdfGraph.findTriples] is O(n) in the number of triples.
+/// - [RdfGraph.merge] creates a new graph and is O(n + m).
 ///
 /// Error handling:
 /// - Adding invalid triples will throw [ArgumentError].

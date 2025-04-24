@@ -14,7 +14,7 @@
 /// ```
 ///
 /// See also: [RDF 1.1 Concepts - Syntax](https://www.w3.org/TR/rdf11-concepts/#section-syntax)
-library ext.rdf.core.exceptions.parser;
+library rdf_core.exceptions.parser;
 
 import 'rdf_exception.dart';
 

@@ -53,7 +53,7 @@ class TurtleParser {
   ///
   /// The parser processes the input in the following order:
   /// 1. Prefix declarations (@prefix)
-  /// 2. Blank nodes ([...])
+  /// 2. Blank nodes
   /// 3. Subject-predicate-object triples
   ///
   /// Each triple is added to the result list, and the method returns all

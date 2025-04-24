@@ -42,8 +42,8 @@ final _log = Logger("rdf.turtle");
 /// - [a]: The 'a' keyword, shorthand for the rdf:type predicate
 ///
 /// Collection tokens:
-/// - [openBracket]/[closeBracket]: The '[' and ']' for blank node property lists
-/// - [openParen]/[closeParen]: The '(' and ')' for RDF collections (ordered lists)
+/// - [openBracket]/[closeBracket]: The `[` and `]` for blank node property lists
+/// - [openParen]/[closeParen]: The `(` and `)` for RDF collections (ordered lists)
 ///
 /// Other:
 /// - [eof]: End of file marker, indicating the input has been fully consumed
