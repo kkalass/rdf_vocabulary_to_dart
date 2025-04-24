@@ -7,7 +7,7 @@
 [![pub package](https://img.shields.io/pub/v/rdf_core.svg)](https://pub.dev/packages/rdf_core)
 [![build](https://github.com/kkalass/rdf_core/actions/workflows/ci.yml/badge.svg)](https://github.com/kkalass/rdf_core/actions)
 [![codecov](https://codecov.io/gh/kkalass/rdf_core/branch/main/graph/badge.svg)](https://codecov.io/gh/kkalass/rdf_core)
-[![license](https://img.shields.io/github/license/kkalass/rdf_core.svg)](LICENSE)
+[![license](https://img.shields.io/github/license/kkalass/rdf_core.svg)](https://github.com/kkalass/rdf_core/blob/main/LICENSE)
 
 A type-safe, and extensible Dart library for representing and manipulating RDF data without any further dependencies.
 
