@@ -1,3 +1,7 @@
+<div align="center">
+  <img src="logo.svg" alt="rdf_core logo" width="96" height="96"/>
+</div>
+
 # rdf_core
 
 [![pub package](https://img.shields.io/pub/v/rdf_core.svg)](https://pub.dev/packages/rdf_core)
