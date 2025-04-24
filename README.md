@@ -35,7 +35,7 @@ import 'package:rdf_core/rdf_core.dart';
 void main() {
   final subject = IriTerm('http://example.org/alice');
   final predicate = IriTerm('http://xmlns.com/foaf/0.1/name');
-  final object = LiteralTerm('Alice', language: 'en');
+  final object = LiteralTerm.withLanguage('Alice', 'en');
   final triple = Triple(subject, predicate, object);
   final graph = RdfGraph(triples: [triple]);
 
@@ -86,7 +86,7 @@ final results = graph.findTriples(subject: subject);
 ### Blank Node Handling
 ```dart
 final bnode = BlankNodeTerm('b1');
-graph.add(Triple(bnode, predicate, object));
+final newGraph = graph.withTriple(Triple(bnode, predicate, object));
 ```
 
 ### Serialization/Parsing

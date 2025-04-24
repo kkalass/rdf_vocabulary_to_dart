@@ -15,7 +15,7 @@
 ///
 /// // Blank node handling: add a triple with a blank node subject
 /// final blankNode = BlankNodeTerm('b1');
-/// graph.add(Triple(blankNode, predicate, object));
+/// final newGraph = graph.withTriple(Triple(blankNode, predicate, object));
 /// ```
 ///
 /// Performance:

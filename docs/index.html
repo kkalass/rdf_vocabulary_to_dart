@@ -75,13 +75,13 @@
     <h2>🚀 Quick Start</h2>
     <pre><code class="language-dart">import 'package:rdf_core/rdf_core.dart';
 
-final graph = RdfGraph();
-final triple = Triple(
-  IriTerm('https://example.org/subject'),
-  IriTerm('https://example.org/predicate'),
-  LiteralTerm('object'),
-);
-graph.add(triple);
+final graph = RdfGraph(triples: [
+  Triple(
+    IriTerm('https://example.org/subject'),
+    IriTerm('https://example.org/predicate'),
+    LiteralTerm.string('Hello, World!'),
+  ),
+]);
 </code></pre>
     <div class="links">
       <a href="api/">Full API Docs</a>

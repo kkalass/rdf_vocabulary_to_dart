@@ -65,10 +65,10 @@
 /// // Create terms
 /// final subject = IriTerm('http://example.org/john');
 /// final predicate = IriTerm('http://xmlns.com/foaf/0.1/name');
-/// final object = LiteralTerm('John Smith');
+/// final object = LiteralTerm.string('John Smith');
 ///
 /// // Add a triple
-/// graph.add(Triple(subject, predicate, object));
+/// final newGraph = graph.withTriple(Triple(subject, predicate, object));
 ///
 /// // Query the graph
 /// final nameTriples = graph.findBySubjectAndPredicate(
