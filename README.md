@@ -145,4 +145,10 @@ Contributions, bug reports, and feature requests are welcome!
 
 ---
 
+## 🤖 AI Policy
+
+This project is proudly human-led and human-controlled, with all key decisions, design, and code reviews made by people. At the same time, it stands on the shoulders of LLM giants: generative AI tools are used throughout the development process to accelerate iteration, inspire new ideas, and improve documentation quality. We believe that combining human expertise with the best of AI leads to higher-quality, more innovative open source software.
+
+---
+
 © 2025 Klas Kalaß. Licensed under the MIT License.
