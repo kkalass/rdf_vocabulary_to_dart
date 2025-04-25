@@ -1,11 +1,9 @@
 import 'package:logging/logging.dart';
-import 'package:rdf_core/constants/xsd_constants.dart';
+import 'package:rdf_core/graph/rdf_graph.dart';
 import 'package:rdf_core/graph/rdf_term.dart';
 import 'package:rdf_core/graph/triple.dart';
-
-import 'package:rdf_core/constants/rdf_constants.dart';
-import 'package:rdf_core/graph/rdf_graph.dart';
 import 'package:rdf_core/rdf_serializer.dart';
+import 'package:rdf_core/vocab/vocab.dart';
 
 final _log = Logger("rdf.turtle");
 
@@ -27,21 +25,7 @@ class TurtleSerializer implements RdfSerializer {
   /// A map of well-known common RDF prefixes used in Turtle serialization.
   /// These prefixes provide shorthand notation for commonly used RDF namespaces
   /// and do not need to be specified explicitly for serialization.
-  static final Map<String, String> _commonPrefixes = {
-    'rdf': RdfConstants.namespace,
-    'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
-    'xsd': XsdConstants.namespace,
-    'owl': 'http://www.w3.org/2002/07/owl#',
-    'foaf': 'http://xmlns.com/foaf/0.1/',
-    'dc': 'http://purl.org/dc/elements/1.1/',
-    'dcterms': 'http://purl.org/dc/terms/',
-    'skos': 'http://www.w3.org/2004/02/skos/core#',
-    'vcard': 'http://www.w3.org/2006/vcard/ns#',
-    'schema': 'http://schema.org/',
-    'solid': 'http://www.w3.org/ns/solid/terms#',
-    'acl': 'http://www.w3.org/ns/auth/acl#',
-    'ldp': 'http://www.w3.org/ns/ldp#',
-  };
+  static final Map<String, String> _commonPrefixes = commonPrefixes;
 
   @override
   String write(
@@ -150,8 +134,8 @@ class TurtleSerializer implements RdfSerializer {
         );
       } else if (triple.object is LiteralTerm) {
         final literal = triple.object as LiteralTerm;
-        if (literal.datatype == XsdConstants.stringIri ||
-            literal.datatype == RdfConstants.langStringIri) {
+        if (literal.datatype == XsdTypes.string ||
+            literal.datatype == RdfTypes.langString) {
           // string and langString will not actually be written, they are implicit.
           continue;
         }
@@ -174,7 +158,7 @@ class TurtleSerializer implements RdfSerializer {
     Map<String, String> usedPrefixes,
     Map<String, String> prefixCandidates,
   ) {
-    if (term == RdfConstants.typeIri) {
+    if (term == RdfPredicates.type) {
       // This IRI has special handling in Turtle besides the prefix stuff:
       // it will be rendered simply as "a" - no prefix needed
       return;
@@ -357,7 +341,7 @@ class TurtleSerializer implements RdfSerializer {
   }) {
     switch (term) {
       case IriTerm _:
-        if (term == RdfConstants.typeIri) {
+        if (term == RdfPredicates.type) {
           return 'a';
         } else {
           // Check if the predicate is a known prefix
@@ -409,7 +393,7 @@ class TurtleSerializer implements RdfSerializer {
         if (literal.language != null) {
           return '"$escapedLiteralValue"@${literal.language}';
         }
-        if (literal.datatype != XsdConstants.stringIri) {
+        if (literal.datatype != XsdTypes.string) {
           return '"$escapedLiteralValue"^^${writeTerm(literal.datatype, prefixesByIri: prefixesByIri, blankNodeLabels: blankNodeLabels)}';
         }
         return '"$escapedLiteralValue"';

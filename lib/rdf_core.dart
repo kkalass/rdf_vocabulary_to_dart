@@ -134,6 +134,8 @@ export 'graph/triple.dart';
 export 'plugin/format_plugin.dart';
 export 'rdf_parser.dart';
 export 'rdf_serializer.dart';
+// Export the new vocabulary modules
+export 'vocab/vocab.dart';
 
 /// RDF Core Library
 ///

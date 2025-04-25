@@ -1,11 +1,7 @@
-import 'package:test/test.dart';
-import 'package:rdf_core/constants/dc_terms_constants.dart';
-import 'package:rdf_core/constants/rdf_constants.dart';
-import 'package:rdf_core/graph/rdf_graph.dart';
-import 'package:rdf_core/graph/rdf_term.dart';
-import 'package:rdf_core/graph/triple.dart';
 import 'package:rdf_core/jsonld/jsonld_parser.dart';
 import 'package:rdf_core/jsonld/jsonld_serializer.dart';
+import 'package:rdf_core/rdf_core.dart';
+import 'package:test/test.dart';
 
 void main() {
   group('JsonLd Serializer-Parser Roundtrip', () {
@@ -17,7 +13,7 @@ void main() {
           triples: [
             Triple(
               IriTerm('http://example.org/person/alice'),
-              RdfConstants.typeIri,
+              RdfPredicates.type,
               IriTerm('http://xmlns.com/foaf/0.1/Person'),
             ),
             Triple(
@@ -66,7 +62,7 @@ void main() {
             // Add person with various property types
             Triple(
               IriTerm('http://example.org/person/john'),
-              RdfConstants.typeIri,
+              RdfPredicates.type,
               IriTerm('http://xmlns.com/foaf/0.1/Person'),
             ),
             Triple(
@@ -81,7 +77,7 @@ void main() {
             ),
             Triple(
               IriTerm('http://example.org/person/john'),
-              DcTermsConstants.createdIri,
+              DcTermsPredicates.created,
               LiteralTerm.typed('2025-04-23T12:00:00Z', 'dateTime'),
             ),
             // Add language-tagged literals
@@ -121,7 +117,7 @@ void main() {
           ),
           Triple(
             addressNode,
-            RdfConstants.typeIri,
+            RdfPredicates.type,
             IriTerm('http://schema.org/PostalAddress'),
           ),
           Triple(

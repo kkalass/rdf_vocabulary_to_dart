@@ -1,8 +1,8 @@
 import 'package:logging/logging.dart';
-import 'package:rdf_core/constants/rdf_constants.dart';
 import 'package:rdf_core/exceptions/exceptions.dart';
 import 'package:rdf_core/graph/rdf_term.dart';
 import 'package:rdf_core/graph/triple.dart';
+import 'package:rdf_core/vocab/rdf.dart';
 
 import 'turtle_tokenizer.dart';
 
@@ -360,7 +360,7 @@ class TurtleParser {
     if (_currentToken.type == TokenType.a) {
       _currentToken = _tokenizer.nextToken();
       _log.info('Found "a" keyword, expanded to rdf:type');
-      return RdfConstants.typeIri;
+      return RdfPredicates.type;
     } else if (_currentToken.type == TokenType.iri) {
       final iriValue = _extractIriValue(_currentToken.value);
       final resolvedIri = _resolveIri(iriValue);

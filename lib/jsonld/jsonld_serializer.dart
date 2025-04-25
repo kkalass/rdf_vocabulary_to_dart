@@ -15,12 +15,11 @@ library jsonld_serializer;
 import 'dart:convert';
 
 import 'package:logging/logging.dart';
-import 'package:rdf_core/constants/rdf_constants.dart';
-import 'package:rdf_core/constants/xsd_constants.dart';
 import 'package:rdf_core/graph/rdf_graph.dart';
 import 'package:rdf_core/graph/rdf_term.dart';
 import 'package:rdf_core/graph/triple.dart';
 import 'package:rdf_core/rdf_serializer.dart';
+import 'package:rdf_core/vocab/vocab.dart';
 
 final _log = Logger("rdf.jsonld");
 
@@ -39,19 +38,7 @@ final _log = Logger("rdf.jsonld");
 /// to make property names more readable.
 final class JsonLdSerializer implements RdfSerializer {
   /// Well-known common prefixes used for more readable JSON-LD output.
-  static const Map<String, String> _commonPrefixes = {
-    'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
-    'rdfs': 'http://www.w3.org/2000/01/rdf-schema#',
-    'xsd': 'http://www.w3.org/2001/XMLSchema#',
-    'owl': 'http://www.w3.org/2002/07/owl#',
-    'foaf': 'http://xmlns.com/foaf/0.1/',
-    'dc': 'http://purl.org/dc/elements/1.1/',
-    'dcterms': 'http://purl.org/dc/terms/',
-    'schema': 'http://schema.org/',
-    'solid': 'http://www.w3.org/ns/solid/terms#',
-    'acl': 'http://www.w3.org/ns/auth/acl#',
-    'ldp': 'http://www.w3.org/ns/ldp#',
-  };
+  static final Map<String, String> _commonPrefixes = commonPrefixes;
 
   /// Creates a new JSON-LD serializer.
   JsonLdSerializer();
@@ -208,7 +195,7 @@ final class JsonLdSerializer implements RdfSerializer {
         );
       } else if (triple.object is LiteralTerm) {
         final literal = triple.object as LiteralTerm;
-        if (literal.datatype != XsdConstants.stringIri) {
+        if (literal.datatype != XsdTypes.string) {
           _checkTermForPrefix(
             literal.datatype,
             iriToPrefixMap,
@@ -283,7 +270,7 @@ final class JsonLdSerializer implements RdfSerializer {
     final typeObjects = <RdfObject>[];
 
     for (final triple in triples) {
-      if (triple.predicate == RdfConstants.typeIri) {
+      if (triple.predicate == RdfPredicates.type) {
         // Handle rdf:type specially
         typeObjects.add(triple.object);
       } else {
@@ -417,22 +404,21 @@ final class JsonLdSerializer implements RdfSerializer {
     final datatype = literal.datatype;
 
     // String literals (default datatype)
-    if (datatype == XsdConstants.stringIri) {
+    if (datatype == XsdTypes.string) {
       return value;
     }
 
     // Number literals
-    if (datatype == XsdConstants.integerIri) {
+    if (datatype == XsdTypes.integer) {
       return int.tryParse(value) ?? {'@value': value, '@type': datatype.iri};
     }
 
-    if (datatype == XsdConstants.doubleIri ||
-        datatype == XsdConstants.decimalIri) {
+    if (datatype == XsdTypes.double || datatype == XsdTypes.decimal) {
       return double.tryParse(value) ?? {'@value': value, '@type': datatype.iri};
     }
 
     // Boolean literals
-    if (datatype == XsdConstants.booleanIri) {
+    if (datatype == XsdTypes.boolean) {
       if (value == 'true') return true;
       if (value == 'false') return false;
       return {'@value': value, '@type': datatype.iri};

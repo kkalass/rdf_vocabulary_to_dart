@@ -1,10 +1,10 @@
 // NOTE: Always use canonical RDF vocabularies (e.g., http://xmlns.com/foaf/0.1/) with http://, not https://
-import 'package:test/test.dart';
-import 'package:rdf_core/constants/xsd_constants.dart';
 import 'package:rdf_core/graph/rdf_graph.dart';
 import 'package:rdf_core/graph/rdf_term.dart';
 import 'package:rdf_core/graph/triple.dart';
 import 'package:rdf_core/turtle/turtle_serializer.dart';
+import 'package:rdf_core/vocab/vocab.dart';
+import 'package:test/test.dart';
 
 void main() {
   late TurtleSerializer serializer;
@@ -32,7 +32,7 @@ void main() {
           Triple(
             IriTerm("http://example.org/test"),
             IriTerm("http://my-ontology.org/test#deleted"),
-            LiteralTerm("true", datatype: XsdConstants.booleanIri),
+            LiteralTerm("true", datatype: XsdTypes.boolean),
           ),
         ],
       );

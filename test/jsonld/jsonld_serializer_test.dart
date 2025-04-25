@@ -1,11 +1,11 @@
 // NOTE: Always use canonical RDF vocabularies (e.g., http://xmlns.com/foaf/0.1/) with http://, not https://
 import 'dart:convert';
 
-import 'package:rdf_core/constants/rdf_constants.dart';
 import 'package:rdf_core/graph/rdf_graph.dart';
 import 'package:rdf_core/graph/rdf_term.dart';
 import 'package:rdf_core/graph/triple.dart';
 import 'package:rdf_core/jsonld/jsonld_serializer.dart';
+import 'package:rdf_core/vocab/vocab.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -46,7 +46,7 @@ void main() {
       final graph = RdfGraph.fromTriples([
         Triple(
           IriTerm('http://example.org/subject'),
-          RdfConstants.typeIri,
+          RdfPredicates.type,
           IriTerm('http://example.org/Class'),
         ),
       ]);
@@ -54,7 +54,7 @@ void main() {
       final result = serializer.write(graph);
       final jsonObj = jsonDecode(result) as Map<String, dynamic>;
 
-      expect(jsonObj['@context']['rdf'], equals(RdfConstants.namespace));
+      expect(jsonObj['@context']['rdf'], equals(Rdf.namespace));
       expect(jsonObj['@id'], equals('http://example.org/subject'));
       expect(jsonObj['@type'], isA<Map<String, dynamic>>());
       expect(jsonObj['@type']['@id'], equals('http://example.org/Class'));
@@ -195,7 +195,7 @@ void main() {
       final graph = RdfGraph.fromTriples([
         Triple(
           IriTerm('http://example.org/person/john'),
-          RdfConstants.typeIri,
+          RdfPredicates.type,
           IriTerm('http://xmlns.com/foaf/0.1/Person'),
         ),
         Triple(
@@ -218,7 +218,7 @@ void main() {
         ),
         Triple(
           IriTerm('http://example.org/person/jane'),
-          RdfConstants.typeIri,
+          RdfPredicates.type,
           IriTerm('http://xmlns.com/foaf/0.1/Person'),
         ),
         Triple(
@@ -232,7 +232,7 @@ void main() {
       final jsonObj = jsonDecode(result) as Map<String, dynamic>;
 
       expect(jsonObj['@context']['foaf'], equals('http://xmlns.com/foaf/0.1/'));
-      expect(jsonObj['@context']['rdf'], equals(RdfConstants.namespace));
+      expect(jsonObj['@context']['rdf'], equals(Rdf.namespace));
       expect(jsonObj.containsKey('@graph'), isTrue);
 
       final graph1 = jsonObj['@graph'].firstWhere(

@@ -1,7 +1,6 @@
-import 'package:rdf_core/constants/rdf_constants.dart';
-import 'package:rdf_core/constants/xsd_constants.dart';
 import 'package:rdf_core/exceptions/rdf_validation_exception.dart';
 import 'package:rdf_core/graph/rdf_term.dart';
+import 'package:rdf_core/vocab/vocab.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -189,41 +188,41 @@ void main() {
 
   group('LiteralTerm', () {
     test('constructs with datatype', () {
-      final literal = LiteralTerm('42', datatype: XsdConstants.integerIri);
+      final literal = LiteralTerm('42', datatype: XsdTypes.integer);
       expect(literal.value, equals('42'));
-      expect(literal.datatype, equals(XsdConstants.integerIri));
+      expect(literal.datatype, equals(XsdTypes.integer));
       expect(literal.language, isNull);
     });
 
     test('constructs with language tag', () {
       final literal = LiteralTerm(
         'hello',
-        datatype: RdfConstants.langStringIri,
+        datatype: RdfTypes.langString,
         language: 'en',
       );
       expect(literal.value, equals('hello'));
-      expect(literal.datatype, equals(RdfConstants.langStringIri));
+      expect(literal.datatype, equals(RdfTypes.langString));
       expect(literal.language, equals('en'));
     });
 
     test('typed factory creates correct datatype', () {
       final literal = LiteralTerm.typed('42', 'integer');
       expect(literal.value, equals('42'));
-      expect(literal.datatype, equals(XsdConstants.integerIri));
+      expect(literal.datatype, equals(XsdTypes.integer));
       expect(literal.language, isNull);
     });
 
     test('string factory creates xsd:string literal', () {
       final literal = LiteralTerm.string('hello');
       expect(literal.value, equals('hello'));
-      expect(literal.datatype, equals(XsdConstants.stringIri));
+      expect(literal.datatype, equals(XsdTypes.string));
       expect(literal.language, isNull);
     });
 
     test('withLanguage factory creates language-tagged literal', () {
       final literal = LiteralTerm.withLanguage('hello', 'en');
       expect(literal.value, equals('hello'));
-      expect(literal.datatype, equals(RdfConstants.langStringIri));
+      expect(literal.datatype, equals(RdfTypes.langString));
       expect(literal.language, equals('en'));
     });
 
@@ -262,11 +261,7 @@ void main() {
       'throws assertion error when language tag is used without rdf:langString',
       () {
         expect(
-          () => LiteralTerm(
-            'hello',
-            datatype: XsdConstants.stringIri,
-            language: 'en',
-          ),
+          () => LiteralTerm('hello', datatype: XsdTypes.string, language: 'en'),
           throwsA(isA<AssertionError>()),
         );
       },
@@ -276,7 +271,7 @@ void main() {
       'throws assertion error when rdf:langString is used without language tag',
       () {
         expect(
-          () => LiteralTerm('hello', datatype: RdfConstants.langStringIri),
+          () => LiteralTerm('hello', datatype: RdfTypes.langString),
           throwsA(isA<AssertionError>()),
         );
       },

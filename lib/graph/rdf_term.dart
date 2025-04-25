@@ -11,7 +11,7 @@
 /// final bnode = BlankNodeTerm();
 ///
 /// // Advanced: create a literal
-/// final literal = LiteralTerm('42', datatype: XsdConstants.intIri);
+/// final literal = LiteralTerm('42', datatype: XsdTypes.int);
 ///
 /// // Type checking
 /// if (term is IriTerm) print('It is an IRI!');
@@ -31,9 +31,9 @@
 /// of the RDF specification regarding which terms can appear in which positions.
 library rdf_terms;
 
-import 'package:rdf_core/constants/rdf_constants.dart';
-import 'package:rdf_core/constants/xsd_constants.dart';
 import 'package:rdf_core/exceptions/rdf_validation_exception.dart';
+import 'package:rdf_core/vocab/rdf.dart';
+import 'package:rdf_core/vocab/xsd.dart';
 
 /// Base type for all RDF terms
 ///
@@ -199,7 +199,7 @@ class LiteralTerm extends RdfTerm implements RdfObject {
   /// This constructor enforces those constraints with an assertion.
   const LiteralTerm(this.value, {required this.datatype, this.language})
     : assert(
-        (language == null) != (datatype == RdfConstants.langStringIri),
+        (language == null) != (datatype == RdfTypes.langString),
         'Language-tagged literals must use rdf:langString datatype, and rdf:langString must have a language tag',
       );
 
@@ -216,7 +216,7 @@ class LiteralTerm extends RdfTerm implements RdfObject {
   /// final dateLiteral = LiteralTerm.typed("2023-04-01", "date");
   /// ```
   factory LiteralTerm.typed(String value, String xsdType) {
-    return LiteralTerm(value, datatype: XsdConstants.makeIri(xsdType));
+    return LiteralTerm(value, datatype: XsdTypes.makeIri(xsdType));
   }
 
   /// Create a plain string literal
@@ -229,7 +229,7 @@ class LiteralTerm extends RdfTerm implements RdfObject {
   /// final stringLiteral = LiteralTerm.string("Hello, World!");
   /// ```
   factory LiteralTerm.string(String value) {
-    return LiteralTerm(value, datatype: XsdConstants.stringIri);
+    return LiteralTerm(value, datatype: XsdTypes.string);
   }
 
   /// Create a language-tagged literal
@@ -246,11 +246,7 @@ class LiteralTerm extends RdfTerm implements RdfObject {
   /// final deLiteral = LiteralTerm.withLanguage("Hallo", "de");
   /// ```
   factory LiteralTerm.withLanguage(String value, String langTag) {
-    return LiteralTerm(
-      value,
-      datatype: RdfConstants.langStringIri,
-      language: langTag,
-    );
+    return LiteralTerm(value, datatype: RdfTypes.langString, language: langTag);
   }
 
   @override

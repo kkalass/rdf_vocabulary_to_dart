@@ -1,7 +1,7 @@
-import 'package:rdf_core/constants/rdf_constants.dart';
 import 'package:rdf_core/exceptions/exceptions.dart';
 import 'package:rdf_core/graph/rdf_term.dart';
 import 'package:rdf_core/jsonld/jsonld_parser.dart';
+import 'package:rdf_core/vocab/vocab.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -149,7 +149,7 @@ void main() {
         triples.any(
           (t) =>
               t.subject == IriTerm('http://example.org/person/john') &&
-              t.predicate == RdfConstants.typeIri &&
+              t.predicate == RdfPredicates.type &&
               t.object == IriTerm('http://xmlns.com/foaf/0.1/Person'),
         ),
         isTrue,
@@ -179,7 +179,7 @@ void main() {
         triples.any(
           (t) =>
               t.subject == IriTerm('http://example.org/person/john') &&
-              t.predicate == RdfConstants.typeIri &&
+              t.predicate == RdfPredicates.type &&
               t.object == IriTerm('http://xmlns.com/foaf/0.1/Person'),
         ),
         isTrue,
@@ -209,7 +209,7 @@ void main() {
         triples.any(
           (t) =>
               t.subject == IriTerm('http://example.org/person/john') &&
-              t.predicate == RdfConstants.typeIri &&
+              t.predicate == RdfPredicates.type &&
               t.object == IriTerm('http://xmlns.com/foaf/0.1/Person'),
         ),
         isTrue,
@@ -241,7 +241,7 @@ void main() {
         triples.any(
           (t) =>
               t.subject == IriTerm('http://example.org/person/john') &&
-              t.predicate == RdfConstants.typeIri &&
+              t.predicate == RdfPredicates.type &&
               t.object == IriTerm('http://xmlns.com/foaf/0.1/Person'),
         ),
         isTrue,
@@ -252,7 +252,7 @@ void main() {
         triples.any(
           (t) =>
               t.subject == IriTerm('http://example.org/person/john') &&
-              t.predicate == RdfConstants.typeIri &&
+              t.predicate == RdfPredicates.type &&
               t.object == IriTerm('http://schema.org/Person'),
         ),
         isTrue,

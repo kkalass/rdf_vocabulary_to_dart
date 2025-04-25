@@ -18,6 +18,7 @@ A type-safe, and extensible Dart library for representing and manipulating RDF d
 ---
 
 ## ✨ Features
+
 - **Type-safe RDF model:** IRIs, Literals, Triples, Graphs, and more
 - **Serialization-agnostic:** Clean separation from Turtle/JSON-LD
 - **Extensible & modular:** Build your own adapters, plugins, and integrations
@@ -74,22 +75,26 @@ void main() {
 ## 🧑‍💻 Advanced Usage
 
 ### Graph Merging
+
 ```dart
 final merged = graph1.merge(graph2);
 ```
 
 ### Pattern Queries
+
 ```dart
 final results = graph.findTriples(subject: subject);
 ```
 
 ### Blank Node Handling
+
 ```dart
 final bnode = BlankNodeTerm();
 final newGraph = graph.withTriple(Triple(bnode, predicate, object));
 ```
 
 ### Serialization/Parsing
+
 ```dart
 final turtleSerializer = TurtleSerializer();
 final turtle = turtleSerializer.write(graph);
@@ -101,12 +106,14 @@ final parsedGraph = jsonLdParser.parse();
 ---
 
 ## ⚠️ Error Handling
+
 - All core methods throw Dart exceptions (e.g., `ArgumentError`, `RdfValidationException`) for invalid input or constraint violations.
 - Catch and handle exceptions for robust RDF processing.
 
 ---
 
 ## 🚦 Performance
+
 - Triple, Term, and IRI equality/hashCode are O(1)
 - Graph queries (`findTriples`) are O(n) in the number of triples
 - Designed for large-scale, high-performance RDF workloads
@@ -128,6 +135,7 @@ final parsedGraph = jsonLdParser.parse();
 ---
 
 ## 📚 Standards & References
+
 - [RDF 1.1 Concepts](https://www.w3.org/TR/rdf11-concepts/)
 - [Turtle: Terse RDF Triple Language](https://www.w3.org/TR/turtle/)
 - [JSON-LD 1.1](https://www.w3.org/TR/json-ld11/)
@@ -136,10 +144,9 @@ final parsedGraph = jsonLdParser.parse();
 ---
 
 ## 🛣️ Roadmap / Next Steps
+
 - Refactor Constants and generate for all well-known ontologies (FoafConstants, FoafTypes, FoafPredicates), rename dir to "ontologies"
 - Support base uri in jsonld and turtle serialization
-- Validate IriTerm
-- Fix BlankNode handling
 - More serialization formats (N-Triples, RDF/XML)
 - SHACL and schema validation
 - Performance optimizations for large graphs
@@ -149,6 +156,7 @@ final parsedGraph = jsonLdParser.parse();
 ## 🤝 Contributing
 
 Contributions, bug reports, and feature requests are welcome!
+
 - Fork the repo and submit a PR
 - See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 - Join the discussion in [GitHub Issues](https://github.com/kkalass/rdf_core/issues)

@@ -1,26 +1,26 @@
-import 'package:rdf_core/constants/rdf_constants.dart';
 import 'package:rdf_core/graph/rdf_term.dart';
+import 'package:rdf_core/vocab/vocab.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('RdfConstants', () {
+  group('Rdf', () {
     test('namespace uses correct RDF namespace URI', () {
       expect(
-        RdfConstants.namespace,
+        Rdf.namespace,
         equals('http://www.w3.org/1999/02/22-rdf-syntax-ns#'),
       );
     });
 
     test('typeIri has correct value', () {
       expect(
-        RdfConstants.typeIri,
+        RdfPredicates.type,
         equals(IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')),
       );
     });
 
     test('langStringIri has correct value', () {
       expect(
-        RdfConstants.langStringIri,
+        RdfTypes.langString,
         equals(
           const IriTerm.prevalidated(
             'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
@@ -31,7 +31,7 @@ void main() {
 
     test('propertyIri has correct value', () {
       expect(
-        RdfConstants.propertyIri,
+        Rdf.property,
         equals(
           const IriTerm.prevalidated(
             'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property',
@@ -42,7 +42,7 @@ void main() {
 
     test('statementIri has correct value', () {
       expect(
-        RdfConstants.statementIri,
+        Rdf.statement,
         equals(
           const IriTerm.prevalidated(
             'http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement',
@@ -55,7 +55,7 @@ void main() {
       expect(() {
         // This should not compile, but we'll check it at runtime too
         // Dynamic cast is used to bypass compile-time check for demonstration
-        final typeIri = RdfConstants.typeIri as dynamic;
+        final typeIri = RdfPredicates.type as dynamic;
         typeIri.iri = 'modified';
       }, throwsNoSuchMethodError);
     });
