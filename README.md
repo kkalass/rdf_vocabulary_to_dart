@@ -136,7 +136,7 @@ final parsedGraph = jsonLdParser.parse();
 ---
 
 ## 🛣️ Roadmap
-- Advanced graph/dataset support
+- Support base uri in jsonld and turtle serialization
 - More serialization formats (N-Triples, RDF/XML)
 - Integration with Dart ORM and Solid libraries
 - SHACL and schema validation

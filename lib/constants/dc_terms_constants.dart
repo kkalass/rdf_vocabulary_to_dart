@@ -1,4 +1,5 @@
 /// Dublin Core Terms Constants
+library dc_terms_constants;
 ///
 /// Provides constants for the [Dublin Core Terms vocabulary](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/).
 ///
