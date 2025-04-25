@@ -1,3 +1,4 @@
+// NOTE: Always use canonical RDF vocabularies (e.g., http://xmlns.com/foaf/0.1/) with http://, not https://
 import 'package:test/test.dart';
 import 'package:rdf_core/constants/xsd_constants.dart';
 import 'package:rdf_core/graph/rdf_graph.dart';
@@ -480,6 +481,67 @@ void main() {
     });
 
     test('should correctly use custom prefixes when available', () {
+      // Arrange
+      final graph = RdfGraph(
+        triples: [
+          Triple(
+            IriTerm('http://example.org/book/littleprince'),
+            IriTerm('http://purl.org/dc/terms/title'),
+            LiteralTerm.string('The Little Prince'),
+          ),
+        ],
+      );
+
+      final customPrefixes = {
+        'book': 'http://example.org/book/',
+        'dc': 'http://purl.org/dc/terms/',
+      };
+
+      // Act
+      final result = serializer.write(graph, customPrefixes: customPrefixes);
+
+      // Assert
+      expect(result, contains('@prefix book: <http://example.org/book/> .'));
+      expect(result, contains('@prefix dc: <http://purl.org/dc/terms/> .'));
+      expect(
+        result,
+        contains('book:littleprince dc:title "The Little Prince" .'),
+      );
+    });
+
+    test(
+      'should automatically add and use foaf prefix when relevant IRIs are present',
+      () {
+        final graph = RdfGraph(
+          triples: [
+            Triple(
+              IriTerm('http://example.org/alice'),
+              IriTerm('http://xmlns.com/foaf/0.1/name'),
+              LiteralTerm.string('Alice'),
+            ),
+            Triple(
+              IriTerm('http://example.org/alice'),
+              IriTerm('http://xmlns.com/foaf/0.1/knows'),
+              IriTerm('http://example.org/bob'),
+            ),
+          ],
+        );
+
+        final serializer = TurtleSerializer();
+        final result = serializer.write(graph);
+
+        expect(
+          result,
+          contains('@prefix foaf: <http://xmlns.com/foaf/0.1/> .'),
+        );
+        expect(result, contains('foaf:name "Alice"'));
+        expect(result, isNot(contains('@prefix xsd: ')));
+        expect(result, contains('foaf:name "Alice"'));
+        expect(result, contains('foaf:knows <http://example.org/bob>'));
+      },
+    );
+
+    test('should handle custom prefixes correctly', () {
       // Arrange
       final graph = RdfGraph(
         triples: [

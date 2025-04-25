@@ -6,10 +6,11 @@ import 'package:rdf_core/rdf_core.dart';
 
 void main() {
   // --- Manual Graph Construction ---
-  final alice = IriTerm('https://example.org/alice');
-  final bob = IriTerm('https://example.org/bob');
-  final knows = IriTerm('https://xmlns.com/foaf/0.1/knows');
-  final name = IriTerm('https://xmlns.com/foaf/0.1/name');
+  // NOTE: Always use canonical RDF vocabularies (e.g., http://xmlns.com/foaf/0.1/) with http://, not https://
+  final alice = IriTerm('http://example.org/alice');
+  final bob = IriTerm('http://example.org/bob');
+  final knows = IriTerm('http://xmlns.com/foaf/0.1/knows');
+  final name = IriTerm('http://xmlns.com/foaf/0.1/name');
 
   final graph = RdfGraph(
     triples: [
@@ -31,7 +32,21 @@ void main() {
   // --- Serialize to Turtle ---
   var rdfCore = RdfCore.withStandardFormats();
   final turtleSerializer = rdfCore.getSerializer(contentType: 'text/turtle');
-  final turtle = turtleSerializer.write(graph);
+  final turtle = turtleSerializer.write(
+    graph,
+    customPrefixes: {'ex': 'http://example.org/'},
+  );
+  // Note that prefixes for well-known IRIs like https://xmlns.com/foaf/0.1/ will automatically
+  // be introduced, using custom prefixes is optional. Expect an output like this:
+  //
+  // ```turtle
+  // @prefix ex: <http://example.org/> .
+  // @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+  //
+  // ex:alice foaf:knows ex:bob;
+  //     foaf:name "Alice" .
+  // ex:bob foaf:name "Bob" .
+  // ```
   print('\nTurtle serialization:\n$turtle');
 
   // --- Parse from Turtle ---

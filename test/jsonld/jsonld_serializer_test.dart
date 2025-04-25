@@ -1,3 +1,4 @@
+// NOTE: Always use canonical RDF vocabularies (e.g., http://xmlns.com/foaf/0.1/) with http://, not https://
 import 'dart:convert';
 
 import 'package:rdf_core/constants/rdf_constants.dart';
@@ -186,6 +187,101 @@ void main() {
       expect(jsonObj['vocab:predicate'], equals('object'));
     });
 
+    test('should serialize complex graph correctly using prefixes', () {
+      final graph = RdfGraph.fromTriples([
+        Triple(
+          IriTerm('http://example.org/person/john'),
+          RdfConstants.typeIri,
+          IriTerm('http://xmlns.com/foaf/0.1/Person'),
+        ),
+        Triple(
+          IriTerm('http://example.org/person/john'),
+          IriTerm('http://xmlns.com/foaf/0.1/name'),
+          LiteralTerm.string('John Doe'),
+        ),
+        Triple(
+          IriTerm('http://example.org/person/john'),
+          IriTerm('http://xmlns.com/foaf/0.1/age'),
+          LiteralTerm(
+            '42',
+            datatype: IriTerm('http://www.w3.org/2001/XMLSchema#integer'),
+          ),
+        ),
+        Triple(
+          IriTerm('http://example.org/person/john'),
+          IriTerm('http://xmlns.com/foaf/0.1/knows'),
+          IriTerm('http://example.org/person/jane'),
+        ),
+        Triple(
+          IriTerm('http://example.org/person/jane'),
+          RdfConstants.typeIri,
+          IriTerm('http://xmlns.com/foaf/0.1/Person'),
+        ),
+        Triple(
+          IriTerm('http://example.org/person/jane'),
+          IriTerm('http://xmlns.com/foaf/0.1/name'),
+          LiteralTerm.string('Jane Smith'),
+        ),
+      ]);
+
+      final result = serializer.write(graph);
+      final jsonObj = jsonDecode(result) as Map<String, dynamic>;
+
+      expect(jsonObj['@context']['foaf'], equals('http://xmlns.com/foaf/0.1/'));
+      expect(jsonObj['@context']['rdf'], equals(RdfConstants.namespace));
+      expect(jsonObj.containsKey('@graph'), isTrue);
+
+      final graph1 = jsonObj['@graph'].firstWhere(
+        (node) => node['@id'] == 'http://example.org/person/john',
+      );
+
+      expect(
+        graph1['@type']['@id'],
+        equals('http://xmlns.com/foaf/0.1/Person'),
+      );
+      // Now we use prefixed property names
+      expect(graph1['foaf:name'], equals('John Doe'));
+      expect(graph1['foaf:age'], equals(42));
+      expect(
+        graph1['foaf:knows']['@id'],
+        equals('http://example.org/person/jane'),
+      );
+
+      final graph2 = jsonObj['@graph'].firstWhere(
+        (node) => node['@id'] == 'http://example.org/person/jane',
+      );
+      expect(graph2['foaf:name'], equals('Jane Smith'));
+    });
+
+    test(
+      'should automatically add and use foaf prefix when relevant IRIs are present',
+      () {
+        final graph = RdfGraph.fromTriples([
+          Triple(
+            IriTerm('http://example.org/alice'),
+            IriTerm('http://xmlns.com/foaf/0.1/name'),
+            LiteralTerm.string('Alice'),
+          ),
+          Triple(
+            IriTerm('http://example.org/alice'),
+            IriTerm('http://xmlns.com/foaf/0.1/knows'),
+            IriTerm('http://example.org/bob'),
+          ),
+        ]);
+
+        final serializer = JsonLdSerializer();
+        final result = serializer.write(graph);
+        final jsonObj = jsonDecode(result) as Map<String, dynamic>;
+
+        expect(
+          jsonObj['@context']['foaf'],
+          equals('http://xmlns.com/foaf/0.1/'),
+        );
+        expect(jsonObj['@context']['xsd'], isNull);
+        expect(jsonObj['foaf:name'], equals('Alice'));
+        expect(jsonObj['foaf:knows']['@id'], equals('http://example.org/bob'));
+      },
+    );
     test('should serialize complex graph correctly using prefixes', () {
       final graph = RdfGraph.fromTriples([
         Triple(

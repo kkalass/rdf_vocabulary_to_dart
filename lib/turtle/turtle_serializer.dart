@@ -21,6 +21,8 @@ final _log = Logger("rdf.turtle");
 /// ```
 ///
 /// See: [Turtle - Terse RDF Triple Language](https://www.w3.org/TR/turtle/)
+/// NOTE: Always use canonical RDF vocabularies (e.g., http://xmlns.com/foaf/0.1/) with http://, not https://
+/// This serializer will warn if it detects use of https:// for a namespace that is canonical as http://.
 class TurtleSerializer implements RdfSerializer {
   /// A map of well-known common RDF prefixes used in Turtle serialization.
   /// These prefixes provide shorthand notation for commonly used RDF namespaces
@@ -48,7 +50,7 @@ class TurtleSerializer implements RdfSerializer {
     Map<String, String> customPrefixes = const {},
   }) {
     _log.info('Serializing graph to Turtle');
-    // FIXME KK - support base IRIs - store all refs to IRIs within this
+    // TODO KK - support base IRIs - store all refs to IRIs within this
     // pod relative to the pod root (or the application root within the pod?)
 
     final buffer = StringBuffer();
@@ -117,6 +119,11 @@ class TurtleSerializer implements RdfSerializer {
         );
       } else if (triple.object is LiteralTerm) {
         final literal = triple.object as LiteralTerm;
+        if (literal.datatype == XsdConstants.stringIri ||
+            literal.datatype == RdfConstants.langStringIri) {
+          // string and langString will not actually be written, they are implicit.
+          continue;
+        }
         _checkTermForPrefix(
           literal.datatype,
           iriToPrefixMap,
@@ -141,7 +148,16 @@ class TurtleSerializer implements RdfSerializer {
       // it will be rendered simply as "a" - no prefix needed
       return;
     }
+    // Warn if https:// is used and http:// is in the prefix map for the same path
     final iri = term.iri;
+    if (iri.startsWith('https://')) {
+      final httpIri = 'http://' + iri.substring('https://'.length);
+      if (prefixCandidates.containsValue(httpIri)) {
+        _log.warning(
+          'Namespace mismatch: Found IRI $iri, but canonical prefix uses $httpIri. Consider using the canonical http:// form.',
+        );
+      }
+    }
 
     // First try direct match (for namespaces that are used completely)
     if (iriToPrefixMap.containsKey(iri)) {

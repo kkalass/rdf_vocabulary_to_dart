@@ -130,12 +130,21 @@ final graph = RdfGraph(triples: [
     <pre><code class="language-dart">// Parse and serialize Turtle
 final rdf = RdfCore.withStandardFormats();
 final doc = '''
-  @prefix ex: <https://example.org/> .
-  ex:s ex:p "o" .
+  @prefix ex: <http://example.org/> .
+  @prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+  ex:alice foaf:knows ex:bob;
+    foaf:name "Alice" .
+  ex:bob foaf:name "Bob" .
 ''';
 final parsed = rdf.parse(doc, contentType: 'text/turtle');
 final turtle = rdf.serialize(parsed, contentType: 'text/turtle');
-print(turtle); // Outputs the same as doc
+
+// Outputs nearly the same as doc, but we did not provide customPrefixes for the serializer so this time we get the full IRIs for example.com.
+// Note that well known prefixes like foaf: are used automatically.
+// If we wanted exactly the same, we would have to call it like this:
+// final turtle = rdf.serialize(parsed, contentType: 'text/turtle', customPrefixes: {'ex': 'http://example.org/'} );
+print(turtle); 
 </code></pre>
     <div class="links">
       <a href="api/">API Reference</a>
