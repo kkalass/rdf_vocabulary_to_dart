@@ -38,6 +38,9 @@ class JsonLdParser {
   final String _input;
   final String? _baseUri;
 
+  // Map to store consistent blank node instances across the parsing process
+  final Map<String, BlankNodeTerm> _blankNodeCache = {};
+
   /// Common prefixes used in JSON-LD documents
   static const Map<String, String> _commonPrefixes = {
     'rdf': 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
@@ -238,10 +241,20 @@ class JsonLdParser {
   /// Create appropriate RDF term for a subject
   RdfSubject _createSubjectTerm(String subject) {
     if (subject.startsWith('_:')) {
-      return BlankNodeTerm(subject);
+      // Use the blank node cache to maintain consistent identity
+      return _getOrCreateBlankNode(subject);
     } else {
       return IriTerm(subject);
     }
+  }
+
+  /// Gets an existing BlankNodeTerm or creates a new one with consistent identity
+  BlankNodeTerm _getOrCreateBlankNode(String label) {
+    return _blankNodeCache.putIfAbsent(label, () {
+      final blankNode = BlankNodeTerm();
+      _log.info('Created blank node for label $label: $blankNode');
+      return blankNode;
+    });
   }
 
   /// Get the subject identifier from a node
@@ -392,7 +405,7 @@ class JsonLdParser {
         final expandedIri = _expandIri(objectId);
         final RdfObject objectTerm =
             expandedIri.startsWith('_:')
-                ? BlankNodeTerm(expandedIri)
+                ? _getOrCreateBlankNode(expandedIri)
                 : IriTerm(expandedIri);
 
         triples.add(Triple(subject, predicate, objectTerm));
@@ -429,7 +442,7 @@ class JsonLdParser {
       } else {
         // Blank node
         final blankNodeId = '_:b${value.hashCode.abs()}';
-        final blankNode = BlankNodeTerm(blankNodeId);
+        final blankNode = _getOrCreateBlankNode(blankNodeId);
 
         triples.add(Triple(subject, predicate, blankNode));
         _log.info(

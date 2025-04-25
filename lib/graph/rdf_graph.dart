@@ -14,7 +14,7 @@
 /// final matches = graph.findTriples(subject: subject);
 ///
 /// // Blank node handling: add a triple with a blank node subject
-/// final blankNode = BlankNodeTerm('b1');
+/// final blankNode = BlankNodeTerm();
 /// final newGraph = graph.withTriple(Triple(blankNode, predicate, object));
 /// ```
 ///

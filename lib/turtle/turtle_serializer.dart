@@ -55,6 +55,10 @@ class TurtleSerializer implements RdfSerializer {
 
     final buffer = StringBuffer();
 
+    // Map to store generated blank node labels for this serialization
+    final Map<BlankNodeTerm, String> blankNodeLabels = {};
+    _generateBlankNodeLabels(graph, blankNodeLabels);
+
     // 1. Write prefixes
     final prefixCandidates = {..._commonPrefixes, ...customPrefixes};
     // Identify which prefixes are actually used in the graph
@@ -67,9 +71,36 @@ class TurtleSerializer implements RdfSerializer {
     });
 
     // 2. Write triples grouped by subject
-    _writeTriples(buffer, graph.triples, prefixesByIri);
+    _writeTriples(buffer, graph.triples, prefixesByIri, blankNodeLabels);
 
     return buffer.toString();
+  }
+
+  /// Generates unique labels for all blank nodes in the graph.
+  ///
+  /// This ensures consistent labels throughout a single serialization.
+  void _generateBlankNodeLabels(
+    RdfGraph graph,
+    Map<BlankNodeTerm, String> blankNodeLabels,
+  ) {
+    var counter = 0;
+
+    // First pass: collect all blank nodes from the graph
+    for (final triple in graph.triples) {
+      if (triple.subject is BlankNodeTerm) {
+        final blankNode = triple.subject as BlankNodeTerm;
+        if (!blankNodeLabels.containsKey(blankNode)) {
+          blankNodeLabels[blankNode] = 'b${counter++}';
+        }
+      }
+
+      if (triple.object is BlankNodeTerm) {
+        final blankNode = triple.object as BlankNodeTerm;
+        if (!blankNodeLabels.containsKey(blankNode)) {
+          blankNodeLabels[blankNode] = 'b${counter++}';
+        }
+      }
+    }
   }
 
   /// Extracts only those prefixes that are actually used in the graph's triples.
@@ -218,6 +249,7 @@ class TurtleSerializer implements RdfSerializer {
     StringBuffer buffer,
     List<Triple> triples,
     Map<String, String> prefixesByIri,
+    Map<BlankNodeTerm, String> blankNodeLabels,
   ) {
     if (triples.isEmpty) {
       return;
@@ -230,6 +262,7 @@ class TurtleSerializer implements RdfSerializer {
       final subjectStr = writeTerm(
         triple.subject,
         prefixesByIri: prefixesByIri,
+        blankNodeLabels: blankNodeLabels,
       );
       triplesBySubject.putIfAbsent(subjectStr, () => []).add(triple);
     }
@@ -242,7 +275,13 @@ class TurtleSerializer implements RdfSerializer {
       }
       isFirst = false;
 
-      _writeSubjectGroup(buffer, entry.key, entry.value, prefixesByIri);
+      _writeSubjectGroup(
+        buffer,
+        entry.key,
+        entry.value,
+        prefixesByIri,
+        blankNodeLabels,
+      );
     }
   }
 
@@ -252,6 +291,7 @@ class TurtleSerializer implements RdfSerializer {
     String subjectStr,
     List<Triple> triples,
     Map<String, String> prefixesByIri,
+    Map<BlankNodeTerm, String> blankNodeLabels,
   ) {
     // Write subject (already in Turtle format)
     buffer.write(subjectStr);
@@ -263,6 +303,7 @@ class TurtleSerializer implements RdfSerializer {
       final predicateStr = writeTerm(
         triple.predicate,
         prefixesByIri: prefixesByIri,
+        blankNodeLabels: blankNodeLabels,
       );
       triplesByPredicate.putIfAbsent(predicateStr, () => []).add(triple);
     }
@@ -294,7 +335,13 @@ class TurtleSerializer implements RdfSerializer {
           buffer.write(', ');
         }
 
-        buffer.write(writeTerm(triple.object, prefixesByIri: prefixesByIri));
+        buffer.write(
+          writeTerm(
+            triple.object,
+            prefixesByIri: prefixesByIri,
+            blankNodeLabels: blankNodeLabels,
+          ),
+        );
       }
     }
 
@@ -306,6 +353,7 @@ class TurtleSerializer implements RdfSerializer {
   String writeTerm(
     RdfTerm term, {
     Map<String, String> prefixesByIri = const {},
+    Map<BlankNodeTerm, String> blankNodeLabels = const {},
   }) {
     switch (term) {
       case IriTerm _:
@@ -344,7 +392,17 @@ class TurtleSerializer implements RdfSerializer {
         }
         return '<${term.iri}>';
       case BlankNodeTerm blankNode:
-        return '_:${blankNode.label}';
+        // Use the pre-generated label for this blank node
+        var label = blankNodeLabels[blankNode];
+        if (label == null) {
+          // This shouldn't happen if all blank nodes were collected correctly
+          _log.warning(
+            'No label generated for blank node, using fallback label',
+          );
+          label = 'b${identityHashCode(blankNode)}';
+          blankNodeLabels[blankNode] = label;
+        }
+        return '_:$label';
       case LiteralTerm literal:
         var escapedLiteralValue = _escapeTurtleString(literal.value);
 
@@ -352,7 +410,7 @@ class TurtleSerializer implements RdfSerializer {
           return '"$escapedLiteralValue"@${literal.language}';
         }
         if (literal.datatype != XsdConstants.stringIri) {
-          return '"$escapedLiteralValue"^^${writeTerm(literal.datatype, prefixesByIri: prefixesByIri)}';
+          return '"$escapedLiteralValue"^^${writeTerm(literal.datatype, prefixesByIri: prefixesByIri, blankNodeLabels: blankNodeLabels)}';
         }
         return '"$escapedLiteralValue"';
     }

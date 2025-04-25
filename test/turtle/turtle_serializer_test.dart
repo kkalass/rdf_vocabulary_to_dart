@@ -194,12 +194,13 @@ void main() {
 
     test('should handle blank nodes', () {
       // Arrange
+      final blankNode = BlankNodeTerm();
       final graph = RdfGraph(
         triples: [
           Triple(
             IriTerm('http://example.org/statement'),
             IriTerm('http://example.org/source'),
-            BlankNodeTerm('b1'),
+            blankNode,
           ),
         ],
       );
@@ -208,10 +209,11 @@ void main() {
       final result = serializer.write(graph);
 
       // Assert
+      // We should have a blank node reference, but we can't check the exact label
       expect(
         result,
-        contains(
-          '<http://example.org/statement> <http://example.org/source> _:b1 .',
+        matches(
+          '<http://example.org/statement> <http://example.org/source> _:b[0-9]+ .',
         ),
       );
     });
@@ -602,6 +604,49 @@ void main() {
         result,
         isNot(contains('ex:subject ex:vocabulary/predicate "object" .')),
       );
+    });
+
+    test('should maintain BlankNode identity in serialization', () {
+      // Create a single blank node used multiple times
+      final blankNode = BlankNodeTerm();
+
+      final graph = RdfGraph.fromTriples([
+        Triple(
+          IriTerm('http://example.org/resource1'),
+          IriTerm('http://example.org/property'),
+          blankNode,
+        ),
+        Triple(
+          IriTerm('http://example.org/resource2'),
+          IriTerm('http://example.org/property'),
+          blankNode,
+        ),
+        Triple(
+          blankNode,
+          IriTerm('http://example.org/type'),
+          LiteralTerm.string('Shared blank node'),
+        ),
+      ]);
+
+      final result = serializer.write(graph);
+
+      // The blank node should have the same label in all usages
+      final matches = RegExp(r'_:b(\d+)').allMatches(result).toList();
+      expect(
+        matches.length,
+        equals(3),
+        reason: 'Should have 3 occurrences of the same blank node',
+      );
+
+      // Extract the label to verify it's the same in all occurrences
+      final label = matches.first.group(1);
+      for (final match in matches) {
+        expect(
+          match.group(1),
+          equals(label),
+          reason: 'All blank node occurrences should have the same label',
+        );
+      }
     });
   });
 }

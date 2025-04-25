@@ -39,6 +39,7 @@ class TurtleParser {
   String? _baseUri;
   Token _currentToken = Token(TokenType.eof, '', 0, 0);
   final List<Triple> _triples = [];
+  final Map<String, BlankNodeTerm> _blankNodesByLabels = {};
 
   /// Creates a new Turtle parser for the given input string.
   ///
@@ -232,7 +233,8 @@ class TurtleParser {
       return subject;
     } else if (_currentToken.type == TokenType.blankNode) {
       final label = _currentToken.value;
-      final subject = BlankNodeTerm(label);
+      final subject = _blankNodesByLabels[label] ?? BlankNodeTerm();
+      _blankNodesByLabels[label] = subject;
       _currentToken = _tokenizer.nextToken();
       _log.info('Parsed blank node subject: $subject');
       return subject;
@@ -413,7 +415,8 @@ class TurtleParser {
       return object;
     } else if (_currentToken.type == TokenType.blankNode) {
       final label = _currentToken.value;
-      final object = BlankNodeTerm(label);
+      final object = _blankNodesByLabels[label] ?? BlankNodeTerm();
+      _blankNodesByLabels[label] = object;
       _currentToken = _tokenizer.nextToken();
       _log.info('Parsed blank node object: $object');
       return object;
@@ -468,8 +471,7 @@ class TurtleParser {
   BlankNodeTerm _parseBlankNode() {
     _log.info('Parsing blank node');
     _expect(TokenType.openBracket);
-    final blankNodeId = 'b${_currentToken.line}${_currentToken.column}';
-    final subject = BlankNodeTerm(blankNodeId);
+    final subject = BlankNodeTerm();
     _log.info('Generated blank node identifier: $subject');
     _currentToken = _tokenizer.nextToken();
 

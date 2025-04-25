@@ -47,34 +47,35 @@ void main() {
   });
 
   group('BlankNodeTerm', () {
-    test('constructs with valid label', () {
-      const node = BlankNodeTerm('b1');
-      expect(node.label, equals('b1'));
+    test('constructs with identity-based equality', () {
+      final node1 = BlankNodeTerm();
+      final node2 = BlankNodeTerm();
+      final nodeSame = node1;
+
+      expect(
+        node1,
+        isNot(equals(node2)),
+        reason: 'Different BlankNodeTerm instances should not be equal',
+      );
+      expect(node1, equals(nodeSame), reason: 'Same instance should be equal');
     });
 
-    test('equals operator compares labels', () {
-      const node1 = BlankNodeTerm('b1');
-      const node2 = BlankNodeTerm('b1');
-      const node3 = BlankNodeTerm('b2');
+    test('hash codes are based on identity', () {
+      final node1 = BlankNodeTerm();
+      final node2 = BlankNodeTerm();
 
-      expect(node1, equals(node2));
-      expect(node1, isNot(equals(node3)));
-    });
-
-    test('hash codes are equal for equal nodes', () {
-      const node1 = BlankNodeTerm('b1');
-      const node2 = BlankNodeTerm('b1');
-
-      expect(node1.hashCode, equals(node2.hashCode));
+      expect(node1.hashCode, equals(identityHashCode(node1)));
+      expect(node1.hashCode, isNot(equals(node2.hashCode)));
     });
 
     test('toString returns a readable representation', () {
-      const node = BlankNodeTerm('b1');
-      expect(node.toString(), equals('BlankNodeTerm(b1)'));
+      final node = BlankNodeTerm();
+      expect(node.toString(), startsWith('BlankNodeTerm('));
+      expect(node.toString(), contains(identityHashCode(node).toString()));
     });
 
     test('is a subject but not a predicate', () {
-      const node = BlankNodeTerm('b1');
+      final node = BlankNodeTerm();
       expect(node, isA<RdfSubject>());
       expect(node, isA<RdfTerm>());
       expect(node, isNot(isA<RdfPredicate>()));

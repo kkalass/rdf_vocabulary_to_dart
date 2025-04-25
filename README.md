@@ -85,7 +85,7 @@ final results = graph.findTriples(subject: subject);
 
 ### Blank Node Handling
 ```dart
-final bnode = BlankNodeTerm('b1');
+final bnode = BlankNodeTerm();
 final newGraph = graph.withTriple(Triple(bnode, predicate, object));
 ```
 

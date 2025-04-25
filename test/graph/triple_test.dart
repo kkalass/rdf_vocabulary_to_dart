@@ -23,7 +23,7 @@ void main() {
     });
 
     test('constructs with blank node subject', () {
-      final blankSubject = const BlankNodeTerm('b1');
+      final blankSubject = BlankNodeTerm();
       final t = Triple(blankSubject, predicate, object);
       expect(t.subject, equals(blankSubject));
     });
@@ -35,7 +35,7 @@ void main() {
     });
 
     test('constructs with blank node object', () {
-      final blankObject = const BlankNodeTerm('b2');
+      final blankObject = BlankNodeTerm();
       final t = Triple(subject, predicate, blankObject);
       expect(t.object, equals(blankObject));
     });
@@ -61,6 +61,27 @@ void main() {
       expect(triple.toString(), contains(subject.toString()));
       expect(triple.toString(), contains(predicate.toString()));
       expect(triple.toString(), contains(object.toString()));
+    });
+
+    test('blank node equality respects object identity', () {
+      final b1 = BlankNodeTerm();
+      final b2 = BlankNodeTerm();
+      final same = b1;
+
+      final t1 = Triple(b1, predicate, object);
+      final t2 = Triple(b2, predicate, object);
+      final t3 = Triple(same, predicate, object);
+
+      expect(
+        t1,
+        isNot(equals(t2)),
+        reason: 'Triples with different blank nodes should not be equal',
+      );
+      expect(
+        t1,
+        equals(t3),
+        reason: 'Triples with identical blank nodes should be equal',
+      );
     });
 
     /*

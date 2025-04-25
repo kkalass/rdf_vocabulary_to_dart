@@ -84,11 +84,13 @@ void main() {
     });
 
     test('should handle blank nodes', () {
+      // Create a blank node and use it in a triple
+      final blankNode = BlankNodeTerm();
       final graph = RdfGraph.fromTriples([
         Triple(
           IriTerm('http://example.org/subject'),
           IriTerm('http://example.org/predicate'),
-          BlankNodeTerm('b1'),
+          blankNode,
         ),
       ]);
 
@@ -99,7 +101,9 @@ void main() {
         jsonObj['http://example.org/predicate'],
         isA<Map<String, dynamic>>(),
       );
-      expect(jsonObj['http://example.org/predicate']['@id'], equals('_:b1'));
+
+      // The blank node will have a generated label that starts with '_:'
+      expect(jsonObj['http://example.org/predicate']['@id'], startsWith('_:'));
     });
 
     test('should handle typed literals', () {
@@ -239,7 +243,6 @@ void main() {
         graph1['@type']['@id'],
         equals('http://xmlns.com/foaf/0.1/Person'),
       );
-      // Now we use prefixed property names
       expect(graph1['foaf:name'], equals('John Doe'));
       expect(graph1['foaf:age'], equals(42));
       expect(
@@ -282,70 +285,175 @@ void main() {
         expect(jsonObj['foaf:knows']['@id'], equals('http://example.org/bob'));
       },
     );
-    test('should serialize complex graph correctly using prefixes', () {
+
+    test('should consistently handle blank nodes in a graph', () {
+      // Create multiple triples using the same blank node
+      final blankNode = BlankNodeTerm();
+
       final graph = RdfGraph.fromTriples([
         Triple(
-          IriTerm('http://example.org/person/john'),
-          RdfConstants.typeIri,
-          IriTerm('http://xmlns.com/foaf/0.1/Person'),
+          IriTerm('http://example.org/resource'),
+          IriTerm('http://example.org/hasProperty'),
+          blankNode,
         ),
         Triple(
-          IriTerm('http://example.org/person/john'),
-          IriTerm('http://xmlns.com/foaf/0.1/name'),
-          LiteralTerm.string('John Doe'),
+          blankNode,
+          IriTerm('http://example.org/name'),
+          LiteralTerm.string('Property Name'),
         ),
         Triple(
-          IriTerm('http://example.org/person/john'),
-          IriTerm('http://xmlns.com/foaf/0.1/age'),
-          LiteralTerm(
-            '42',
-            datatype: IriTerm('http://www.w3.org/2001/XMLSchema#integer'),
-          ),
-        ),
-        Triple(
-          IriTerm('http://example.org/person/john'),
-          IriTerm('http://xmlns.com/foaf/0.1/knows'),
-          IriTerm('http://example.org/person/jane'),
-        ),
-        Triple(
-          IriTerm('http://example.org/person/jane'),
-          RdfConstants.typeIri,
-          IriTerm('http://xmlns.com/foaf/0.1/Person'),
-        ),
-        Triple(
-          IriTerm('http://example.org/person/jane'),
-          IriTerm('http://xmlns.com/foaf/0.1/name'),
-          LiteralTerm.string('Jane Smith'),
+          blankNode,
+          IriTerm('http://example.org/value'),
+          LiteralTerm.string('Property Value'),
         ),
       ]);
 
       final result = serializer.write(graph);
       final jsonObj = jsonDecode(result) as Map<String, dynamic>;
 
-      expect(jsonObj['@context']['foaf'], equals('http://xmlns.com/foaf/0.1/'));
-      expect(jsonObj['@context']['rdf'], equals(RdfConstants.namespace));
-      expect(jsonObj.containsKey('@graph'), isTrue);
+      // Extract all blank node IDs from the serialized JSON-LD
+      final blankNodeIds = _extractAllBlankNodeIds(jsonObj);
 
-      final graph1 = jsonObj['@graph'].firstWhere(
-        (node) => node['@id'] == 'http://example.org/person/john',
-      );
-
+      // There should be exactly one unique blank node ID used consistently
       expect(
-        graph1['@type']['@id'],
-        equals('http://xmlns.com/foaf/0.1/Person'),
-      );
-      // Now we use prefixed property names
-      expect(graph1['foaf:name'], equals('John Doe'));
-      expect(graph1['foaf:age'], equals(42));
-      expect(
-        graph1['foaf:knows']['@id'],
-        equals('http://example.org/person/jane'),
+        blankNodeIds.length,
+        equals(1),
+        reason: 'There should be exactly one unique blank node ID',
       );
 
-      final graph2 = jsonObj['@graph'].firstWhere(
-        (node) => node['@id'] == 'http://example.org/person/jane',
+      // The blank node ID should appear 3 times (once as object, twice as subject)
+      expect(
+        _countBlankNodeIdOccurrences(jsonObj, blankNodeIds.first),
+        equals(3),
+        reason: 'The blank node ID should be used 3 times',
       );
-      expect(graph2['foaf:name'], equals('Jane Smith'));
     });
   });
+}
+
+/// Extracts all blank node IDs from a JSON-LD object.
+Set<String> _extractAllBlankNodeIds(Map<String, dynamic> jsonLd) {
+  final blankNodeIds = <String>{};
+
+  // Check for direct blank node IDs in the main object
+  _findBlankNodeIds(jsonLd, blankNodeIds);
+
+  // Check for blank node IDs in @graph if present
+  if (jsonLd.containsKey('@graph') && jsonLd['@graph'] is List) {
+    for (final node in jsonLd['@graph']) {
+      if (node is Map<String, dynamic>) {
+        _findBlankNodeIds(node, blankNodeIds);
+      }
+    }
+  }
+
+  return blankNodeIds;
+}
+
+/// Recursively finds blank node IDs in a JSON-LD node.
+void _findBlankNodeIds(Map<String, dynamic> node, Set<String> blankNodeIds) {
+  // Check if this node itself is a blank node
+  if (node.containsKey('@id') && node['@id'] is String) {
+    final id = node['@id'] as String;
+    if (id.startsWith('_:')) {
+      blankNodeIds.add(id);
+    }
+  }
+
+  // Check all properties for blank node references
+  for (final entry in node.entries) {
+    if (entry.key != '@context' && entry.key != '@graph') {
+      if (entry.value is Map<String, dynamic>) {
+        // Property with a single object value
+        final valueObj = entry.value as Map<String, dynamic>;
+        if (valueObj.containsKey('@id') &&
+            valueObj['@id'] is String &&
+            (valueObj['@id'] as String).startsWith('_:')) {
+          blankNodeIds.add(valueObj['@id'] as String);
+        }
+
+        // Recursively check nested objects
+        _findBlankNodeIds(valueObj, blankNodeIds);
+      } else if (entry.value is List) {
+        // Property with multiple values
+        for (final item in entry.value) {
+          if (item is Map<String, dynamic> &&
+              item.containsKey('@id') &&
+              item['@id'] is String &&
+              (item['@id'] as String).startsWith('_:')) {
+            blankNodeIds.add(item['@id'] as String);
+          }
+
+          // Recursively check nested objects in the list
+          if (item is Map<String, dynamic>) {
+            _findBlankNodeIds(item, blankNodeIds);
+          }
+        }
+      }
+    }
+  }
+}
+
+/// Counts the number of occurrences of a specific blank node ID in a JSON-LD object.
+int _countBlankNodeIdOccurrences(
+  Map<String, dynamic> jsonLd,
+  String blankNodeId,
+) {
+  int count = 0;
+
+  // Check for occurrences in the main object
+  count += _countBlankNodeIdInNode(jsonLd, blankNodeId);
+
+  // Check for occurrences in @graph if present
+  if (jsonLd.containsKey('@graph') && jsonLd['@graph'] is List) {
+    for (final node in jsonLd['@graph']) {
+      if (node is Map<String, dynamic>) {
+        count += _countBlankNodeIdInNode(node, blankNodeId);
+      }
+    }
+  }
+
+  return count;
+}
+
+/// Recursively counts occurrences of a specific blank node ID in a JSON-LD node.
+int _countBlankNodeIdInNode(Map<String, dynamic> node, String blankNodeId) {
+  int count = 0;
+
+  // Check if this node itself is the blank node we're looking for
+  if (node.containsKey('@id') && node['@id'] == blankNodeId) {
+    count++;
+  }
+
+  // Check all properties for references to our blank node
+  for (final entry in node.entries) {
+    if (entry.key != '@context' && entry.key != '@graph') {
+      if (entry.value is Map<String, dynamic>) {
+        // Property with a single object value
+        final valueObj = entry.value as Map<String, dynamic>;
+        if (valueObj.containsKey('@id') && valueObj['@id'] == blankNodeId) {
+          count++;
+        }
+
+        // Recursively check nested objects
+        count += _countBlankNodeIdInNode(valueObj, blankNodeId);
+      } else if (entry.value is List) {
+        // Property with multiple values
+        for (final item in entry.value) {
+          if (item is Map<String, dynamic> &&
+              item.containsKey('@id') &&
+              item['@id'] == blankNodeId) {
+            count++;
+          }
+
+          // Recursively check nested objects in the list
+          if (item is Map<String, dynamic>) {
+            count += _countBlankNodeIdInNode(item, blankNodeId);
+          }
+        }
+      }
+    }
+  }
+
+  return count;
 }

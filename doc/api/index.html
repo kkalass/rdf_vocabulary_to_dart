@@ -112,7 +112,7 @@ void main() {
 <pre class="language-dart"><code class="language-dart">final results = graph.findTriples(subject: subject);
 </code></pre>
 <h3 id="blank-node-handling">Blank Node Handling</h3>
-<pre class="language-dart"><code class="language-dart">final bnode = BlankNodeTerm('b1');
+<pre class="language-dart"><code class="language-dart">final bnode = BlankNodeTerm();
 graph.add(Triple(bnode, predicate, object));
 </code></pre>
 <h3 id="serializationparsing">Serialization/Parsing</h3>

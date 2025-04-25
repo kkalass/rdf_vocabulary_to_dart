@@ -69,6 +69,10 @@ final class JsonLdSerializer implements RdfSerializer {
       return '{}';
     }
 
+    // Map for tracking BlankNodeTerm to label assignments
+    final Map<BlankNodeTerm, String> blankNodeLabels = {};
+    _generateBlankNodeLabels(graph, blankNodeLabels);
+
     // Create context with prefixes
     final context = _createContext(graph, customPrefixes);
 
@@ -82,7 +86,12 @@ final class JsonLdSerializer implements RdfSerializer {
 
       // Add the single subject node
       final entry = subjectGroups.entries.first;
-      final subjectNode = _createNodeObject(entry.key, entry.value, context);
+      final subjectNode = _createNodeObject(
+        entry.key,
+        entry.value,
+        context,
+        blankNodeLabels,
+      );
       result.addAll(subjectNode);
 
       return JsonEncoder.withIndent('  ').convert(result);
@@ -92,11 +101,43 @@ final class JsonLdSerializer implements RdfSerializer {
         '@context': context,
         '@graph':
             subjectGroups.entries.map((entry) {
-              return _createNodeObject(entry.key, entry.value, context);
+              return _createNodeObject(
+                entry.key,
+                entry.value,
+                context,
+                blankNodeLabels,
+              );
             }).toList(),
       };
 
       return JsonEncoder.withIndent('  ').convert(result);
+    }
+  }
+
+  /// Generates unique labels for all blank nodes in the graph.
+  ///
+  /// This ensures consistent labels throughout a single serialization.
+  void _generateBlankNodeLabels(
+    RdfGraph graph,
+    Map<BlankNodeTerm, String> blankNodeLabels,
+  ) {
+    var counter = 0;
+
+    // First pass: collect all blank nodes from the graph
+    for (final triple in graph.triples) {
+      if (triple.subject is BlankNodeTerm) {
+        final blankNode = triple.subject as BlankNodeTerm;
+        if (!blankNodeLabels.containsKey(blankNode)) {
+          blankNodeLabels[blankNode] = 'b${counter++}';
+        }
+      }
+
+      if (triple.object is BlankNodeTerm) {
+        final blankNode = triple.object as BlankNodeTerm;
+        if (!blankNodeLabels.containsKey(blankNode)) {
+          blankNodeLabels[blankNode] = 'b${counter++}';
+        }
+      }
     }
   }
 
@@ -231,8 +272,11 @@ final class JsonLdSerializer implements RdfSerializer {
     RdfSubject subject,
     List<Triple> triples,
     Map<String, String> context,
+    Map<BlankNodeTerm, String> blankNodeLabels,
   ) {
-    final result = <String, dynamic>{'@id': _getSubjectId(subject)};
+    final result = <String, dynamic>{
+      '@id': _getSubjectId(subject, blankNodeLabels),
+    };
 
     // Group triples by predicate
     final predicateGroups = <String, List<RdfObject>>{};
@@ -252,10 +296,13 @@ final class JsonLdSerializer implements RdfSerializer {
     if (typeObjects.isNotEmpty) {
       if (typeObjects.length == 1) {
         // Single type
-        result['@type'] = _getObjectValue(typeObjects[0]);
+        result['@type'] = _getObjectValue(typeObjects[0], blankNodeLabels);
       } else {
         // Multiple types
-        result['@type'] = typeObjects.map(_getObjectValue).toList();
+        result['@type'] =
+            typeObjects
+                .map((obj) => _getObjectValue(obj, blankNodeLabels))
+                .toList();
       }
     }
 
@@ -263,10 +310,13 @@ final class JsonLdSerializer implements RdfSerializer {
     for (final entry in predicateGroups.entries) {
       if (entry.value.length == 1) {
         // Single value for predicate
-        result[entry.key] = _getObjectValue(entry.value[0]);
+        result[entry.key] = _getObjectValue(entry.value[0], blankNodeLabels);
       } else {
         // Multiple values for predicate
-        result[entry.key] = entry.value.map(_getObjectValue).toList();
+        result[entry.key] =
+            entry.value
+                .map((obj) => _getObjectValue(obj, blankNodeLabels))
+                .toList();
       }
     }
 
@@ -274,11 +324,21 @@ final class JsonLdSerializer implements RdfSerializer {
   }
 
   /// Returns the appropriate string ID for a subject term.
-  String _getSubjectId(RdfSubject subject) {
+  String _getSubjectId(
+    RdfSubject subject,
+    Map<BlankNodeTerm, String> blankNodeLabels,
+  ) {
     if (subject is IriTerm) {
       return subject.iri;
     } else if (subject is BlankNodeTerm) {
-      return '_:${subject.label}';
+      final label = blankNodeLabels[subject];
+      if (label == null) {
+        _log.warning(
+          'No label generated for blank node subject, using fallback label',
+        );
+        return '_:b${identityHashCode(subject)}';
+      }
+      return '_:$label';
     } else {
       return subject.toString();
     }
@@ -322,11 +382,21 @@ final class JsonLdSerializer implements RdfSerializer {
   }
 
   /// Converts an RDF object to its appropriate JSON-LD representation.
-  dynamic _getObjectValue(RdfObject object) {
+  dynamic _getObjectValue(
+    RdfObject object,
+    Map<BlankNodeTerm, String> blankNodeLabels,
+  ) {
     if (object is IriTerm) {
       return {'@id': object.iri};
     } else if (object is BlankNodeTerm) {
-      return {'@id': '_:${object.label}'};
+      final label = blankNodeLabels[object];
+      if (label == null) {
+        _log.warning(
+          'No label generated for blank node object, using fallback label',
+        );
+        return {'@id': '_:b${identityHashCode(object)}'};
+      }
+      return {'@id': '_:$label'};
     } else if (object is LiteralTerm) {
       return _getLiteralValue(object);
     } else {

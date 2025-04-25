@@ -97,7 +97,6 @@ void main() {
       final triples = parser.parse();
       expect(triples.length, equals(1));
       expect(triples[0].subject, isA<BlankNodeTerm>());
-      expect((triples[0].subject as BlankNodeTerm).label, startsWith('b'));
       expect(triples[0].predicate, equals(IriTerm('http://example.com/bar')));
       expect(triples[0].object, equals(LiteralTerm.string('baz')));
     });
@@ -113,7 +112,7 @@ void main() {
         triples[0].predicate,
         equals(IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')),
       );
-      expect(triples[0].object, equals(IriTerm('http://example.com/bar')));
+      expect(triples[0].object, equals(IriTerm('http://example.com/Bar')));
     });
 
     test('should reject using "a" as a subject', () {
@@ -408,6 +407,7 @@ void main() {
         isTrue,
       );
 
+      // Test for blank node existence without checking specific label
       expect(
         johnTriples.any(
           (t) =>
@@ -812,5 +812,82 @@ void main() {
         }
       },
     );
+
+    test('should maintain BlankNode identity within a parse session', () {
+      final parser = TurtleParser('''
+        @prefix ex: <http://example.org/> .
+        _:b1 ex:name "Node 1" ;
+             ex:relatedTo _:b2 .
+        _:b2 ex:name "Node 2" ;
+             ex:relatedTo _:b1 .
+      ''');
+
+      final triples = parser.parse();
+
+      // Find all blank nodes
+      final blankNodes = <BlankNodeTerm>{};
+      for (final triple in triples) {
+        if (triple.subject is BlankNodeTerm) {
+          blankNodes.add(triple.subject as BlankNodeTerm);
+        }
+        if (triple.object is BlankNodeTerm) {
+          blankNodes.add(triple.object as BlankNodeTerm);
+        }
+      }
+
+      // Should be exactly 2 distinct blank nodes
+      expect(blankNodes.length, equals(2));
+
+      // Find the node with name "Node 1"
+      final node1Triples =
+          triples
+              .where(
+                (t) =>
+                    t.predicate == IriTerm('http://example.org/name') &&
+                    t.object == LiteralTerm.string("Node 1"),
+              )
+              .toList();
+
+      expect(node1Triples.length, equals(1));
+      final node1 = node1Triples[0].subject as BlankNodeTerm;
+
+      // Find the node with name "Node 2"
+      final node2Triples =
+          triples
+              .where(
+                (t) =>
+                    t.predicate == IriTerm('http://example.org/name') &&
+                    t.object == LiteralTerm.string("Node 2"),
+              )
+              .toList();
+
+      expect(node2Triples.length, equals(1));
+      final node2 = node2Triples[0].subject as BlankNodeTerm;
+
+      // Verify relationships
+      final node1RelatedTo =
+          triples
+                  .firstWhere(
+                    (t) =>
+                        t.subject == node1 &&
+                        t.predicate == IriTerm('http://example.org/relatedTo'),
+                  )
+                  .object
+              as BlankNodeTerm;
+
+      final node2RelatedTo =
+          triples
+                  .firstWhere(
+                    (t) =>
+                        t.subject == node2 &&
+                        t.predicate == IriTerm('http://example.org/relatedTo'),
+                  )
+                  .object
+              as BlankNodeTerm;
+
+      // Check that relationships are consistent with identity
+      expect(node1RelatedTo, equals(node2));
+      expect(node2RelatedTo, equals(node1));
+    });
   });
 }

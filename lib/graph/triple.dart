@@ -8,7 +8,7 @@
 /// final triple = Triple(subject, predicate, object);
 ///
 /// // Advanced: blank node as subject
-/// final bnode = BlankNodeTerm('b1');
+/// final bnode = BlankNodeTerm();
 /// final triple2 = Triple(bnode, predicate, object);
 ///
 /// // Advanced: literal as object

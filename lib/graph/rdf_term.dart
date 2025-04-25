@@ -7,8 +7,8 @@
 /// import 'package:rdf_core/graph/rdf_term.dart';
 /// final subject = IriTerm('http://example.org/subject');
 ///
-/// // Advanced: create a blank node (must provide a label)
-/// final bnode = BlankNodeTerm('b1');
+/// // Advanced: create a blank node (uses identity hash code)
+/// final bnode = BlankNodeTerm();
 ///
 /// // Advanced: create a literal
 /// final literal = LiteralTerm('42', datatype: XsdConstants.intIri);
@@ -103,22 +103,19 @@ class IriTerm extends RdfTerm implements RdfPredicate, RdfSubject {
 ///
 /// In Turtle syntax, blank nodes are written as `_:label` or as `[]`.
 class BlankNodeTerm extends RdfTerm implements RdfSubject {
-  /// The label identifying this blank node within its document scope
-  final String label;
-
-  /// Creates a blank node term with the specified label
-  const BlankNodeTerm(this.label);
-
   @override
   bool operator ==(Object other) {
-    return other is BlankNodeTerm && label == other.label;
+    // Yes, this is the default implementation, but because it is so crucial
+    // here we make it explicit - BlankNodeTerm *must* be compared by identity,
+    // never by any label that may be associated with it in serialized form.
+    return identical(this, other);
   }
 
   @override
-  int get hashCode => label.hashCode;
+  int get hashCode => identityHashCode(this);
 
   @override
-  String toString() => 'BlankNodeTerm($label)';
+  String toString() => 'BlankNodeTerm(${identityHashCode(this)})';
 }
 
 /// Literal value in RDF
