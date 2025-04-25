@@ -9,6 +9,11 @@ on:
       - 'pubspec.yaml'
       - 'README.md'
 
+permissions:
+  id-token: write
+  contents: read
+  pages: write
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
