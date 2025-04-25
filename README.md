@@ -135,10 +135,12 @@ final parsedGraph = jsonLdParser.parse();
 
 ---
 
-## 🛣️ Roadmap
+## 🛣️ Roadmap / Next Steps
+- Refactor Constants and generate for all well-known ontologies (FoafConstants, FoafTypes, FoafPredicates), rename dir to "ontologies"
 - Support base uri in jsonld and turtle serialization
+- Validate IriTerm
+- Fix BlankNode handling
 - More serialization formats (N-Triples, RDF/XML)
-- Integration with Dart ORM and Solid libraries
 - SHACL and schema validation
 - Performance optimizations for large graphs
 

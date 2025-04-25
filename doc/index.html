@@ -137,13 +137,13 @@ final doc = '''
     foaf:name "Alice" .
   ex:bob foaf:name "Bob" .
 ''';
-final parsed = rdf.parse(doc, contentType: 'text/turtle');
-final turtle = rdf.serialize(parsed, contentType: 'text/turtle');
+final parsed = rdf.parse(doc);
+final turtle = rdf.serialize(parsed);
 
 // Outputs nearly the same as doc, but we did not provide customPrefixes for the serializer so this time we get the full IRIs for example.com.
 // Note that well known prefixes like foaf: are used automatically.
 // If we wanted exactly the same, we would have to call it like this:
-// final turtle = rdf.serialize(parsed, contentType: 'text/turtle', customPrefixes: {'ex': 'http://example.org/'} );
+// final turtle = rdf.serialize(parsed, customPrefixes: {'ex': 'http://example.org/'} );
 print(turtle); 
 </code></pre>
     <div class="links">
