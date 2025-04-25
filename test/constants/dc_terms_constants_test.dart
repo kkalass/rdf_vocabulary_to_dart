@@ -11,21 +11,21 @@ void main() {
     test('createdIri has correct value', () {
       expect(
         DcTermsConstants.createdIri,
-        equals(const IriTerm('http://purl.org/dc/terms/created')),
+        equals(IriTerm('http://purl.org/dc/terms/created')),
       );
     });
 
     test('creatorIri has correct value', () {
       expect(
         DcTermsConstants.creatorIri,
-        equals(const IriTerm('http://purl.org/dc/terms/creator')),
+        equals(IriTerm('http://purl.org/dc/terms/creator')),
       );
     });
 
     test('modifiedIri has correct value', () {
       expect(
         DcTermsConstants.modifiedIri,
-        equals(const IriTerm('http://purl.org/dc/terms/modified')),
+        equals(IriTerm('http://purl.org/dc/terms/modified')),
       );
     });
 

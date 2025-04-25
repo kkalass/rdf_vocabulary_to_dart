@@ -1,19 +1,20 @@
 import 'package:rdf_core/constants/rdf_constants.dart';
 import 'package:rdf_core/constants/xsd_constants.dart';
+import 'package:rdf_core/exceptions/rdf_validation_exception.dart';
 import 'package:rdf_core/graph/rdf_term.dart';
 import 'package:test/test.dart';
 
 void main() {
   group('IriTerm', () {
     test('constructs with valid IRI', () {
-      const iri = IriTerm('http://example.org/resource');
+      final iri = IriTerm('http://example.org/resource');
       expect(iri.iri, equals('http://example.org/resource'));
     });
 
     test('equals operator compares case-insensitively', () {
-      const iri1 = IriTerm('http://example.org/resource');
-      const iri2 = IriTerm('http://EXAMPLE.org/resource');
-      const iri3 = IriTerm('http://example.org/different');
+      final iri1 = IriTerm('http://example.org/resource');
+      final iri2 = IriTerm('http://EXAMPLE.org/resource');
+      final iri3 = IriTerm('http://example.org/different');
 
       expect(iri1, equals(iri2));
       expect(iri1, isNot(equals(iri3)));
@@ -22,8 +23,8 @@ void main() {
     test('hash codes are equal for case-variant IRIs', () {
       // Note: This test may theoretically fail in edge cases due to hash collisions
       // but should be stable for typical usage patterns
-      const iri1 = IriTerm('http://example.org/resource');
-      const iri2 = IriTerm('http://example.org/RESOURCE');
+      final iri1 = IriTerm('http://example.org/resource');
+      final iri2 = IriTerm('http://example.org/RESOURCE');
 
       expect(
         iri1.hashCode,
@@ -33,16 +34,120 @@ void main() {
     });
 
     test('toString returns a readable representation', () {
-      const iri = IriTerm('http://example.org/resource');
+      final iri = IriTerm('http://example.org/resource');
       expect(iri.toString(), equals('IriTerm(http://example.org/resource)'));
     });
 
     test('is a subject, object and predicate', () {
-      const iri = IriTerm('http://example.org/resource');
+      final iri = IriTerm('http://example.org/resource');
       expect(iri, isA<RdfSubject>());
       expect(iri, isA<RdfPredicate>());
       expect(iri, isA<RdfTerm>());
       expect(iri, isA<RdfObject>());
+    });
+
+    test('accepts various valid IRI formats', () {
+      // Test with different schemes
+      expect(() => IriTerm('http://example.org'), returnsNormally);
+      expect(() => IriTerm('https://example.org'), returnsNormally);
+      expect(() => IriTerm('ftp://example.org'), returnsNormally);
+      expect(
+        () => IriTerm('urn:uuid:6e8bc430-9c3a-11d9-9669-0800200c9a66'),
+        returnsNormally,
+      );
+      expect(() => IriTerm('isbn:0451450523'), returnsNormally);
+
+      // Test with complex paths and query strings
+      expect(
+        () => IriTerm('http://example.org/path/to/resource'),
+        returnsNormally,
+      );
+      expect(
+        () => IriTerm('http://example.org/search?q=test&page=1'),
+        returnsNormally,
+      );
+
+      // Test with user info and fragment
+      expect(() => IriTerm('http://user:pass@example.org'), returnsNormally);
+      expect(
+        () => IriTerm('http://example.org/resource#fragment'),
+        returnsNormally,
+      );
+    });
+
+    test('rejects empty IRI string', () {
+      expect(
+        () => IriTerm(''),
+        throwsA(
+          predicate<RdfConstraintViolationException>(
+            (e) =>
+                e.constraint == 'absolute-iri' &&
+                e.message.contains('cannot be empty'),
+          ),
+        ),
+      );
+    });
+
+    test('rejects relative IRIs without scheme', () {
+      expect(
+        () => IriTerm('/path/to/resource'),
+        throwsA(
+          predicate<RdfConstraintViolationException>(
+            (e) =>
+                e.constraint == 'absolute-iri' &&
+                e.message.contains('scheme component'),
+          ),
+        ),
+      );
+
+      expect(
+        () => IriTerm('example.org/resource'),
+        throwsA(
+          predicate<RdfConstraintViolationException>(
+            (e) =>
+                e.constraint == 'absolute-iri' &&
+                e.message.contains('scheme component'),
+          ),
+        ),
+      );
+    });
+
+    test('rejects IRIs with invalid scheme format', () {
+      // Scheme starting with digit
+      expect(
+        () => IriTerm('1http://example.org'),
+        throwsA(
+          predicate<RdfConstraintViolationException>(
+            (e) =>
+                e.constraint == 'scheme-format' &&
+                e.message.contains('scheme must start with a letter'),
+          ),
+        ),
+      );
+
+      // Scheme with invalid characters
+      expect(
+        () => IriTerm('ht@tp://example.org'),
+        throwsA(
+          predicate<RdfConstraintViolationException>(
+            (e) =>
+                e.constraint == 'scheme-format' &&
+                e.message.contains('contain only letters, digits, +, -, or .'),
+          ),
+        ),
+      );
+
+      // Scheme with spaces
+      expect(
+        () => IriTerm('http space://example.org'),
+        throwsA(
+          predicate<RdfConstraintViolationException>(
+            (e) =>
+                e.constraint == 'scheme-format' &&
+                e.message.contains('contain only letters, digits, +, -, or .'),
+          ),
+        ),
+      );
     });
   });
 

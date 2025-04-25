@@ -33,6 +33,7 @@ library rdf_terms;
 
 import 'package:rdf_core/constants/rdf_constants.dart';
 import 'package:rdf_core/constants/xsd_constants.dart';
+import 'package:rdf_core/exceptions/rdf_validation_exception.dart';
 
 /// Base type for all RDF terms
 ///
@@ -77,9 +78,57 @@ class IriTerm extends RdfTerm implements RdfPredicate, RdfSubject {
 
   /// Creates an IRI term with the specified IRI string
   ///
-  /// The IRI should be a valid IRI according to RFC 3987, though
-  /// this constructor doesn't validate the IRI format.
-  const IriTerm(this.iri);
+  /// The IRI should be a valid absolute IRI according to RFC 3987.
+  /// This constructor validates that the IRI is well-formed and absolute.
+  ///
+  /// Throws [RdfConstraintViolationException] if the IRI is not well-formed
+  /// or not absolute.
+  IriTerm(this.iri) {
+    _validateAbsoluteIri(iri);
+  }
+
+  /// Creates an IRI term from a prevalidated IRI string.
+  ///
+  /// Use this constructor only when you are sure the IRI is valid and absolute
+  /// and need to create a const instance.
+  /// This is useful for performance optimization.
+  const IriTerm.prevalidated(this.iri);
+
+  /// Validates that the given string is a valid absolute IRI
+  ///
+  /// An absolute IRI must have a scheme component followed by a colon.
+  /// This is a simplification of the RFC 3987 specification, focusing on
+  /// the most important constraint that IRIs used in RDF should be absolute.
+  ///
+  /// Throws [RdfConstraintViolationException] if validation fails.
+  static void _validateAbsoluteIri(String iri) {
+    // Check for null or empty string
+    if (iri.isEmpty) {
+      throw RdfConstraintViolationException(
+        'IRI cannot be empty',
+        constraint: 'absolute-iri',
+      );
+    }
+
+    // Basic check for scheme presence (scheme:rest)
+    // Per RFC 3987, scheme is ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+    final schemeEndIndex = iri.indexOf(':');
+    if (schemeEndIndex <= 0) {
+      throw RdfConstraintViolationException(
+        'IRI must be absolute with a scheme component followed by a colon',
+        constraint: 'absolute-iri',
+      );
+    }
+
+    // Validate scheme starts with a letter and contains only allowed characters
+    final scheme = iri.substring(0, schemeEndIndex);
+    if (!RegExp(r'^[a-zA-Z][a-zA-Z0-9+.-]*$').hasMatch(scheme)) {
+      throw RdfConstraintViolationException(
+        'IRI scheme must start with a letter and contain only letters, digits, +, -, or .',
+        constraint: 'scheme-format',
+      );
+    }
+  }
 
   @override
   bool operator ==(Object other) {

@@ -14,9 +14,7 @@ void main() {
     test('typeIri has correct value', () {
       expect(
         RdfConstants.typeIri,
-        equals(
-          const IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-        ),
+        equals(IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type')),
       );
     });
 
@@ -24,7 +22,7 @@ void main() {
       expect(
         RdfConstants.langStringIri,
         equals(
-          const IriTerm(
+          const IriTerm.prevalidated(
             'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
           ),
         ),
@@ -35,7 +33,9 @@ void main() {
       expect(
         RdfConstants.propertyIri,
         equals(
-          const IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#Property'),
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property',
+          ),
         ),
       );
     });
@@ -44,7 +44,9 @@ void main() {
       expect(
         RdfConstants.statementIri,
         equals(
-          const IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement'),
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement',
+          ),
         ),
       );
     });

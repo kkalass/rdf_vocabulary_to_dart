@@ -42,7 +42,7 @@ class RdfConstants {
   /// ```turtle
   /// <http://example.org/john> rdf:type foaf:Person .
   /// ```
-  static const typeIri = IriTerm('${namespace}type');
+  static const typeIri = IriTerm.prevalidated('${namespace}type');
 
   /// IRI for rdf:langString datatype
   ///
@@ -54,7 +54,7 @@ class RdfConstants {
   /// ```turtle
   /// <http://example.org/book> <http://example.org/title> "The Title"@en .
   /// ```
-  static const langStringIri = IriTerm('${namespace}langString');
+  static const langStringIri = IriTerm.prevalidated('${namespace}langString');
 
   /// IRI for rdf:Property
   ///
@@ -65,7 +65,7 @@ class RdfConstants {
   /// ```turtle
   /// <http://example.org/name> rdf:type rdf:Property .
   /// ```
-  static const propertyIri = IriTerm('${namespace}Property');
+  static const propertyIri = IriTerm.prevalidated('${namespace}Property');
 
   /// IRI for rdf:Statement
   ///
@@ -79,40 +79,40 @@ class RdfConstants {
   ///        rdf:predicate <http://example.org/knows> ;
   ///        rdf:object <http://example.org/jane> .
   /// ```
-  static const statementIri = IriTerm('${namespace}Statement');
+  static const statementIri = IriTerm.prevalidated('${namespace}Statement');
 
   /// IRI for rdf:subject
   ///
   /// Used in reification to specify the subject of a statement.
-  static const subjectIri = IriTerm('${namespace}subject');
+  static const subjectIri = IriTerm.prevalidated('${namespace}subject');
 
   /// IRI for rdf:predicate
   ///
   /// Used in reification to specify the predicate of a statement.
-  static const predicateIri = IriTerm('${namespace}predicate');
+  static const predicateIri = IriTerm.prevalidated('${namespace}predicate');
 
   /// IRI for rdf:object
   ///
   /// Used in reification to specify the object of a statement.
-  static const objectIri = IriTerm('${namespace}object');
+  static const objectIri = IriTerm.prevalidated('${namespace}object');
 
   /// IRI for rdf:List
   ///
   /// Represents the class of RDF Lists.
-  static const listIri = IriTerm('${namespace}List');
+  static const listIri = IriTerm.prevalidated('${namespace}List');
 
   /// IRI for rdf:first
   ///
   /// Used to specify the first element in an RDF List.
-  static const firstIri = IriTerm('${namespace}first');
+  static const firstIri = IriTerm.prevalidated('${namespace}first');
 
   /// IRI for rdf:rest
   ///
   /// Used to specify the remainder of an RDF List after the first element.
-  static const restIri = IriTerm('${namespace}rest');
+  static const restIri = IriTerm.prevalidated('${namespace}rest');
 
   /// IRI for rdf:nil
   ///
   /// Represents an empty RDF List.
-  static const nilIri = IriTerm('${namespace}nil');
+  static const nilIri = IriTerm.prevalidated('${namespace}nil');
 }

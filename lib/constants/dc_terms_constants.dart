@@ -20,13 +20,13 @@ class DcTermsConstants {
 
   /// IRI for dcterms:created property
   /// [Spec](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/created)
-  static const createdIri = IriTerm('${namespace}created');
+  static const createdIri = IriTerm.prevalidated('${namespace}created');
 
   /// IRI for dcterms:creator property
   /// [Spec](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/creator)
-  static const creatorIri = IriTerm('${namespace}creator');
+  static const creatorIri = IriTerm.prevalidated('${namespace}creator');
 
   /// IRI for dcterms:modified property
   /// [Spec](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/modified)
-  static const modifiedIri = IriTerm('${namespace}modified');
+  static const modifiedIri = IriTerm.prevalidated('${namespace}modified');
 }

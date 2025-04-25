@@ -14,53 +14,53 @@ void main() {
     test('stringIri has correct value', () {
       expect(
         XsdConstants.stringIri,
-        equals(const IriTerm('http://www.w3.org/2001/XMLSchema#string')),
+        equals(IriTerm('http://www.w3.org/2001/XMLSchema#string')),
       );
     });
 
     test('booleanIri has correct value', () {
       expect(
         XsdConstants.booleanIri,
-        equals(const IriTerm('http://www.w3.org/2001/XMLSchema#boolean')),
+        equals(IriTerm('http://www.w3.org/2001/XMLSchema#boolean')),
       );
     });
 
     test('integerIri has correct value', () {
       expect(
         XsdConstants.integerIri,
-        equals(const IriTerm('http://www.w3.org/2001/XMLSchema#integer')),
+        equals(IriTerm('http://www.w3.org/2001/XMLSchema#integer')),
       );
     });
 
     test('decimalIri has correct value', () {
       expect(
         XsdConstants.decimalIri,
-        equals(const IriTerm('http://www.w3.org/2001/XMLSchema#decimal')),
+        equals(IriTerm('http://www.w3.org/2001/XMLSchema#decimal')),
       );
     });
 
     test('dateTimeIri has correct value', () {
       expect(
         XsdConstants.dateTimeIri,
-        equals(const IriTerm('http://www.w3.org/2001/XMLSchema#dateTime')),
+        equals(IriTerm('http://www.w3.org/2001/XMLSchema#dateTime')),
       );
     });
 
     test('makeIri creates correct IRI from local name', () {
       expect(
         XsdConstants.makeIri('double'),
-        equals(const IriTerm('http://www.w3.org/2001/XMLSchema#double')),
+        equals(IriTerm('http://www.w3.org/2001/XMLSchema#double')),
       );
 
       expect(
         XsdConstants.makeIri('float'),
-        equals(const IriTerm('http://www.w3.org/2001/XMLSchema#float')),
+        equals(IriTerm('http://www.w3.org/2001/XMLSchema#float')),
       );
 
       // Verify custom types work too
       expect(
         XsdConstants.makeIri('customType'),
-        equals(const IriTerm('http://www.w3.org/2001/XMLSchema#customType')),
+        equals(IriTerm('http://www.w3.org/2001/XMLSchema#customType')),
       );
     });
 

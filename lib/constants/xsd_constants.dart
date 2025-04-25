@@ -42,7 +42,7 @@ class XsdConstants {
   /// ```turtle
   /// <http://example.org/name> "John Smith"^^xsd:string .
   /// ```
-  static const stringIri = IriTerm('${namespace}string');
+  static const stringIri = IriTerm.prevalidated('${namespace}string');
 
   /// IRI for xsd:boolean datatype
   ///
@@ -52,7 +52,7 @@ class XsdConstants {
   /// ```turtle
   /// <http://example.org/isActive> "true"^^xsd:boolean .
   /// ```
-  static const booleanIri = IriTerm('${namespace}boolean');
+  static const booleanIri = IriTerm.prevalidated('${namespace}boolean');
 
   /// IRI for xsd:integer datatype
   ///
@@ -62,7 +62,7 @@ class XsdConstants {
   /// ```turtle
   /// <http://example.org/age> "42"^^xsd:integer .
   /// ```
-  static const integerIri = IriTerm('${namespace}integer');
+  static const integerIri = IriTerm.prevalidated('${namespace}integer');
 
   /// IRI for xsd:decimal datatype
   ///
@@ -72,7 +72,7 @@ class XsdConstants {
   /// ```turtle
   /// <http://example.org/price> "19.99"^^xsd:decimal .
   /// ```
-  static const decimalIri = IriTerm('${namespace}decimal');
+  static const decimalIri = IriTerm.prevalidated('${namespace}decimal');
 
   /// IRI for xsd:double datatype
   ///
@@ -82,12 +82,12 @@ class XsdConstants {
   /// ```turtle
   /// <http://example.org/coefficient> "3.14159265359"^^xsd:double .
   /// ```
-  static const doubleIri = IriTerm('${namespace}double');
+  static const doubleIri = IriTerm.prevalidated('${namespace}double');
 
   /// IRI for xsd:float datatype
   ///
   /// Represents single-precision 32-bit floating point numbers.
-  static const floatIri = IriTerm('${namespace}float');
+  static const floatIri = IriTerm.prevalidated('${namespace}float');
 
   /// IRI for xsd:dateTime datatype
   ///
@@ -97,32 +97,32 @@ class XsdConstants {
   /// ```turtle
   /// <http://example.org/birthDate> "1990-01-01T00:00:00Z"^^xsd:dateTime .
   /// ```
-  static const dateTimeIri = IriTerm('${namespace}dateTime');
+  static const dateTimeIri = IriTerm.prevalidated('${namespace}dateTime');
 
   /// IRI for xsd:date datatype
   ///
   /// Represents calendar dates in ISO 8601 format (YYYY-MM-DD).
-  static const dateIri = IriTerm('${namespace}date');
+  static const dateIri = IriTerm.prevalidated('${namespace}date');
 
   /// IRI for xsd:time datatype
   ///
   /// Represents time of day in ISO 8601 format.
-  static const timeIri = IriTerm('${namespace}time');
+  static const timeIri = IriTerm.prevalidated('${namespace}time');
 
   /// IRI for xsd:anyURI datatype
   ///
   /// Represents URI references.
-  static const anyUriIri = IriTerm('${namespace}anyURI');
+  static const anyUriIri = IriTerm.prevalidated('${namespace}anyURI');
 
   /// IRI for xsd:long datatype
   ///
   /// Represents 64-bit integers.
-  static const longIri = IriTerm('${namespace}long');
+  static const longIri = IriTerm.prevalidated('${namespace}long');
 
   /// IRI for xsd:int datatype
   ///
   /// Represents 32-bit integers.
-  static const intIri = IriTerm('${namespace}int');
+  static const intIri = IriTerm.prevalidated('${namespace}int');
 
   /// Creates an XSD datatype IRI from a local name
   ///
@@ -140,5 +140,6 @@ class XsdConstants {
   /// // Create an IRI for xsd:gMonth datatype
   /// final gMonthType = XsdConstants.makeIri("gMonth");
   /// ```
-  static IriTerm makeIri(String xsdType) => IriTerm('$namespace$xsdType');
+  static IriTerm makeIri(String xsdType) =>
+      IriTerm.prevalidated('$namespace$xsdType');
 }
