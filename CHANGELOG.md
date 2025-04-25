@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.1.2
+- Cleaned up all library names for consistency (removed rdf_core. prefix, now use simple names like `exceptions.base`).
+- Minor formatting and style improvements in core files.
+- No breaking changes; all public APIs remain backward compatible.
+
 ## 0.1.1
 - Example and documentation now consistently use canonical RDF vocabularies (e.g., http://xmlns.com/foaf/0.1/) with http://, not https://.
 - Turtle and JSON-LD serializers automatically warn if non-canonical (https) namespaces are used when canonical (http) is available.
