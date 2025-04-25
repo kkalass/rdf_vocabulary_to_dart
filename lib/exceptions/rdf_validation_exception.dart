@@ -14,7 +14,7 @@
 /// ```
 ///
 /// See also: [SHACL - Shapes Constraint Language](https://www.w3.org/TR/shacl/)
-library rdf_core.exceptions.validation;
+library exceptions.validation;
 
 import 'rdf_exception.dart';
 

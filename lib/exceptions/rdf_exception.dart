@@ -14,7 +14,7 @@
 /// ```
 ///
 /// See also: [Dart Exception Guidelines](https://dart.dev/guides/libraries/library-tour#exceptions)
-library rdf_core.exceptions.base;
+library exceptions.base;
 
 /// Base exception class for all RDF-related errors.
 ///

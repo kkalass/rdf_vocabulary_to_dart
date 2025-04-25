@@ -1,5 +1,6 @@
 /// RDF Core Constants Library
 library constants;
+
 ///
 /// Barrel file exporting all RDF-related constants for easy import.
 ///

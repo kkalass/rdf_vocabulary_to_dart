@@ -77,6 +77,7 @@ void main() {
     */
   });
 }
+
 /*
 /// Helper class for testing validation logic
 class _InvalidSubject implements RdfSubject {

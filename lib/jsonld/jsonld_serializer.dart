@@ -10,6 +10,8 @@
 /// ```
 ///
 /// See: [JSON-LD 1.1 Specification](https://www.w3.org/TR/json-ld11/)
+library jsonld_serializer;
+
 import 'dart:convert';
 
 import 'package:logging/logging.dart';
