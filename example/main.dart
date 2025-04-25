@@ -15,12 +15,9 @@ void main() {
   final graph = RdfGraph(
     triples: [
       Triple(alice, knows, bob),
-      Triple(
-        alice,
-        name,
-        LiteralTerm('Alice', datatype: XsdConstants.stringIri),
-      ),
-      Triple(bob, name, LiteralTerm('Bob', datatype: XsdConstants.stringIri)),
+      // Note the LiteralTerm.string convenience constructor which is the same as LiteralTerm('Alice', datatype: XsdConstants.stringIri)
+      Triple(alice, name, LiteralTerm.string('Alice')),
+      Triple(bob, name, LiteralTerm.string('Bob')),
     ],
   );
 
