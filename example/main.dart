@@ -1,7 +1,6 @@
 // Example usage of the rdf_core package
 // Demonstrates manual graph handling, Turtle, and JSON-LD parsing/serialization
 
-import 'package:rdf_core/constants/xsd_constants.dart';
 import 'package:rdf_core/rdf_core.dart';
 
 void main() {
