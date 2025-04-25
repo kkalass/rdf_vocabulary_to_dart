@@ -1,11 +1,25 @@
 name: rdf_core
-description: >-
-  A type-safe, modular Dart library for modeling, parsing, and serializing RDF data. Clean separation of RDF and serialization concerns.
+description: >
+  A type-safe, modular Dart library for modeling, parsing, and serializing RDF data (Turtle, JSON-LD, and more). Clean separation of RDF and serialization concerns. Extensible, standards-compliant, and blazing fast.
 version: 0.1.0
-homepage: https://github.com/kkalass/rdf_core
+homepage: https://kkalass.github.io/rdf_core/
+repository: https://github.com/kkalass/rdf_core
+issue_tracker: https://github.com/kkalass/rdf_core/issues
+documentation: https://kkalass.github.io/rdf_core/
+topics:
+  - rdf
+  - linked-data
+  - semantic-web
+  - graph
+  - serialization
+readme: README.md
+changelog: CHANGELOG.md
+license: LICENSE
+maintainers:
+  - "Klas Kalaß <habbatical@gmail.com>"
 environment:
   sdk: ^3.7.0
-dev_dependencies:
-  test: ^1.21.0
 dependencies:
   logging: ^1.2.0
+dev_dependencies:
+  test: ^1.21.0
