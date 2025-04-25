@@ -138,7 +138,7 @@ packages:
     source: hosted
     version: "0.7.2"
   logging:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: logging
       sha256: c8245ada5f1717ed44271ed1c26b8ce85ca3228fd2ffdb75468ab01979309d61

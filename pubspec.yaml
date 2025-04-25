@@ -6,5 +6,6 @@ homepage: https://github.com/kkalass/rdf_core
 environment:
   sdk: ^3.7.0
 dev_dependencies:
-  logging: ^1.2.0
   test: ^1.21.0
+dependencies:
+  logging: ^1.2.0
