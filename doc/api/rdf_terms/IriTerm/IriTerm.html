@@ -27,7 +27,7 @@
     <li><a href="../../index.html">rdf_core</a></li>
     <li><a href="../../rdf_terms">graph&#47;rdf_term.dart</a></li>
     <li><a href="../../rdf_terms/IriTerm-class.html">IriTerm</a></li>
-    <li class="self-crumb">IriTerm const constructor</li>
+    <li class="self-crumb">IriTerm constructor</li>
   </ol>
   <div class="self-name">IriTerm</div>
   <form class="search navbar-right" role="search">
@@ -56,22 +56,26 @@
 </h1></div>
 
     <section class="multi-line-signature">
-      const
+      
       <span class="name ">IriTerm</span>(<wbr><ol class="parameter-list single-line"> <li><span class="parameter" id="-param-iri"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">iri</span></span></li>
 </ol>)
     </section>
     
 <section class="desc markdown">
   <p>Creates an IRI term with the specified IRI string</p>
-<p>The IRI should be a valid IRI according to RFC 3987, though
-this constructor doesn't validate the IRI format.</p>
+<p>The IRI should be a valid absolute IRI according to RFC 3987.
+This constructor validates that the IRI is well-formed and absolute.</p>
+<p>Throws <a href="../../exceptions.validation/RdfConstraintViolationException-class.html">RdfConstraintViolationException</a> if the IRI is not well-formed
+or not absolute.</p>
 </section>
 
 
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">const IriTerm(this.iri);</code></pre>
+  <pre class="language-dart"><code class="language-dart">IriTerm(this.iri) {
+  _validateAbsoluteIri(iri);
+}</code></pre>
 </section>
 
 
@@ -87,7 +91,7 @@ this constructor doesn't validate the IRI format.</p>
     <li><a href="../../index.html">rdf_core</a></li>
     <li><a href="../../rdf_terms">rdf_terms</a></li>
     <li><a href="../../rdf_terms/IriTerm-class.html">IriTerm</a></li>
-    <li class="self-crumb">IriTerm const constructor</li>
+    <li class="self-crumb">IriTerm constructor</li>
 </ol>
 
     <h5>IriTerm class</h5>
@@ -99,7 +103,7 @@ this constructor doesn't validate the IRI format.</p>
 <footer>
   <span class="no-break">
     rdf_core
-      0.1.0
+      0.1.2
   </span>
   
 </footer>

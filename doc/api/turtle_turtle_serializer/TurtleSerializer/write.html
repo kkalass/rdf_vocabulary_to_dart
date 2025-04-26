@@ -101,10 +101,14 @@ String write(
   Map&lt;String, String&gt; customPrefixes = const {},
 }) {
   _log.info(&#39;Serializing graph to Turtle&#39;);
-  &#47;&#47; FIXME KK - support base IRIs - store all refs to IRIs within this
+  &#47;&#47; TODO KK - support base IRIs - store all refs to IRIs within this
   &#47;&#47; pod relative to the pod root (or the application root within the pod?)
 
   final buffer = StringBuffer();
+
+  &#47;&#47; Map to store generated blank node labels for this serialization
+  final Map&lt;BlankNodeTerm, String&gt; blankNodeLabels = {};
+  _generateBlankNodeLabels(graph, blankNodeLabels);
 
   &#47;&#47; 1. Write prefixes
   final prefixCandidates = {..._commonPrefixes, ...customPrefixes};
@@ -118,7 +122,7 @@ String write(
   });
 
   &#47;&#47; 2. Write triples grouped by subject
-  _writeTriples(buffer, graph.triples, prefixesByIri);
+  _writeTriples(buffer, graph.triples, prefixesByIri, blankNodeLabels);
 
   return buffer.toString();
 }</code></pre>
@@ -149,7 +153,7 @@ String write(
 <footer>
   <span class="no-break">
     rdf_core
-      0.1.0
+      0.1.2
   </span>
   
 </footer>

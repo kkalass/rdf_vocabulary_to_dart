@@ -80,11 +80,7 @@ final deLiteral = LiteralTerm.withLanguage("Hallo", "de");
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">factory LiteralTerm.withLanguage(String value, String langTag) {
-  return LiteralTerm(
-    value,
-    datatype: RdfConstants.langStringIri,
-    language: langTag,
-  );
+  return LiteralTerm(value, datatype: RdfTypes.langString, language: langTag);
 }</code></pre>
 </section>
 
@@ -113,7 +109,7 @@ final deLiteral = LiteralTerm.withLanguage("Hallo", "de");
 <footer>
   <span class="no-break">
     rdf_core
-      0.1.0
+      0.1.2
   </span>
   
 </footer>

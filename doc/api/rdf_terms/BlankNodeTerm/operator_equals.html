@@ -106,7 +106,10 @@ the <a href="../../rdf_terms/BlankNodeTerm/hashCode.html">hashCode</a> method as
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">@override
 bool operator ==(Object other) {
-  return other is BlankNodeTerm &amp;&amp; label == other.label;
+  &#47;&#47; Yes, this is the default implementation, but because it is so crucial
+  &#47;&#47; here we make it explicit - BlankNodeTerm *must* be compared by identity,
+  &#47;&#47; never by any label that may be associated with it in serialized form.
+  return identical(this, other);
 }</code></pre>
 </section>
 
@@ -135,7 +138,7 @@ bool operator ==(Object other) {
 <footer>
   <span class="no-break">
     rdf_core
-      0.1.0
+      0.1.2
   </span>
   
 </footer>
