@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.2.0
+- Numerous improvements and new features since 0.1.2.
+- See commit history for details on all enhancements and fixes.
+
 ## 0.1.2
 - Cleaned up all library names for consistency (removed rdf_core. prefix, now use simple names like `exceptions.base`).
 - Minor formatting and style improvements in core files.
