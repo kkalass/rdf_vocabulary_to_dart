@@ -25,7 +25,7 @@ class TurtleSerializer implements RdfSerializer {
   /// A map of well-known common RDF prefixes used in Turtle serialization.
   /// These prefixes provide shorthand notation for commonly used RDF namespaces
   /// and do not need to be specified explicitly for serialization.
-  static final Map<String, String> _commonPrefixes = commonPrefixes;
+  static final Map<String, String> _commonPrefixes = rdfNamespaceMappings;
 
   @override
   String write(

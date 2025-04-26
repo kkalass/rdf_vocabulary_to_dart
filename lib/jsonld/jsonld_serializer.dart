@@ -38,7 +38,7 @@ final _log = Logger("rdf.jsonld");
 /// to make property names more readable.
 final class JsonLdSerializer implements RdfSerializer {
   /// Well-known common prefixes used for more readable JSON-LD output.
-  static final Map<String, String> _commonPrefixes = commonPrefixes;
+  static final Map<String, String> _commonPrefixes = rdfNamespaceMappings;
 
   /// Creates a new JSON-LD serializer.
   JsonLdSerializer();
