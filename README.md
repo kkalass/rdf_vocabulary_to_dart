@@ -84,6 +84,7 @@ The `vocab/` directory provides ready-to-use, type-safe access to many well-know
 #### Example: Using Vocabularies
 
 ```dart
+import 'package:rdf_core/rdf_core.dart';
 import 'package:rdf_core/vocab.dart';
 
 final alice = IriTerm('http://example.org/alice');
