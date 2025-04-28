@@ -6,10 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group('Ldp', () {
     test('namespace uses correct LDP namespace URI', () {
-      expect(
-        Ldp.namespace,
-        equals('http://www.w3.org/ns/ldp#'),
-      );
+      expect(Ldp.namespace, equals('http://www.w3.org/ns/ldp#'));
     });
 
     test('prefix has correct value', () {

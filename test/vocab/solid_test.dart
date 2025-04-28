@@ -6,10 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group('Solid', () {
     test('namespace uses correct Solid namespace URI', () {
-      expect(
-        Solid.namespace,
-        equals('http://www.w3.org/ns/solid/terms#'),
-      );
+      expect(Solid.namespace, equals('http://www.w3.org/ns/solid/terms#'));
     });
 
     test('prefix has correct value', () {

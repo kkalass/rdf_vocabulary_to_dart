@@ -6,10 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group('Acl', () {
     test('namespace uses correct ACL namespace URI', () {
-      expect(
-        Acl.namespace,
-        equals('http://www.w3.org/ns/auth/acl#'),
-      );
+      expect(Acl.namespace, equals('http://www.w3.org/ns/auth/acl#'));
     });
 
     test('prefix has correct value', () {

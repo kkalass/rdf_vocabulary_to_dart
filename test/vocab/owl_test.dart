@@ -6,10 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group('Owl', () {
     test('namespace uses correct OWL namespace URI', () {
-      expect(
-        Owl.namespace,
-        equals('http://www.w3.org/2002/07/owl#'),
-      );
+      expect(Owl.namespace, equals('http://www.w3.org/2002/07/owl#'));
     });
 
     test('prefix has correct value', () {

@@ -6,10 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group('Vcard', () {
     test('namespace uses correct vCard namespace URI', () {
-      expect(
-        Vcard.namespace,
-        equals('http://www.w3.org/2006/vcard/ns#'),
-      );
+      expect(Vcard.namespace, equals('http://www.w3.org/2006/vcard/ns#'));
     });
 
     test('prefix has correct value', () {

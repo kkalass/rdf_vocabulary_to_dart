@@ -6,10 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group('Rdfs', () {
     test('namespace uses correct RDFS namespace URI', () {
-      expect(
-        Rdfs.namespace,
-        equals('http://www.w3.org/2000/01/rdf-schema#'),
-      );
+      expect(Rdfs.namespace, equals('http://www.w3.org/2000/01/rdf-schema#'));
     });
 
     test('prefix has correct value', () {
@@ -55,9 +52,11 @@ void main() {
       test('containerMembershipProperty has correct value', () {
         expect(
           RdfsClasses.containerMembershipProperty,
-          equals(IriTerm(
-            'http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty',
-          )),
+          equals(
+            IriTerm(
+              'http://www.w3.org/2000/01/rdf-schema#ContainerMembershipProperty',
+            ),
+          ),
         );
       });
     });

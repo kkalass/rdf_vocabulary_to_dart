@@ -38,17 +38,34 @@ void main() {
 
     test('contains all required vocabularies', () {
       final requiredPrefixes = [
-        'acl', 'dc', 'dcterms', 'foaf', 'ldp', 'owl', 
-        'rdf', 'rdfs', 'schema', 'skos', 'solid', 'vcard', 'xsd'
+        'acl',
+        'dc',
+        'dcterms',
+        'foaf',
+        'ldp',
+        'owl',
+        'rdf',
+        'rdfs',
+        'schema',
+        'skos',
+        'solid',
+        'vcard',
+        'xsd',
       ];
-      
+
       for (final prefix in requiredPrefixes) {
-        expect(rdfNamespaceMappings.containsKey(prefix), isTrue, 
-          reason: "Missing namespace mapping for prefix: $prefix");
+        expect(
+          rdfNamespaceMappings.containsKey(prefix),
+          isTrue,
+          reason: "Missing namespace mapping for prefix: $prefix",
+        );
       }
-      
-      expect(rdfNamespaceMappings.length, equals(requiredPrefixes.length), 
-        reason: "Different number of mappings than expected");
+
+      expect(
+        rdfNamespaceMappings.length,
+        equals(requiredPrefixes.length),
+        reason: "Different number of mappings than expected",
+      );
     });
   });
 }

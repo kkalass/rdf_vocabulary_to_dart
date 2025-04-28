@@ -6,10 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group('Skos', () {
     test('namespace uses correct SKOS namespace URI', () {
-      expect(
-        Skos.namespace,
-        equals('http://www.w3.org/2004/02/skos/core#'),
-      );
+      expect(Skos.namespace, equals('http://www.w3.org/2004/02/skos/core#'));
     });
 
     test('prefix has correct value', () {
@@ -42,7 +39,8 @@ void main() {
         expect(
           SkosClasses.orderedCollection,
           equals(
-              IriTerm('http://www.w3.org/2004/02/skos/core#OrderedCollection')),
+            IriTerm('http://www.w3.org/2004/02/skos/core#OrderedCollection'),
+          ),
         );
       });
     });
@@ -73,7 +71,8 @@ void main() {
         expect(
           SkosSemanticRelations.broaderTransitive,
           equals(
-              IriTerm('http://www.w3.org/2004/02/skos/core#broaderTransitive')),
+            IriTerm('http://www.w3.org/2004/02/skos/core#broaderTransitive'),
+          ),
         );
       });
 
@@ -81,7 +80,8 @@ void main() {
         expect(
           SkosSemanticRelations.narrowerTransitive,
           equals(
-              IriTerm('http://www.w3.org/2004/02/skos/core#narrowerTransitive')),
+            IriTerm('http://www.w3.org/2004/02/skos/core#narrowerTransitive'),
+          ),
         );
       });
 
@@ -89,7 +89,8 @@ void main() {
         expect(
           SkosSemanticRelations.semanticRelation,
           equals(
-              IriTerm('http://www.w3.org/2004/02/skos/core#semanticRelation')),
+            IriTerm('http://www.w3.org/2004/02/skos/core#semanticRelation'),
+          ),
         );
       });
     });

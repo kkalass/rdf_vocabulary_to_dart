@@ -6,10 +6,7 @@ import 'package:test/test.dart';
 void main() {
   group('Schema', () {
     test('namespace uses correct Schema.org namespace URI', () {
-      expect(
-        Schema.namespace,
-        equals('http://schema.org/'),
-      );
+      expect(Schema.namespace, equals('http://schema.org/'));
     });
 
     test('prefix has correct value', () {
@@ -18,10 +15,7 @@ void main() {
 
     group('SchemaClasses', () {
       test('thing has correct value', () {
-        expect(
-          SchemaClasses.thing,
-          equals(IriTerm('http://schema.org/Thing')),
-        );
+        expect(SchemaClasses.thing, equals(IriTerm('http://schema.org/Thing')));
       });
 
       test('person has correct value', () {
@@ -39,17 +33,11 @@ void main() {
       });
 
       test('place has correct value', () {
-        expect(
-          SchemaClasses.place,
-          equals(IriTerm('http://schema.org/Place')),
-        );
+        expect(SchemaClasses.place, equals(IriTerm('http://schema.org/Place')));
       });
 
       test('event has correct value', () {
-        expect(
-          SchemaClasses.event,
-          equals(IriTerm('http://schema.org/Event')),
-        );
+        expect(SchemaClasses.event, equals(IriTerm('http://schema.org/Event')));
       });
 
       test('creativeWork has correct value', () {
@@ -74,10 +62,7 @@ void main() {
       });
 
       test('offer has correct value', () {
-        expect(
-          SchemaClasses.offer,
-          equals(IriTerm('http://schema.org/Offer')),
-        );
+        expect(SchemaClasses.offer, equals(IriTerm('http://schema.org/Offer')));
       });
     });
 
@@ -97,10 +82,7 @@ void main() {
       });
 
       test('url has correct value', () {
-        expect(
-          SchemaProperties.url,
-          equals(IriTerm('http://schema.org/url')),
-        );
+        expect(SchemaProperties.url, equals(IriTerm('http://schema.org/url')));
       });
 
       test('image has correct value', () {
