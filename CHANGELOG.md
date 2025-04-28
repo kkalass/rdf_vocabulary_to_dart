@@ -2,23 +2,39 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.3.0
+
+- Enhanced blank node handling in RDF serialization and parsing
+- Refactored IriTerm usage with prevalidated constructor and improved validation logic
+- Refactored RDF Core Vocabulary: replaced constants with vocabulary modules
+- Added RDF vocabularies for RDFS, Schema.org, SKOS, Solid, and vCard
+- Improved documentation and consistency across RDF vocabularies
+- Added comprehensive tests for RDF exception handling and parsing
+- Enhanced test coverage for TurtleTokenizer and JsonLdFormat functionality
+- Fixed edge cases in blank node handling
+- Improved test assertions and documentation for various RDF vocabularies
+
 ## 0.2.0
+
 - Numerous improvements and new features since 0.1.2.
 - See commit history for details on all enhancements and fixes.
 
 ## 0.1.2
+
 - Cleaned up all library names for consistency (removed rdf_core. prefix, now use simple names like `exceptions.base`).
 - Minor formatting and style improvements in core files.
 - No breaking changes; all public APIs remain backward compatible.
 
 ## 0.1.1
-- Example and documentation now consistently use canonical RDF vocabularies (e.g., http://xmlns.com/foaf/0.1/) with http://, not https://.
+
+- Example and documentation now consistently use canonical RDF vocabularies (e.g., <http://xmlns.com/foaf/0.1/>) with http://, not https://.
 - Turtle and JSON-LD serializers automatically warn if non-canonical (https) namespaces are used when canonical (http) is available.
 - Added documentation and comments on best practices for prefixes and vocabularies.
 - Improved prefix handling and static analysis compliance.
 - Added and refined tests for prefix usage and serialization correctness.
 
 ## 0.1.0
+
 - Initial release of rdf_core: type-safe, extensible Dart library for RDF data manipulation.
 - Implements RDF graph, triple, term, and serialization/parsing for Turtle and JSON-LD.
 - Plugin architecture for formats and adapters.
