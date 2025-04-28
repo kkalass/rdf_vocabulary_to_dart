@@ -120,22 +120,20 @@
 /// library highly testable and extensible.
 library rdf;
 
-import 'graph/rdf_graph.dart';
-import 'plugin/format_plugin.dart';
-import 'rdf_parser.dart';
-import 'rdf_serializer.dart';
-import 'jsonld/jsonld_format.dart';
-import 'turtle/turtle_format.dart';
+import 'src/graph/rdf_graph.dart';
+import 'src/plugin/format_plugin.dart';
+import 'src/rdf_parser.dart';
+import 'src/rdf_serializer.dart';
+import 'src/jsonld/jsonld_format.dart';
+import 'src/turtle/turtle_format.dart';
 
 // Re-export core components for easy access
-export 'graph/rdf_graph.dart';
-export 'graph/rdf_term.dart';
-export 'graph/triple.dart';
-export 'plugin/format_plugin.dart';
-export 'rdf_parser.dart';
-export 'rdf_serializer.dart';
-// Export the new vocabulary modules
-export 'vocab/vocab.dart';
+export 'src/graph/rdf_graph.dart';
+export 'src/graph/rdf_term.dart';
+export 'src/graph/triple.dart';
+export 'src/plugin/format_plugin.dart';
+export 'src/rdf_parser.dart';
+export 'src/rdf_serializer.dart';
 
 /// RDF Core Library
 ///

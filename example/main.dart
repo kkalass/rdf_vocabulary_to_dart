@@ -5,6 +5,7 @@
 // For example, FoafPredicates.knows instead of IriTerm('http://xmlns.com/foaf/0.1/knows')
 
 import 'package:rdf_core/rdf_core.dart';
+import 'package:rdf_core/vocab.dart';
 
 void main() {
   // --- Manual Graph Construction ---
