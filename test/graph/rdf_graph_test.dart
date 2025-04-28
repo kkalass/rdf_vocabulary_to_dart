@@ -249,6 +249,41 @@ void main() {
         expect(filteredByObject.triples, contains(triple2));
       });
 
+      test(
+        'withoutMatching should return a copy of the graph when no parameters provided',
+        () {
+          final triple1 = Triple(
+            IriTerm('http://example.com/foo'),
+            IriTerm('http://example.com/bar'),
+            LiteralTerm.string('baz'),
+          );
+
+          final triple2 = Triple(
+            IriTerm('http://example.com/bar'),
+            IriTerm('http://example.com/qux'),
+            LiteralTerm.string('quux'),
+          );
+
+          final originalGraph = RdfGraph()
+              .withTriple(triple1)
+              .withTriple(triple2);
+
+          // Call withoutMatching with no parameters
+          final resultGraph = originalGraph.withoutMatching();
+
+          // The result should be equivalent to the original graph
+          expect(resultGraph.size, equals(originalGraph.size));
+          expect(resultGraph.triples, containsAll(originalGraph.triples));
+          expect(originalGraph.triples, containsAll(resultGraph.triples));
+
+          // Since they have the same triples, they should be equal
+          expect(resultGraph, equals(originalGraph));
+
+          // But they should be different instances (immutability check)
+          expect(identical(resultGraph, originalGraph), isFalse);
+        },
+      );
+
       test('should merge graphs immutably', () {
         final triple1 = Triple(
           IriTerm('http://example.com/foo'),

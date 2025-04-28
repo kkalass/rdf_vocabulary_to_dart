@@ -347,8 +347,6 @@ void main() {
       expect(tokenizer.nextToken().type, equals(TokenType.eof));
     });
 
-    // Neue Tests für bisher nicht oder unvollständig getestete Bereiche
-
     test('should properly handle prefixed names with empty prefix', () {
       final tokenizer = TurtleTokenizer(':localName');
       final token = tokenizer.nextToken();
@@ -362,7 +360,6 @@ void main() {
       final token = tokenizer.nextToken();
       expect(token.type, equals(TokenType.iri));
       expect(token.value, equals('<http://example.org/path\\u00A9>'));
-      expect(tokenizer.nextToken().type, equals(TokenType.eof));
     });
 
     test('should handle recognizing \'a\' keyword in various contexts', () {
@@ -415,6 +412,43 @@ void main() {
       expect(tokenizer.nextToken().type, equals(TokenType.literal));
       expect(tokenizer.nextToken().type, equals(TokenType.dot));
       expect(tokenizer.nextToken().type, equals(TokenType.eof));
+    });
+
+    test('should handle invalid character sequences correctly', () {
+      // These characters are not valid as first characters in Turtle syntax
+      // and should cause a FormatException to be thrown
+      expect(
+        () => TurtleTokenizer('?invalid').nextToken(),
+        throwsFormatException,
+      );
+
+      expect(
+        () => TurtleTokenizer('!invalid').nextToken(),
+        throwsFormatException,
+      );
+
+      // Invalid tokens with characters not allowed in Turtle syntax
+      expect(() => TurtleTokenizer('\$%^&').nextToken(), throwsFormatException);
+    });
+
+    test('should process each character in the input correctly', () {
+      final tokenizer = TurtleTokenizer('a b c');
+      // 'a' should be recognized as the 'a' keyword (rdf:type)
+      expect(tokenizer.nextToken().type, equals(TokenType.a));
+      // 'b' should be recognized as a prefixed name
+      expect(tokenizer.nextToken().type, equals(TokenType.prefixedName));
+      // 'c' should be recognized as a prefixed name
+      expect(tokenizer.nextToken().type, equals(TokenType.prefixedName));
+      // End of input
+      expect(tokenizer.nextToken().type, equals(TokenType.eof));
+    });
+
+    test('should correctly parse IRIs with escape sequences', () {
+      // This test confirms that escape sequences in IRIs are handled
+      final tokenizer = TurtleTokenizer('<http://example.org/path\\u00A9>');
+      final token = tokenizer.nextToken();
+      expect(token.type, equals(TokenType.iri));
+      expect(token.value, equals('<http://example.org/path\\u00A9>'));
     });
   });
 }

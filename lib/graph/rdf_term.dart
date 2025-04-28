@@ -72,7 +72,7 @@ sealed class RdfPredicate extends RdfTerm {
 /// IRIs can be used in any position in a triple: subject, predicate, or object.
 ///
 /// Example: `http://example.org/person/john` or `http://xmlns.com/foaf/0.1/name`
-class IriTerm extends RdfTerm implements RdfPredicate, RdfSubject {
+class IriTerm extends RdfPredicate implements RdfSubject {
   /// The string representation of the IRI
   final String iri;
 
@@ -151,7 +151,7 @@ class IriTerm extends RdfTerm implements RdfPredicate, RdfSubject {
 /// Blank nodes can appear in subject or object positions, but not as predicates.
 ///
 /// In Turtle syntax, blank nodes are written as `_:label` or as `[]`.
-class BlankNodeTerm extends RdfTerm implements RdfSubject {
+class BlankNodeTerm extends RdfSubject {
   @override
   bool operator ==(Object other) {
     // Yes, this is the default implementation, but because it is so crucial
@@ -180,7 +180,7 @@ class BlankNodeTerm extends RdfTerm implements RdfSubject {
 /// - Simple string: `"Hello World"`
 /// - Typed number: `"42"^^xsd:integer`
 /// - Language-tagged string: `"Hello"@en`
-class LiteralTerm extends RdfTerm implements RdfObject {
+class LiteralTerm extends RdfObject {
   /// The lexical value of the literal as a string
   final String value;
 

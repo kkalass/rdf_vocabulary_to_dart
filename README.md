@@ -71,17 +71,18 @@ void main() {
 }
 ```
 
-
 ### Use Built-in RDF Vocabularies
 
 The `vocab/` directory provides ready-to-use, type-safe access to many well-known RDF vocabularies and ontologies, including FOAF, Dublin Core (DC), SKOS, Schema.org, and more. This makes it easy to build interoperable RDF graphs without having to look up or type out long IRIs by hand.
 
 **Why does this matter?**
+
 - **Less boilerplate:** Use `FoafClasses.person` or `DcPredicates.title` instead of raw strings.
 - **Fewer mistakes:** Avoid typos in IRIs and get autocompletion in your IDE.
 - **Interoperability:** Build RDF graphs that follow standards, making your data more portable and reusable.
 
 #### Example: Using Vocabularies
+
 ```dart
 import 'package:rdf_core/vocab/vocab.dart';
 

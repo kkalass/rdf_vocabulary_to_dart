@@ -328,6 +328,219 @@ void main() {
         reason: 'The blank node ID should be used 3 times',
       );
     });
+
+    test('should handle non-parseable literals correctly', () {
+      final graph = RdfGraph.fromTriples([
+        Triple(
+          IriTerm('http://example.org/subject'),
+          IriTerm('http://example.org/invalidInt'),
+          LiteralTerm(
+            'not-an-integer',
+            datatype: IriTerm('http://www.w3.org/2001/XMLSchema#integer'),
+          ),
+        ),
+        Triple(
+          IriTerm('http://example.org/subject'),
+          IriTerm('http://example.org/invalidFloat'),
+          LiteralTerm(
+            'not-a-float',
+            datatype: IriTerm('http://www.w3.org/2001/XMLSchema#decimal'),
+          ),
+        ),
+        Triple(
+          IriTerm('http://example.org/subject'),
+          IriTerm('http://example.org/invalidBool'),
+          LiteralTerm(
+            'not-a-boolean',
+            datatype: IriTerm('http://www.w3.org/2001/XMLSchema#boolean'),
+          ),
+        ),
+      ]);
+
+      final result = serializer.write(graph);
+      final jsonObj = jsonDecode(result) as Map<String, dynamic>;
+
+      // Check that non-parsable numeric values have correct type info
+      expect(
+        jsonObj['http://example.org/invalidInt']['@value'],
+        equals('not-an-integer'),
+      );
+      expect(
+        jsonObj['http://example.org/invalidInt']['@type'],
+        equals('http://www.w3.org/2001/XMLSchema#integer'),
+      );
+
+      expect(
+        jsonObj['http://example.org/invalidFloat']['@value'],
+        equals('not-a-float'),
+      );
+      expect(
+        jsonObj['http://example.org/invalidFloat']['@type'],
+        equals('http://www.w3.org/2001/XMLSchema#decimal'),
+      );
+
+      expect(
+        jsonObj['http://example.org/invalidBool']['@value'],
+        equals('not-a-boolean'),
+      );
+      expect(
+        jsonObj['http://example.org/invalidBool']['@type'],
+        equals('http://www.w3.org/2001/XMLSchema#boolean'),
+      );
+    });
+
+    test('should handle literals with custom datatypes', () {
+      final graph = RdfGraph.fromTriples([
+        Triple(
+          IriTerm('http://example.org/subject'),
+          IriTerm('http://example.org/predicate'),
+          LiteralTerm(
+            'custom value',
+            datatype: IriTerm('http://example.org/custom-datatype'),
+          ),
+        ),
+      ]);
+
+      final result = serializer.write(graph);
+      final jsonObj = jsonDecode(result) as Map<String, dynamic>;
+
+      final value = jsonObj['http://example.org/predicate'];
+      expect(value, isA<Map<String, dynamic>>());
+      expect(value['@value'], equals('custom value'));
+      expect(value['@type'], equals('http://example.org/custom-datatype'));
+    });
+
+    test('should handle multiple types as an array', () {
+      final graph = RdfGraph.fromTriples([
+        Triple(
+          IriTerm('http://example.org/subject'),
+          RdfPredicates.type,
+          IriTerm('http://example.org/Type1'),
+        ),
+        Triple(
+          IriTerm('http://example.org/subject'),
+          RdfPredicates.type,
+          IriTerm('http://example.org/Type2'),
+        ),
+      ]);
+
+      final result = serializer.write(graph);
+      final jsonObj = jsonDecode(result) as Map<String, dynamic>;
+
+      expect(jsonObj['@type'], isA<List>());
+      expect(jsonObj['@type'].length, equals(2));
+
+      final typeIds = jsonObj['@type'].map((t) => t['@id']).toList();
+      expect(typeIds, contains('http://example.org/Type1'));
+      expect(typeIds, contains('http://example.org/Type2'));
+    });
+
+    test('should handle multiple values for predicates as arrays', () {
+      final graph = RdfGraph.fromTriples([
+        Triple(
+          IriTerm('http://example.org/subject'),
+          IriTerm('http://example.org/predicate'),
+          LiteralTerm.string('value1'),
+        ),
+        Triple(
+          IriTerm('http://example.org/subject'),
+          IriTerm('http://example.org/predicate'),
+          LiteralTerm.string('value2'),
+        ),
+      ]);
+
+      final result = serializer.write(graph);
+      final jsonObj = jsonDecode(result) as Map<String, dynamic>;
+
+      expect(jsonObj['http://example.org/predicate'], isA<List>());
+      expect(jsonObj['http://example.org/predicate'].length, equals(2));
+      expect(jsonObj['http://example.org/predicate'], contains('value1'));
+      expect(jsonObj['http://example.org/predicate'], contains('value2'));
+    });
+
+    test('should detect namespaces with overlap when creating context', () {
+      final graph = RdfGraph.fromTriples([
+        Triple(
+          IriTerm('http://example.org/subject'),
+          IriTerm('http://example.org/vocabulary/predicate1'),
+          LiteralTerm.string('value1'),
+        ),
+        Triple(
+          IriTerm('http://example.org/subject'),
+          IriTerm('http://example.org/vocabulary/nested/predicate2'),
+          LiteralTerm.string('value2'),
+        ),
+      ]);
+
+      final customPrefixes = {
+        'ex': 'http://example.org/',
+        'vocab': 'http://example.org/vocabulary/',
+        'nested': 'http://example.org/vocabulary/nested/',
+      };
+
+      final result = serializer.write(graph, customPrefixes: customPrefixes);
+      final jsonObj = jsonDecode(result) as Map<String, dynamic>;
+
+      // The more specific prefix should be used for the nested predicate
+      expect(jsonObj['vocab:predicate1'], equals('value1'));
+      expect(jsonObj['nested:predicate2'], equals('value2'));
+    });
+
+    test('should handle direct namespace match in context', () {
+      final graph = RdfGraph.fromTriples([
+        Triple(
+          IriTerm('http://example.org/subject'),
+          IriTerm('http://example.org/vocabulary/'),
+          LiteralTerm.string('direct namespace'),
+        ),
+      ]);
+
+      final customPrefixes = {'vocab': 'http://example.org/vocabulary/'};
+
+      final result = serializer.write(graph, customPrefixes: customPrefixes);
+      final jsonObj = jsonDecode(result) as Map<String, dynamic>;
+
+      // When the predicate exactly matches a namespace, use the prefix with empty local part
+      expect(jsonObj['vocab:'], equals('direct namespace'));
+    });
+
+    test('should preserve non-common namespaces in the context', () {
+      final graph = RdfGraph.fromTriples([
+        Triple(
+          IriTerm('http://example.org/subject'),
+          IriTerm('http://uncommon.namespace.org/predicate'),
+          LiteralTerm.string('value'),
+        ),
+      ]);
+
+      final result = serializer.write(graph);
+      final jsonObj = jsonDecode(result) as Map<String, dynamic>;
+
+      // The full IRI should be used since there's no prefix mapping
+      expect(
+        jsonObj['http://uncommon.namespace.org/predicate'],
+        equals('value'),
+      );
+    });
+
+    test('should handle double datatype literals', () {
+      final graph = RdfGraph.fromTriples([
+        Triple(
+          IriTerm('http://example.org/subject'),
+          IriTerm('http://example.org/doubleValue'),
+          LiteralTerm(
+            '3.14159265',
+            datatype: IriTerm('http://www.w3.org/2001/XMLSchema#double'),
+          ),
+        ),
+      ]);
+
+      final result = serializer.write(graph);
+      final jsonObj = jsonDecode(result) as Map<String, dynamic>;
+
+      // The double value should be parsed and represented as a number
+      expect(jsonObj['http://example.org/doubleValue'], equals(3.14159265));
+    });
   });
 }
 

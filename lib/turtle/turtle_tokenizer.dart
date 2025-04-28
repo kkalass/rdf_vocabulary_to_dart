@@ -511,6 +511,9 @@ class TurtleTokenizer {
   ///
   /// Returns a token of type [TokenType.prefixedName] containing the
   /// complete prefixed name.
+  ///
+  /// Throws [FormatException] if the input doesn't contain a colon where required,
+  /// particularly in prefix declarations.
   Token _parsePrefixedName() {
     final startLine = _line;
     final startColumn = _column;
@@ -539,6 +542,10 @@ class TurtleTokenizer {
       );
     }
 
+    // Save the prefix part to check if we're in a prefix declaration context
+    final prefixStart = _position;
+    bool foundColon = false;
+
     while (_position < _input.length) {
       final char = _input[_position];
       _log.info('Processing char in prefixed name: "$char"');
@@ -548,6 +555,7 @@ class TurtleTokenizer {
         _position++;
         _column++;
       } else if (char == ':') {
+        foundColon = true;
         buffer.write(char);
         _position++;
         _column++;
@@ -568,6 +576,30 @@ class TurtleTokenizer {
         );
       } else {
         break;
+      }
+    }
+
+    // Check the context - if we're parsing what appears to be a prefix declaration
+    // but didn't find a colon, it's an error
+    if (!foundColon) {
+      final prefixPart = _input.substring(prefixStart, _position).trim();
+
+      // Look back in the input to see if '@prefix' appears before this token
+      int lookBack = prefixStart - 1;
+      while (lookBack >= 0 &&
+          (_input[lookBack] == ' ' || _input[lookBack] == '\t')) {
+        lookBack--;
+      }
+
+      // Check if we might be in a prefix declaration context
+      if (lookBack >= 7 &&
+          _input.substring(lookBack - 7, lookBack + 1) == '@prefix ') {
+        _log.severe(
+          'Invalid prefix declaration: missing colon after prefix name',
+        );
+        throw FormatException(
+          'Invalid prefix declaration: missing colon after "$prefixPart" at $startLine:$startColumn',
+        );
       }
     }
 

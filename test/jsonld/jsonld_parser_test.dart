@@ -511,5 +511,283 @@ void main() {
       final parser = JsonLdParser(invalidJson);
       expect(() => parser.parse(), throwsA(isA<RdfSyntaxException>()));
     });
+
+    test('throws exception for non-object/array JSON', () {
+      final invalidJson = '"Just a string"';
+
+      final parser = JsonLdParser(invalidJson);
+      expect(
+        () => parser.parse(),
+        throwsA(
+          isA<RdfSyntaxException>().having(
+            (e) => e.message,
+            'message',
+            contains('must be an object or array'),
+          ),
+        ),
+      );
+    });
+
+    test('throws exception for invalid array item', () {
+      final invalidJson =
+          '[1, 2, 3]'; // Array should contain objects, not primitives
+
+      final parser = JsonLdParser(invalidJson);
+      expect(
+        () => parser.parse(),
+        throwsA(
+          isA<RdfSyntaxException>().having(
+            (e) => e.message,
+            'message',
+            contains('Array item must be a JSON object'),
+          ),
+        ),
+      );
+    });
+
+    test('throws exception for non-string @id value', () {
+      final invalidIdJson = '''
+      {
+        "@id": 123,
+        "name": "John Smith"
+      }
+      ''';
+
+      final parser = JsonLdParser(invalidIdJson);
+      expect(
+        () => parser.parse(),
+        throwsA(
+          isA<RdfSyntaxException>().having(
+            (e) => e.message,
+            'message',
+            contains('@id value must be a string'),
+          ),
+        ),
+      );
+    });
+
+    test('handles object value with reference and additional properties', () {
+      final jsonLd = '''
+      {
+        "@context": {
+          "knows": "http://xmlns.com/foaf/0.1/knows",
+          "name": "http://xmlns.com/foaf/0.1/name"
+        },
+        "@id": "http://example.org/person/john",
+        "knows": {
+          "@id": "http://example.org/person/jane",
+          "name": "Jane Doe"
+        }
+      }
+      ''';
+
+      final parser = JsonLdParser(jsonLd);
+      final triples = parser.parse();
+
+      // Should be 3 triples: the knows relation and name triples for both subjects
+      expect(triples.length, 2);
+
+      // Check knows triple between John and Jane
+      expect(
+        triples.any(
+          (t) =>
+              t.subject == IriTerm('http://example.org/person/john') &&
+              t.predicate == IriTerm('http://xmlns.com/foaf/0.1/knows') &&
+              t.object == IriTerm('http://example.org/person/jane'),
+        ),
+        isTrue,
+      );
+
+      // Check Jane's name triple
+      expect(
+        triples.any(
+          (t) =>
+              t.subject == IriTerm('http://example.org/person/jane') &&
+              t.predicate == IriTerm('http://xmlns.com/foaf/0.1/name') &&
+              t.object == LiteralTerm.string('Jane Doe'),
+        ),
+        isTrue,
+      );
+    });
+
+    test('handles simple values with different types', () {
+      final jsonLd = '''
+      {
+        "@context": {
+          "name": "http://xmlns.com/foaf/0.1/name",
+          "age": "http://xmlns.com/foaf/0.1/age",
+          "active": "http://xmlns.com/foaf/0.1/active"
+        },
+        "@id": "http://example.org/person/john",
+        "name": "John Smith",
+        "age": 42,
+        "active": true
+      }
+      ''';
+
+      final parser = JsonLdParser(jsonLd);
+      final triples = parser.parse();
+
+      expect(triples.length, 3);
+
+      // Check string literal
+      expect(
+        triples.any(
+          (t) =>
+              t.subject == IriTerm('http://example.org/person/john') &&
+              t.predicate == IriTerm('http://xmlns.com/foaf/0.1/name') &&
+              t.object == LiteralTerm.string('John Smith'),
+        ),
+        isTrue,
+      );
+
+      // Check numeric literal (integer)
+      expect(
+        triples.any(
+          (t) =>
+              t.subject == IriTerm('http://example.org/person/john') &&
+              t.predicate == IriTerm('http://xmlns.com/foaf/0.1/age') &&
+              t.object == LiteralTerm.typed('42', 'integer'),
+        ),
+        isTrue,
+      );
+
+      // Check boolean literal
+      expect(
+        triples.any(
+          (t) =>
+              t.subject == IriTerm('http://example.org/person/john') &&
+              t.predicate == IriTerm('http://xmlns.com/foaf/0.1/active') &&
+              t.object == LiteralTerm.typed('true', 'boolean'),
+        ),
+        isTrue,
+      );
+    });
+
+    test('handles decimal numeric values', () {
+      final jsonLd = '''
+      {
+        "@context": {
+          "score": "http://example.org/score"
+        },
+        "@id": "http://example.org/person/john",
+        "score": 97.5
+      }
+      ''';
+
+      final parser = JsonLdParser(jsonLd);
+      final triples = parser.parse();
+
+      expect(triples.length, 1);
+
+      // Check decimal literal
+      final triple = triples.first;
+      expect(triple.subject, equals(IriTerm('http://example.org/person/john')));
+      expect(triple.predicate, equals(IriTerm('http://example.org/score')));
+      expect(triple.object, equals(LiteralTerm.typed('97.5', 'decimal')));
+    });
+
+    test('handles @value object without type or language', () {
+      final jsonLd = '''
+      {
+        "@context": {
+          "comment": "http://xmlns.com/foaf/0.1/comment"
+        },
+        "@id": "http://example.org/person/john",
+        "comment": {
+          "@value": "Just a simple comment"
+        }
+      }
+      ''';
+
+      final parser = JsonLdParser(jsonLd);
+      final triples = parser.parse();
+
+      expect(triples.length, 1);
+
+      final triple = triples.first;
+      expect(triple.subject, equals(IriTerm('http://example.org/person/john')));
+      expect(
+        triple.predicate,
+        equals(IriTerm('http://xmlns.com/foaf/0.1/comment')),
+      );
+      expect(
+        triple.object,
+        equals(LiteralTerm.string('Just a simple comment')),
+      );
+    });
+
+    test('throws exception for invalid IRI resolution', () {
+      // Testing exception handling in _expandIri method
+      final jsonLd = '''
+      {
+        "@id": "://invalid-uri",
+        "name": "Invalid URI"
+      }
+      ''';
+
+      final parser = JsonLdParser(jsonLd, baseUri: 'http://example.org/');
+      expect(
+        () => parser.parse(),
+        throwsA(isA<RdfConstraintViolationException>()),
+      );
+    });
+
+    test('handles context with complex mapping definitions', () {
+      final jsonLd = '''
+      {
+        "@context": {
+          "name": {
+            "@id": "http://xmlns.com/foaf/0.1/name"
+          }
+        },
+        "@id": "http://example.org/person/john",
+        "name": "John Smith"
+      }
+      ''';
+
+      final parser = JsonLdParser(jsonLd);
+      final triples = parser.parse();
+
+      expect(triples.length, 1);
+
+      final triple = triples.first;
+      expect(triple.subject, equals(IriTerm('http://example.org/person/john')));
+      expect(
+        triple.predicate,
+        equals(IriTerm('http://xmlns.com/foaf/0.1/name')),
+      );
+      expect(triple.object, equals(LiteralTerm.string('John Smith')));
+    });
+
+    test('preserves blank node identity across document', () {
+      final jsonLd = '''
+      {
+        "@context": {
+          "knows": "http://xmlns.com/foaf/0.1/knows",
+          "friend": "http://xmlns.com/foaf/0.1/friend"
+        },
+        "@id": "http://example.org/person/john",
+        "knows": {"@id": "_:b1"},
+        "friend": {"@id": "_:b1"}
+      }
+      ''';
+
+      final parser = JsonLdParser(jsonLd);
+      final triples = parser.parse();
+
+      expect(triples.length, 2);
+
+      final knowsTriple = triples.firstWhere(
+        (t) => t.predicate == IriTerm('http://xmlns.com/foaf/0.1/knows'),
+      );
+      final friendTriple = triples.firstWhere(
+        (t) => t.predicate == IriTerm('http://xmlns.com/foaf/0.1/friend'),
+      );
+
+      // The blank node objects should be the same instance
+      expect(knowsTriple.object, equals(friendTriple.object));
+      expect(identical(knowsTriple.object, friendTriple.object), isTrue);
+    });
   });
 }

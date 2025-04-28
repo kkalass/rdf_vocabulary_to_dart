@@ -77,9 +77,23 @@ class TurtleParser {
           _parseBase();
         } else if (_currentToken.type == TokenType.openBracket) {
           _log.info('Found blank node');
-          _parseBlankNode();
-          _expect(TokenType.dot);
-          _currentToken = _tokenizer.nextToken();
+          final subject = _parseBlankNode();
+
+          // After parsing a blank node that is used as a subject,
+          // we need to continue parsing a predicate-object list
+          if (_currentToken.type != TokenType.dot &&
+              _currentToken.type != TokenType.eof) {
+            final predicateObjectList = _parsePredicateObjectList();
+            for (final po in predicateObjectList) {
+              triples.add(Triple(subject, po.predicate, po.object));
+            }
+
+            _expect(TokenType.dot);
+            _currentToken = _tokenizer.nextToken();
+          } else {
+            _expect(TokenType.dot);
+            _currentToken = _tokenizer.nextToken();
+          }
         } else {
           _log.info('Parsing subject');
           final subject = _parseSubject();
@@ -170,14 +184,42 @@ class TurtleParser {
   ///
   /// The prefix is stored in the [_prefixes] map for later use in expanding
   /// prefixed names.
+  ///
+  /// Throws [RdfSyntaxException] if the prefix declaration is malformed,
+  /// such as when the colon is missing after the prefix.
   void _parsePrefix() {
     _log.info('Parsing prefix declaration');
     _expect(TokenType.prefix);
     _currentToken = _tokenizer.nextToken();
     _log.info('After @prefix: $_currentToken');
 
-    _expect(TokenType.prefixedName);
+    // Check that the next token is a prefixed name (which must contain a colon)
+    if (_currentToken.type != TokenType.prefixedName) {
+      throw RdfSyntaxException(
+        'Expected prefixed name (with colon) after @prefix',
+        format: _format,
+        source: SourceLocation(
+          line: _currentToken.line,
+          column: _currentToken.column,
+          context: _currentToken.value,
+        ),
+      );
+    }
+
+    // Ensure the prefixed name actually contains a colon
     final prefixedName = _currentToken.value;
+    if (!prefixedName.contains(':')) {
+      throw RdfSyntaxException(
+        'Invalid prefix declaration: missing colon after prefix name',
+        format: _format,
+        source: SourceLocation(
+          line: _currentToken.line,
+          column: _currentToken.column,
+          context: prefixedName,
+        ),
+      );
+    }
+
     _log.info('Found prefixed name: $prefixedName');
 
     // Handle empty prefix case
@@ -562,6 +604,13 @@ class TurtleParser {
   /// This is the inverse operation of _escapeTurtleString in TurtleSerializer.
   /// It handles standard escape sequences (\n, \r, \t, etc.) and Unicode
   /// escape sequences (\uXXXX and \UXXXXXXXX).
+  ///
+  /// According to the W3C Turtle specification, Unicode escape sequences must:
+  /// - Be 4 digits for \u escapes
+  /// - Be 8 digits for \U escapes
+  /// - Contain only valid hexadecimal digits (0-9, A-F)
+  ///
+  /// If these conditions are not met, the parser will throw a syntax error.
   String _unescapeTurtleString(String value) {
     final StringBuffer buffer = StringBuffer();
 
@@ -601,42 +650,51 @@ class TurtleParser {
           case 'u': // 4-digit Unicode escape (e.g., \u00A9)
             if (i + 5 < value.length) {
               final hexCode = value.substring(i + 2, i + 6);
-              try {
+              // Check if all characters are valid hex digits
+              if (RegExp(r'^[0-9A-Fa-f]{4}$').hasMatch(hexCode)) {
                 final codeUnit = int.parse(hexCode, radix: 16);
                 buffer.writeCharCode(codeUnit);
                 i += 5;
-              } catch (e) {
+              } else {
                 // Invalid Unicode escape, treat as literal characters
-                buffer.write('\\u$hexCode');
-                i += 5;
+                buffer.write('\\');
+                buffer.write(nextChar);
+                // Don't skip the u since we're treating it as a literal
+                i++;
               }
             } else {
               // Incomplete escape, treat as literal characters
-              buffer.write('\\u');
+              buffer.write('\\');
+              buffer.write(nextChar);
               i++;
             }
             break;
           case 'U': // 8-digit Unicode escape (e.g., \U0001F600)
             if (i + 9 < value.length) {
               final hexCode = value.substring(i + 2, i + 10);
-              try {
+              // Check if all characters are valid hex digits
+              if (RegExp(r'^[0-9A-Fa-f]{8}$').hasMatch(hexCode)) {
                 final codeUnit = int.parse(hexCode, radix: 16);
                 buffer.writeCharCode(codeUnit);
                 i += 9;
-              } catch (e) {
+              } else {
                 // Invalid Unicode escape, treat as literal characters
-                buffer.write('\\U$hexCode');
-                i += 9;
+                buffer.write('\\');
+                buffer.write(nextChar);
+                // Don't skip the U since we're treating it as a literal
+                i++;
               }
             } else {
               // Incomplete escape, treat as literal characters
-              buffer.write('\\U');
+              buffer.write('\\');
+              buffer.write(nextChar);
               i++;
             }
             break;
           default:
             // Unrecognized escape, treat as literal characters
-            buffer.write('\\$nextChar');
+            buffer.write('\\');
+            buffer.write(nextChar);
             i++;
         }
       } else {

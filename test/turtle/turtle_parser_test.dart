@@ -889,5 +889,313 @@ void main() {
       expect(node1RelatedTo, equals(node2));
       expect(node2RelatedTo, equals(node1));
     });
+
+    test('should handle empty blank node expressions', () {
+      final parser = TurtleParser(
+        '[] <http://example.org/predicate> "object" .',
+      );
+      final triples = parser.parse();
+
+      expect(triples.length, equals(1));
+      expect(triples[0].subject is BlankNodeTerm, isTrue);
+      expect(
+        triples[0].predicate,
+        equals(IriTerm('http://example.org/predicate')),
+      );
+      expect(triples[0].object, equals(LiteralTerm.string('object')));
+    });
+
+    test('should handle empty blank node as object', () {
+      final parser = TurtleParser(
+        '<http://example.org/subject> <http://example.org/predicate> [] .',
+      );
+      final triples = parser.parse();
+
+      expect(triples.length, equals(1));
+      expect(triples[0].subject, equals(IriTerm('http://example.org/subject')));
+      expect(
+        triples[0].predicate,
+        equals(IriTerm('http://example.org/predicate')),
+      );
+      expect(triples[0].object is BlankNodeTerm, isTrue);
+    });
+
+    test('should throw exception for invalid literal format', () {
+      final parser = TurtleParser(
+        '<http://example.org/subject> <http://example.org/predicate> "invalid literal .',
+      );
+
+      expect(() => parser.parse(), throwsA(isA<RdfSyntaxException>()));
+    });
+
+    test('should handle incomplete Unicode escape sequences correctly', () {
+      final parser = TurtleParser(
+        '<http://example.org/subject> <http://example.org/predicate> "Incomplete \\u123 escape" .',
+      );
+
+      final triples = parser.parse();
+      expect(triples.length, equals(1));
+      // The parser should treat incomplete sequences as literal characters
+      expect(
+        triples[0].object,
+        equals(LiteralTerm.string('Incomplete \\u123 escape')),
+      );
+    });
+
+    test('should handle invalid Unicode escape sequences correctly', () {
+      final parser = TurtleParser(
+        '<http://example.org/subject> <http://example.org/predicate> "Invalid \\uXYZW escape" .',
+      );
+
+      final triples = parser.parse();
+      expect(triples.length, equals(1));
+      // The parser should treat invalid sequences as literal characters
+      expect(
+        triples[0].object,
+        equals(LiteralTerm.string('Invalid \\uXYZW escape')),
+      );
+    });
+
+    test('should throw exception for invalid prefixed name format', () {
+      final parser = TurtleParser('''
+        @prefix ex: <http://example.org/> .
+        <http://example.org/subject> <http://example.org/predicate> ex:local:name .
+      ''');
+
+      expect(() => parser.parse(), throwsA(isA<RdfSyntaxException>()));
+    });
+
+    test('should handle deeply nested blank nodes', () {
+      final parser = TurtleParser('''
+        @prefix ex: <http://example.org/> .
+        ex:subject ex:predicate [
+          ex:level1 [
+            ex:level2 [
+              ex:level3 "Deep value"
+            ]
+          ]
+        ] .
+      ''');
+
+      final triples = parser.parse();
+
+      // Should create:
+      // 1. subject -> predicate -> bn1
+      // 2. bn1 -> level1 -> bn2
+      // 3. bn2 -> level2 -> bn3
+      // 4. bn3 -> level3 -> "Deep value"
+      expect(triples.length, equals(4));
+
+      // Find the first blank node
+      final subjectTriples =
+          triples
+              .where((t) => t.subject == IriTerm('http://example.org/subject'))
+              .toList();
+      expect(subjectTriples.length, equals(1));
+
+      final bn1 = subjectTriples[0].object as BlankNodeTerm;
+
+      // Find level1 triple
+      final level1Triples =
+          triples
+              .where(
+                (t) =>
+                    t.subject == bn1 &&
+                    t.predicate == IriTerm('http://example.org/level1'),
+              )
+              .toList();
+      expect(level1Triples.length, equals(1));
+
+      final bn2 = level1Triples[0].object as BlankNodeTerm;
+
+      // Find level2 triple
+      final level2Triples =
+          triples
+              .where(
+                (t) =>
+                    t.subject == bn2 &&
+                    t.predicate == IriTerm('http://example.org/level2'),
+              )
+              .toList();
+      expect(level2Triples.length, equals(1));
+
+      final bn3 = level2Triples[0].object as BlankNodeTerm;
+
+      // Find level3 triple
+      final level3Triples =
+          triples
+              .where(
+                (t) =>
+                    t.subject == bn3 &&
+                    t.predicate == IriTerm('http://example.org/level3'),
+              )
+              .toList();
+      expect(level3Triples.length, equals(1));
+      expect(level3Triples[0].object, equals(LiteralTerm.string('Deep value')));
+    });
+
+    test('should throw exception when expected token is missing', () {
+      final parser = TurtleParser('''
+        @prefix ex <http://example.org/> . # Missing colon after prefix
+      ''');
+
+      expect(() => parser.parse(), throwsA(isA<RdfSyntaxException>()));
+    });
+
+    test(
+      'should handle complex blank node structure with multiple properties',
+      () {
+        final parser = TurtleParser('''
+        @prefix ex: <http://example.org/> .
+        ex:subject ex:predicate [
+          ex:prop1 "value1";
+          ex:prop2 "value2";
+          ex:prop3 [
+            ex:nestedProp "nestedValue"
+          ];
+          ex:prop4 "value4"
+        ] .
+      ''');
+
+        final triples = parser.parse();
+
+        // Should create:
+        // 1. subject -> predicate -> bn1
+        // 2. bn1 -> prop1 -> "value1"
+        // 3. bn1 -> prop2 -> "value2"
+        // 4. bn1 -> prop3 -> bn2
+        // 5. bn2 -> nestedProp -> "nestedValue"
+        // 6. bn1 -> prop4 -> "value4"
+        expect(triples.length, equals(6));
+
+        // Find the main blank node
+        final outerBn =
+            triples
+                    .firstWhere(
+                      (t) => t.subject == IriTerm('http://example.org/subject'),
+                    )
+                    .object
+                as BlankNodeTerm;
+
+        // Count properties on the main blank node
+        final bnProps = triples.where((t) => t.subject == outerBn).toList();
+        expect(bnProps.length, equals(4));
+
+        // Verify prop3 points to another blank node
+        final prop3Triple = triples.firstWhere(
+          (t) =>
+              t.subject == outerBn &&
+              t.predicate == IriTerm('http://example.org/prop3'),
+        );
+        expect(prop3Triple.object is BlankNodeTerm, isTrue);
+
+        // Verify the nested blank node properties
+        final nestedBn = prop3Triple.object as BlankNodeTerm;
+        final nestedTriple = triples.firstWhere((t) => t.subject == nestedBn);
+        expect(
+          nestedTriple.predicate,
+          equals(IriTerm('http://example.org/nestedProp')),
+        );
+        expect(nestedTriple.object, equals(LiteralTerm.string('nestedValue')));
+      },
+    );
+
+    test('should handle all common escape sequences in literals', () {
+      final parser = TurtleParser('''
+        <http://example.org/subject> <http://example.org/predicate> "\\b\\t\\n\\f\\r\\"\\\\" .
+      ''');
+
+      final triples = parser.parse();
+      expect(triples.length, equals(1));
+      expect(triples[0].object, equals(LiteralTerm.string('\b\t\n\f\r"\\')));
+    });
+
+    test('should handle terminating statement with blank node correctly', () {
+      final parser = TurtleParser('''
+        @prefix ex: <http://example.org/> .
+        ex:subject1 ex:predicate1 "value1" .
+        ex:subject2 ex:predicate2 [
+          ex:nested "value"
+        ] .
+        ex:subject3 ex:predicate3 "value3" .
+      ''');
+
+      final triples = parser.parse();
+      expect(triples.length, equals(4));
+
+      // Verify the subjects
+      expect(
+        triples.any((t) => t.subject == IriTerm('http://example.org/subject1')),
+        isTrue,
+      );
+      expect(
+        triples.any((t) => t.subject == IriTerm('http://example.org/subject2')),
+        isTrue,
+      );
+      expect(
+        triples.any((t) => t.subject == IriTerm('http://example.org/subject3')),
+        isTrue,
+      );
+    });
+
+    test('should handle non-empty blank node expressions as subject', () {
+      final parser = TurtleParser('''
+        @prefix ex: <http://example.org/> .
+        [ ex:property1 "value1" ; 
+          ex:property2 "value2" ] 
+          ex:mainPredicate "mainObject" .
+      ''');
+
+      final triples = parser.parse();
+
+      // Should have 3 triples:
+      // 1. blank_node -> ex:property1 -> "value1"
+      // 2. blank_node -> ex:property2 -> "value2"
+      // 3. blank_node -> ex:mainPredicate -> "mainObject"
+      expect(triples.length, equals(3));
+
+      // Find the blank node used as subject
+      BlankNodeTerm? blankNode;
+      for (final triple in triples) {
+        if (triple.predicate == IriTerm('http://example.org/mainPredicate')) {
+          blankNode = triple.subject as BlankNodeTerm;
+          expect(triple.object, equals(LiteralTerm.string('mainObject')));
+        }
+      }
+
+      // Make sure we found the blank node
+      expect(blankNode, isNotNull);
+
+      // Verify the blank node has the correct properties
+      final blankNodeTriples =
+          triples
+              .where(
+                (t) =>
+                    t.subject == blankNode &&
+                    t.predicate != IriTerm('http://example.org/mainPredicate'),
+              )
+              .toList();
+      expect(blankNodeTriples.length, equals(2));
+
+      // Check property1
+      expect(
+        blankNodeTriples.any(
+          (t) =>
+              t.predicate == IriTerm('http://example.org/property1') &&
+              t.object == LiteralTerm.string('value1'),
+        ),
+        isTrue,
+      );
+
+      // Check property2
+      expect(
+        blankNodeTriples.any(
+          (t) =>
+              t.predicate == IriTerm('http://example.org/property2') &&
+              t.object == LiteralTerm.string('value2'),
+        ),
+        isTrue,
+      );
+    });
   });
 }
