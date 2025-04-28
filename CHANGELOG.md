@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.3.1
+
+- Extended Schema.org vocabulary with postal address support
+  - Added `PostalAddress`, `ContactPoint`, and `Country` classes
+  - Added `SchemaAddressProperties` for complete address modeling
+  - Added properties for street address, locality, region, postal code, country, etc.
+- Added comprehensive tests for new postal address components
+- Added example demonstrating postal address usage with Schema.org vocabulary
+
 ## 0.3.0
 
 - Enhanced blank node handling in RDF serialization and parsing

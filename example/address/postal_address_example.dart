@@ -4,7 +4,6 @@
 // using the Schema.org vocabulary in RDF Core.
 
 import 'package:rdf_core/rdf_core.dart';
-import 'package:rdf_core/vocab/vocab.dart';
 
 void main() {
   // Create a graph with an organization that has a postal address
