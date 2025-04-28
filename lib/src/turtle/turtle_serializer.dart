@@ -2,7 +2,7 @@ import 'package:logging/logging.dart';
 import 'package:rdf_core/src/graph/rdf_graph.dart';
 import 'package:rdf_core/src/graph/rdf_term.dart';
 import 'package:rdf_core/src/graph/triple.dart';
-import 'package:rdf_core/rdf_serializer.dart';
+import 'package:rdf_core/src/rdf_serializer.dart';
 import 'package:rdf_core/src/vocab/namespaces.dart';
 import 'package:rdf_core/src/vocab/rdf.dart';
 import 'package:rdf_core/src/vocab/xsd.dart';
@@ -27,7 +27,10 @@ class TurtleSerializer implements RdfSerializer {
   /// A map of well-known common RDF prefixes used in Turtle serialization.
   /// These prefixes provide shorthand notation for commonly used RDF namespaces
   /// and do not need to be specified explicitly for serialization.
-  static final Map<String, String> _commonPrefixes = rdfNamespaceMappings;
+  final RdfNamespaceMappings _namespaceMappings;
+
+  TurtleSerializer({RdfNamespaceMappings? namespaceMappings})
+    : _namespaceMappings = namespaceMappings ?? RdfNamespaceMappings();
 
   @override
   String write(
@@ -46,7 +49,7 @@ class TurtleSerializer implements RdfSerializer {
     _generateBlankNodeLabels(graph, blankNodeLabels);
 
     // 1. Write prefixes
-    final prefixCandidates = {..._commonPrefixes, ...customPrefixes};
+    final prefixCandidates = {..._namespaceMappings.asMap(), ...customPrefixes};
     // Identify which prefixes are actually used in the graph
     final prefixes = _extractUsedPrefixes(graph, prefixCandidates);
 

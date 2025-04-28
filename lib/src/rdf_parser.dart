@@ -14,8 +14,8 @@ library rdf_parser;
 
 import 'package:logging/logging.dart';
 
-import 'src/graph/rdf_graph.dart';
-import 'src/plugin/format_plugin.dart';
+import 'graph/rdf_graph.dart';
+import 'plugin/format_plugin.dart';
 
 /// Interface for parsing RDF documents in various formats
 ///

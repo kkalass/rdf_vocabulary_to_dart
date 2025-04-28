@@ -5,10 +5,12 @@
 /// standard JSON syntax, making it both web-friendly and developer-friendly.
 library jsonld_format;
 
+import 'package:rdf_core/src/vocab/namespaces.dart';
+
 import '../graph/rdf_graph.dart';
 import '../plugin/format_plugin.dart';
-import '../../rdf_parser.dart';
-import '../../rdf_serializer.dart';
+import '../rdf_parser.dart';
+import '../rdf_serializer.dart';
 import 'jsonld_parser.dart';
 import 'jsonld_serializer.dart';
 
@@ -77,8 +79,11 @@ final class JsonLdFormat implements RdfFormat {
   /// All MIME types that this format implementation can handle
   static const _supportedMimeTypes = {_primaryMimeType, 'application/json+ld'};
 
+  final RdfNamespaceMappings _namespaceMappings;
+
   /// Creates a new JSON-LD format handler
-  const JsonLdFormat();
+  const JsonLdFormat({RdfNamespaceMappings? namespaceMappings})
+    : _namespaceMappings = namespaceMappings ?? const RdfNamespaceMappings();
 
   @override
   String get primaryMimeType => _primaryMimeType;
@@ -90,7 +95,8 @@ final class JsonLdFormat implements RdfFormat {
   RdfParser createParser() => _JsonLdParserAdapter();
 
   @override
-  RdfSerializer createSerializer() => JsonLdSerializer();
+  RdfSerializer createSerializer() =>
+      JsonLdSerializer(namespaceMappings: this._namespaceMappings);
 
   @override
   bool canParse(String content) {

@@ -18,7 +18,7 @@ import 'package:logging/logging.dart';
 import 'package:rdf_core/src/graph/rdf_graph.dart';
 import 'package:rdf_core/src/graph/rdf_term.dart';
 import 'package:rdf_core/src/graph/triple.dart';
-import 'package:rdf_core/rdf_serializer.dart';
+import 'package:rdf_core/src/rdf_serializer.dart';
 import 'package:rdf_core/src/vocab/namespaces.dart';
 import 'package:rdf_core/src/vocab/rdf.dart';
 import 'package:rdf_core/src/vocab/xsd.dart';
@@ -40,10 +40,11 @@ final _log = Logger("rdf.jsonld");
 /// to make property names more readable.
 final class JsonLdSerializer implements RdfSerializer {
   /// Well-known common prefixes used for more readable JSON-LD output.
-  static final Map<String, String> _commonPrefixes = rdfNamespaceMappings;
+  final RdfNamespaceMappings _namespaceMappings;
 
   /// Creates a new JSON-LD serializer.
-  JsonLdSerializer();
+  const JsonLdSerializer({RdfNamespaceMappings? namespaceMappings})
+    : _namespaceMappings = namespaceMappings ?? const RdfNamespaceMappings();
 
   @override
   String write(
@@ -141,7 +142,7 @@ final class JsonLdSerializer implements RdfSerializer {
     context.addAll(customPrefixes);
 
     // Add common prefixes that are used in the graph
-    final allPrefixes = {..._commonPrefixes, ...customPrefixes};
+    final allPrefixes = {..._namespaceMappings.asMap(), ...customPrefixes};
     final usedPrefixes = _extractUsedPrefixes(graph, allPrefixes);
 
     // Add prefixes that don't conflict with custom ones

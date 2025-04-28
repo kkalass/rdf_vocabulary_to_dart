@@ -14,8 +14,8 @@ library format_plugin;
 import 'package:logging/logging.dart';
 
 import '../graph/rdf_graph.dart';
-import '../../rdf_parser.dart';
-import '../../rdf_serializer.dart';
+import '../rdf_parser.dart';
+import '../rdf_serializer.dart';
 
 /// Represents a content format that can be handled by the RDF framework.
 ///

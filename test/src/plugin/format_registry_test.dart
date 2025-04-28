@@ -1,7 +1,7 @@
 import 'package:rdf_core/src/graph/rdf_graph.dart';
 import 'package:rdf_core/src/plugin/format_plugin.dart';
-import 'package:rdf_core/rdf_parser.dart';
-import 'package:rdf_core/rdf_serializer.dart';
+import 'package:rdf_core/src/rdf_parser.dart';
+import 'package:rdf_core/src/rdf_serializer.dart';
 import 'package:test/test.dart';
 
 void main() {

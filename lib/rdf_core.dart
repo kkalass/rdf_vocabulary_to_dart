@@ -120,6 +120,8 @@
 /// library highly testable and extensible.
 library rdf;
 
+import 'package:rdf_core/src/vocab/namespaces.dart';
+
 import 'src/graph/rdf_graph.dart';
 import 'src/plugin/format_plugin.dart';
 import 'src/rdf_parser.dart';
@@ -193,12 +195,19 @@ final class RdfCore {
   /// final rdf = RdfCore.withStandardFormats();
   /// final graph = rdf.parse(turtleData, contentType: 'text/turtle');
   /// ```
-  factory RdfCore.withStandardFormats() {
+  factory RdfCore.withStandardFormats({
+    RdfNamespaceMappings? namespaceMappings,
+  }) {
     final registry = RdfFormatRegistry();
-
+    final _namespaceMappings =
+        namespaceMappings ?? const RdfNamespaceMappings();
     // Register standard formats
-    registry.registerFormat(const TurtleFormat());
-    registry.registerFormat(const JsonLdFormat());
+    registry.registerFormat(
+      TurtleFormat(namespaceMappings: _namespaceMappings),
+    );
+    registry.registerFormat(
+      JsonLdFormat(namespaceMappings: _namespaceMappings),
+    );
 
     final parserFactory = RdfParserFactory(registry);
     final serializerFactory = RdfSerializerFactory(registry);

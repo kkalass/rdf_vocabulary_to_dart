@@ -5,8 +5,8 @@
 /// It complements the parser framework by providing the reverse operation.
 library rdf_serializer;
 
-import 'src/graph/rdf_graph.dart';
-import 'src/plugin/format_plugin.dart';
+import 'graph/rdf_graph.dart';
+import 'plugin/format_plugin.dart';
 
 /// Interface for writing RDF graphs to different serialization formats.
 ///

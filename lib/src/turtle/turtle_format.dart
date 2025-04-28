@@ -5,10 +5,12 @@
 /// syntax for encoding RDF graphs as text.
 library turtle_format;
 
+import 'package:rdf_core/src/vocab/namespaces.dart';
+
 import '../graph/rdf_graph.dart';
 import '../plugin/format_plugin.dart';
-import '../../rdf_parser.dart';
-import '../../rdf_serializer.dart';
+import '../rdf_parser.dart';
+import '../rdf_serializer.dart';
 import 'turtle_parser.dart';
 import 'turtle_serializer.dart';
 
@@ -70,8 +72,11 @@ final class TurtleFormat implements RdfFormat {
     'application/rdf+n3', // Alternative MIME for N3
   };
 
+  final RdfNamespaceMappings _namespaceMappings;
+
   /// Creates a new Turtle format handler
-  const TurtleFormat();
+  const TurtleFormat({RdfNamespaceMappings? namespaceMappings})
+    : _namespaceMappings = namespaceMappings ?? const RdfNamespaceMappings();
 
   @override
   String get primaryMimeType => _primaryMimeType;
@@ -83,7 +88,8 @@ final class TurtleFormat implements RdfFormat {
   RdfParser createParser() => _TurtleParserAdapter();
 
   @override
-  RdfSerializer createSerializer() => TurtleSerializer();
+  RdfSerializer createSerializer() =>
+      TurtleSerializer(namespaceMappings: _namespaceMappings);
 
   @override
   bool canParse(String content) {

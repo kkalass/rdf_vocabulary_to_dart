@@ -1,6 +1,6 @@
 import 'package:rdf_core/src/graph/rdf_term.dart';
 import 'package:rdf_core/src/plugin/format_plugin.dart';
-import 'package:rdf_core/rdf_parser.dart';
+import 'package:rdf_core/src/rdf_parser.dart';
 import 'package:rdf_core/src/jsonld/jsonld_format.dart';
 import 'package:rdf_core/src/turtle/turtle_format.dart';
 import 'package:test/test.dart';
