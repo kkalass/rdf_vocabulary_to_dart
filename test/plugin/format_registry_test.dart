@@ -110,6 +110,43 @@ void main() {
       expect(result, isA<RdfGraph>());
     });
 
+    test('tries each format when detection fails', () {
+      // Both formats return false for canParse, but one parser should work
+      final undetectableFormat1 = _UndetectableButParsableFormat();
+      final undetectableFormat2 = _UndetectableAndFailingFormat();
+
+      registry.registerFormat(undetectableFormat1);
+      registry.registerFormat(undetectableFormat2);
+
+      final parser = FormatDetectingParser(registry);
+      final result = parser.parse('dummy content');
+
+      // Should use the first format since detection fails but parsing works
+      expect(result, isA<RdfGraph>());
+    });
+
+    test('throws exception when all formats fail to parse', () {
+      // Register formats that all fail to parse
+      final failingFormat1 = _UndetectableAndFailingFormat();
+      final failingFormat2 = _AnotherFailingFormat();
+
+      registry.registerFormat(failingFormat1);
+      registry.registerFormat(failingFormat2);
+
+      final parser = FormatDetectingParser(registry);
+
+      expect(
+        () => parser.parse('dummy content'),
+        throwsA(
+          isA<FormatNotSupportedException>().having(
+            (e) => e.toString(),
+            'message contains last error',
+            contains('Mock parsing error 2'),
+          ),
+        ),
+      );
+    });
+
     test('throws exception when no formats registered', () {
       // Don't register any formats
       final parser = FormatDetectingParser(registry);
@@ -158,11 +195,73 @@ class _MockFormat2 implements RdfFormat {
   Set<String> get supportedMimeTypes => {'application/test2'};
 }
 
+class _UndetectableButParsableFormat implements RdfFormat {
+  @override
+  bool canParse(String content) => false;
+
+  @override
+  RdfParser createParser() => _MockParser();
+
+  @override
+  RdfSerializer createSerializer() => _MockSerializer();
+
+  @override
+  String get primaryMimeType => 'application/undetectable';
+
+  @override
+  Set<String> get supportedMimeTypes => {'application/undetectable'};
+}
+
+class _UndetectableAndFailingFormat implements RdfFormat {
+  @override
+  bool canParse(String content) => false;
+
+  @override
+  RdfParser createParser() => _FailingParser('Mock parsing error 1');
+
+  @override
+  RdfSerializer createSerializer() => _MockSerializer();
+
+  @override
+  String get primaryMimeType => 'application/failing';
+
+  @override
+  Set<String> get supportedMimeTypes => {'application/failing'};
+}
+
+class _AnotherFailingFormat implements RdfFormat {
+  @override
+  bool canParse(String content) => false;
+
+  @override
+  RdfParser createParser() => _FailingParser('Mock parsing error 2');
+
+  @override
+  RdfSerializer createSerializer() => _MockSerializer();
+
+  @override
+  String get primaryMimeType => 'application/failing2';
+
+  @override
+  Set<String> get supportedMimeTypes => {'application/failing2'};
+}
+
 class _MockParser implements RdfParser {
   @override
   RdfGraph parse(String input, {String? documentUrl}) {
     // Just return an empty graph
     return RdfGraph();
+  }
+}
+
+class _FailingParser implements RdfParser {
+  final String errorMessage;
+
+  _FailingParser(this.errorMessage);
+
+  @override
+  RdfGraph parse(String input, {String? documentUrl}) {
+    throw FormatException(errorMessage);
   }
 }
 
