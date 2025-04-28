@@ -94,6 +94,28 @@ class SchemaClasses {
   ///
   /// An offer to transfer some rights to an item or to provide a service.
   static const offer = IriTerm.prevalidated('${Schema.namespace}Offer');
+
+  /// IRI for schema:PostalAddress
+  /// [Spec](https://schema.org/PostalAddress)
+  ///
+  /// The mailing address.
+  static const postalAddress = IriTerm.prevalidated(
+    '${Schema.namespace}PostalAddress',
+  );
+
+  /// IRI for schema:ContactPoint
+  /// [Spec](https://schema.org/ContactPoint)
+  ///
+  /// A contact point—for example, a Customer Service department.
+  static const contactPoint = IriTerm.prevalidated(
+    '${Schema.namespace}ContactPoint',
+  );
+
+  /// IRI for schema:Country
+  /// [Spec](https://schema.org/Country)
+  ///
+  /// A country.
+  static const country = IriTerm.prevalidated('${Schema.namespace}Country');
 }
 
 /// Schema.org predicate constants.
@@ -259,4 +281,84 @@ class SchemaOrganizationProperties {
   ///
   /// A member of an Organization or a ProgramMembership.
   static const member = IriTerm.prevalidated('${Schema.namespace}member');
+}
+
+/// Address-related Schema.org property constants.
+///
+/// Contains IRIs for address-related properties in the Schema.org vocabulary.
+/// These properties are typically used with PostalAddress entities.
+class SchemaAddressProperties {
+  // coverage:ignore-start
+  const SchemaAddressProperties._();
+  // coverage:ignore-end
+
+  /// IRI for schema:streetAddress
+  /// [Spec](https://schema.org/streetAddress)
+  ///
+  /// The street address. For example, 1600 Amphitheatre Pkwy.
+  static const streetAddress = IriTerm.prevalidated(
+    '${Schema.namespace}streetAddress',
+  );
+
+  /// IRI for schema:addressLocality
+  /// [Spec](https://schema.org/addressLocality)
+  ///
+  /// The locality in which the street address is, and which is in the region.
+  /// For example, Mountain View.
+  static const addressLocality = IriTerm.prevalidated(
+    '${Schema.namespace}addressLocality',
+  );
+
+  /// IRI for schema:addressRegion
+  /// [Spec](https://schema.org/addressRegion)
+  ///
+  /// The region in which the locality is, and which is in the country.
+  /// For example, California or another appropriate first-level
+  /// Administrative division.
+  static const addressRegion = IriTerm.prevalidated(
+    '${Schema.namespace}addressRegion',
+  );
+
+  /// IRI for schema:postalCode
+  /// [Spec](https://schema.org/postalCode)
+  ///
+  /// The postal code. For example, 94043.
+  static const postalCode = IriTerm.prevalidated(
+    '${Schema.namespace}postalCode',
+  );
+
+  /// IRI for schema:postOfficeBoxNumber
+  /// [Spec](https://schema.org/postOfficeBoxNumber)
+  ///
+  /// The post office box number for PO box addresses.
+  static const postOfficeBoxNumber = IriTerm.prevalidated(
+    '${Schema.namespace}postOfficeBoxNumber',
+  );
+
+  /// IRI for schema:addressCountry
+  /// [Spec](https://schema.org/addressCountry)
+  ///
+  /// The country. For example, USA. You can also provide the two-letter
+  /// ISO 3166-1 alpha-2 country code.
+  static const addressCountry = IriTerm.prevalidated(
+    '${Schema.namespace}addressCountry',
+  );
+
+  /// IRI for schema:areaServed
+  /// [Spec](https://schema.org/areaServed)
+  ///
+  /// The geographic area where a service or offered item is provided.
+  static const areaServed = IriTerm.prevalidated(
+    '${Schema.namespace}areaServed',
+  );
+
+  /// IRI for schema:contactType
+  /// [Spec](https://schema.org/contactType)
+  ///
+  /// A person or organization can have different contact points, for different purposes.
+  /// For example, a sales contact point, a PR contact point and so on.
+  /// This property is used to specify the kind of contact point.
+  static const contactType = IriTerm.prevalidated(
+    '${Schema.namespace}contactType',
+  );
 }

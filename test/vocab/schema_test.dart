@@ -76,6 +76,27 @@ void main() {
           equals(IriTerm('https://schema.org/Offer')),
         );
       });
+
+      test('postalAddress has correct value', () {
+        expect(
+          SchemaClasses.postalAddress,
+          equals(IriTerm('https://schema.org/PostalAddress')),
+        );
+      });
+
+      test('contactPoint has correct value', () {
+        expect(
+          SchemaClasses.contactPoint,
+          equals(IriTerm('https://schema.org/ContactPoint')),
+        );
+      });
+
+      test('country has correct value', () {
+        expect(
+          SchemaClasses.country,
+          equals(IriTerm('https://schema.org/Country')),
+        );
+      });
     });
 
     group('SchemaProperties', () {
@@ -224,6 +245,64 @@ void main() {
         expect(
           SchemaOrganizationProperties.member,
           equals(IriTerm('https://schema.org/member')),
+        );
+      });
+    });
+
+    group('SchemaAddressProperties', () {
+      test('streetAddress has correct value', () {
+        expect(
+          SchemaAddressProperties.streetAddress,
+          equals(IriTerm('https://schema.org/streetAddress')),
+        );
+      });
+
+      test('addressLocality has correct value', () {
+        expect(
+          SchemaAddressProperties.addressLocality,
+          equals(IriTerm('https://schema.org/addressLocality')),
+        );
+      });
+
+      test('addressRegion has correct value', () {
+        expect(
+          SchemaAddressProperties.addressRegion,
+          equals(IriTerm('https://schema.org/addressRegion')),
+        );
+      });
+
+      test('postalCode has correct value', () {
+        expect(
+          SchemaAddressProperties.postalCode,
+          equals(IriTerm('https://schema.org/postalCode')),
+        );
+      });
+
+      test('postOfficeBoxNumber has correct value', () {
+        expect(
+          SchemaAddressProperties.postOfficeBoxNumber,
+          equals(IriTerm('https://schema.org/postOfficeBoxNumber')),
+        );
+      });
+
+      test('addressCountry has correct value', () {
+        expect(
+          SchemaAddressProperties.addressCountry,
+          equals(IriTerm('https://schema.org/addressCountry')),
+        );
+      });
+
+      test('areaServed has correct value', () {
+        expect(
+          SchemaAddressProperties.areaServed,
+          equals(IriTerm('https://schema.org/areaServed')),
+        );
+      });
+
+      test('contactType has correct value', () {
+        expect(
+          SchemaAddressProperties.contactType,
+          equals(IriTerm('https://schema.org/contactType')),
         );
       });
     });
