@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.4.0
+
+- **BREAKING CHANGE**: Reorganized API structure for better modularity and usability
+- Added `RdfNamespaceMappings` for improved namespace handling
+- Enhanced serializers to support custom namespace mappings
+- Improved documentation across the codebase
+- Updated API documentation to reflect new structure
+
 ## 0.3.1
 
 - Extended Schema.org vocabulary with postal address support
@@ -36,7 +44,7 @@ All notable changes to this project will be documented in this file.
 
 ## 0.1.1
 
-- Example and documentation now consistently use canonical RDF vocabularies (e.g., <http://xmlns.com/foaf/0.1/>) with http://, not https://.
+- Example and documentation now consistently use canonical RDF vocabularies (e.g., http://xmlns.com/foaf/0.1/) with http://, not https://.
 - Turtle and JSON-LD serializers automatically warn if non-canonical (https) namespaces are used when canonical (http) is available.
 - Added documentation and comments on best practices for prefixes and vocabularies.
 - Improved prefix handling and static analysis compliance.
