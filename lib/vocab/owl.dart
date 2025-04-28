@@ -178,7 +178,9 @@ class OwlPredicates {
 ///
 /// Contains IRIs for constraint and value types defined in the OWL vocabulary.
 class OwlConstraints {
+  // coverage:ignore-start
   const OwlConstraints._();
+  // coverage:ignore-end
 
   /// IRI for owl:someValuesFrom
   /// [Spec](https://www.w3.org/TR/owl2-syntax/#Existential_Quantification)

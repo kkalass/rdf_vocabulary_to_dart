@@ -122,7 +122,9 @@ class SkosSemanticRelations {
 ///
 /// Contains IRIs for properties related to concept schemes and concept mapping.
 class SkosConceptSchemePredicates {
+  // coverage:ignore-start
   const SkosConceptSchemePredicates._();
+  // coverage:ignore-end
 
   /// IRI for skos:inScheme
   /// [Spec](https://www.w3.org/TR/skos-reference/#schemes)
@@ -151,7 +153,9 @@ class SkosConceptSchemePredicates {
 ///
 /// Contains IRIs for properties that represent lexical labels in the SKOS vocabulary.
 class SkosLabelRelations {
+  // coverage:ignore-start
   const SkosLabelRelations._();
+  // coverage:ignore-end
 
   /// IRI for skos:prefLabel
   /// [Spec](https://www.w3.org/TR/skos-reference/#labels)
@@ -178,7 +182,9 @@ class SkosLabelRelations {
 ///
 /// Contains IRIs for properties that represent documentation in the SKOS vocabulary.
 class SkosDocumentationProps {
+  // coverage:ignore-start
   const SkosDocumentationProps._();
+  // coverage:ignore-end
 
   /// IRI for skos:note
   /// [Spec](https://www.w3.org/TR/skos-reference/#notes)
@@ -217,7 +223,9 @@ class SkosDocumentationProps {
 ///
 /// Contains IRIs for properties that represent mappings between concepts in different schemes.
 class SkosMappingProps {
+  // coverage:ignore-start
   const SkosMappingProps._();
+  // coverage:ignore-end
 
   /// IRI for skos:exactMatch
   /// [Spec](https://www.w3.org/TR/skos-reference/#mapping)

@@ -60,4 +60,34 @@ void main() {
       }, throwsNoSuchMethodError);
     });
   });
+
+  group('RdfPredicates', () {
+    group('containerMembership', () {
+      test('returns correct IriTerm for valid indices', () {
+        expect(
+          RdfPredicates.containerMembership(1),
+          equals(IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#_1')),
+        );
+
+        expect(
+          RdfPredicates.containerMembership(42),
+          equals(IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#_42')),
+        );
+
+        expect(
+          RdfPredicates.containerMembership(999),
+          equals(IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#_999')),
+        );
+      });
+
+      test('throws ArgumentError for non-positive indices', () {
+        expect(() => RdfPredicates.containerMembership(0), throwsArgumentError);
+
+        expect(
+          () => RdfPredicates.containerMembership(-1),
+          throwsArgumentError,
+        );
+      });
+    });
+  });
 }

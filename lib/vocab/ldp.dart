@@ -153,7 +153,9 @@ class LdpPredicates {
 ///
 /// Contains IRIs for LDP preferences that can be used in the Prefer header.
 class LdpPreferences {
+  // coverage:ignore-start
   const LdpPreferences._();
+  // coverage:ignore-end
 
   /// IRI for ldp:PreferContainment
   /// [Spec](https://www.w3.org/TR/ldp/#prefer-parameters)
