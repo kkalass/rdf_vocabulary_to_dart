@@ -64,11 +64,15 @@
     
 <section class="desc markdown">
   <p>Dublin Core Terms Vocabulary</p>
-<p>Provides constants for the <a href="https://www.dublincore.org/specifications/dublin-core/dcmi-terms/">Dublin Core Terms vocabulary</a>.</p>
+<p>Provides constants for the <a href="http://purl.org/dc/terms/">Dublin Core Terms vocabulary</a>,
+which extends the basic Dublin Core Elements with additional metadata terms.</p>
 <p>Example usage:</p>
 <pre class="language-dart"><code class="language-dart">import 'package:rdf_core/vocab/dc_terms.dart';
-final creator = DcTermsPredicates.creator;
+final title = DcTermsPredicates.title;
 </code></pre>
+<p>All constants are pre-constructed as IriTerm objects to enable direct use in
+constructing RDF graphs without repeated string concatenation or term creation.</p>
+<p><a href="http://purl.org/dc/terms/">Specification Reference</a></p>
 </section>
 
 
@@ -80,7 +84,7 @@ final creator = DcTermsPredicates.creator;
 
 </dt>
 <dd>
-  Dublin Core Terms namespace and basic utility functions
+  Base Dublin Core Terms namespace and utility functions
 </dd>
 
           <dt id="DcTermsClasses">
@@ -88,7 +92,7 @@ final creator = DcTermsPredicates.creator;
 
 </dt>
 <dd>
-  Dublin Core Terms classes
+  Dublin Core Terms classes.
 </dd>
 
           <dt id="DcTermsPredicates">
@@ -96,7 +100,7 @@ final creator = DcTermsPredicates.creator;
 
 </dt>
 <dd>
-  Dublin Core Terms predicate constants
+  Dublin Core Terms predicates.
 </dd>
 
       </dl>
@@ -170,7 +174,7 @@ final creator = DcTermsPredicates.creator;
 <footer>
   <span class="no-break">
     rdf_core
-      0.1.2
+      0.3.1
   </span>
   
 </footer>

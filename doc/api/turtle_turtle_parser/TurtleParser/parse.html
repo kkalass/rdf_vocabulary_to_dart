@@ -97,9 +97,23 @@ triples found in the input.</p>
         _parseBase();
       } else if (_currentToken.type == TokenType.openBracket) {
         _log.info(&#39;Found blank node&#39;);
-        _parseBlankNode();
-        _expect(TokenType.dot);
-        _currentToken = _tokenizer.nextToken();
+        final subject = _parseBlankNode();
+
+        &#47;&#47; After parsing a blank node that is used as a subject,
+        &#47;&#47; we need to continue parsing a predicate-object list
+        if (_currentToken.type != TokenType.dot &amp;&amp;
+            _currentToken.type != TokenType.eof) {
+          final predicateObjectList = _parsePredicateObjectList();
+          for (final po in predicateObjectList) {
+            triples.add(Triple(subject, po.predicate, po.object));
+          }
+
+          _expect(TokenType.dot);
+          _currentToken = _tokenizer.nextToken();
+        } else {
+          _expect(TokenType.dot);
+          _currentToken = _tokenizer.nextToken();
+        }
       } else {
         _log.info(&#39;Parsing subject&#39;);
         final subject = _parseSubject();
@@ -176,7 +190,7 @@ triples found in the input.</p>
 <footer>
   <span class="no-break">
     rdf_core
-      0.1.2
+      0.3.1
   </span>
   
 </footer>

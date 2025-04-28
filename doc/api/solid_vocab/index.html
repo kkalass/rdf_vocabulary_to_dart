@@ -63,16 +63,16 @@
 
     
 <section class="desc markdown">
-  <p>Solid Terms Vocabulary</p>
-<p>Provides constants for the <a href="http://www.w3.org/ns/solid/terms">Solid Terms vocabulary</a>
-used in the Solid specification.</p>
+  <p>Solid Vocabulary</p>
+<p>Provides constants for the <a href="http://www.w3.org/ns/solid/terms#">Solid vocabulary</a>,
+which defines terms related to the Solid project and decentralized data ecosystems.</p>
 <p>Example usage:</p>
 <pre class="language-dart"><code class="language-dart">import 'package:rdf_core/vocab/solid.dart';
-final publicTypeIndex = SolidPredicates.publicTypeIndex;
+final oidcIssuer = SolidPredicates.oidcIssuer;
 </code></pre>
 <p>All constants are pre-constructed as IriTerm objects to enable direct use in
 constructing RDF graphs without repeated string concatenation or term creation.</p>
-<p><a href="http://www.w3.org/ns/solid/terms">Specification Reference</a></p>
+<p><a href="https://solidproject.org/">Project Reference</a></p>
 </section>
 
 
@@ -100,7 +100,7 @@ constructing RDF graphs without repeated string concatenation or term creation.<
 
 </dt>
 <dd>
-  Solid predicates constants.
+  Solid predicate constants.
 </dd>
 
       </dl>
@@ -174,7 +174,7 @@ constructing RDF graphs without repeated string concatenation or term creation.<
 <footer>
   <span class="no-break">
     rdf_core
-      0.1.2
+      0.3.1
   </span>
   
 </footer>

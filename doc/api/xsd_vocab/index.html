@@ -63,13 +63,16 @@
 
     
 <section class="desc markdown">
-  <p>Provides constants for <a href="https://www.w3.org/TR/xmlschema-2/">XML Schema Definition (XSD) datatypes</a> as used in RDF.</p>
+  <p>XML Schema Definition (XSD) Vocabulary</p>
+<p>Provides constants for the <a href="http://www.w3.org/2001/XMLSchema#">XML Schema Definition vocabulary</a>,
+which defines data types used in RDF literals.</p>
 <p>Example usage:</p>
 <pre class="language-dart"><code class="language-dart">import 'package:rdf_core/vocab/xsd.dart';
-final intType = XsdTypes.int;
+final integerType = Xsd.integer;
 </code></pre>
-<p>All constants are pre-constructed as IriTerm objects for direct use in the library.</p>
-<p><a href="https://www.w3.org/TR/xmlschema-2/">Specification Reference</a></p>
+<p>All constants are pre-constructed as IriTerm objects to enable direct use in
+constructing RDF graphs without repeated string concatenation or term creation.</p>
+<p><a href="https://www.w3.org/TR/xmlschema11-2/">Specification Reference</a></p>
 </section>
 
 
@@ -81,7 +84,7 @@ final intType = XsdTypes.int;
 
 </dt>
 <dd>
-  XML Schema Definition (XSD) namespace and utility functions
+  XSD namespace and datatype constants
 </dd>
 
           <dt id="XsdTypes">
@@ -163,7 +166,7 @@ final intType = XsdTypes.int;
 <footer>
   <span class="no-break">
     rdf_core
-      0.1.2
+      0.3.1
   </span>
   
 </footer>

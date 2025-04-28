@@ -63,12 +63,12 @@
 
     
 <section class="desc markdown">
-  <p>vCard Ontology Vocabulary</p>
-<p>Provides constants for the <a href="https://www.w3.org/TR/vcard-rdf/">vCard Ontology</a>.
-This vocabulary corresponds to the RDF encoding of vCard data.</p>
+  <p>vCard Vocabulary</p>
+<p>Provides constants for the <a href="http://www.w3.org/2006/vcard/ns#">vCard vocabulary</a>,
+which is used for describing people and organizations.</p>
 <p>Example usage:</p>
 <pre class="language-dart"><code class="language-dart">import 'package:rdf_core/vocab/vcard.dart';
-final fullName = VcardPredicates.fn;
+final name = VcardPredicates.name;
 </code></pre>
 <p>All constants are pre-constructed as IriTerm objects to enable direct use in
 constructing RDF graphs without repeated string concatenation or term creation.</p>
@@ -174,7 +174,7 @@ constructing RDF graphs without repeated string concatenation or term creation.<
 <footer>
   <span class="no-break">
     rdf_core
-      0.1.2
+      0.3.1
   </span>
   
 </footer>

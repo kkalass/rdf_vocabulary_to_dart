@@ -64,14 +64,15 @@
     
 <section class="desc markdown">
   <p>Schema.org Vocabulary</p>
-<p>Provides constants for the <a href="https://schema.org/">Schema.org vocabulary</a>.</p>
+<p>Provides constants for the <a href="https://schema.org/">Schema.org vocabulary</a>,
+which defines schemas for structured data on the internet.</p>
 <p>Example usage:</p>
 <pre class="language-dart"><code class="language-dart">import 'package:rdf_core/vocab/schema.dart';
 final person = SchemaClasses.person;
 </code></pre>
 <p>All constants are pre-constructed as IriTerm objects to enable direct use in
 constructing RDF graphs without repeated string concatenation or term creation.</p>
-<p><a href="https://schema.org/">Specification Reference</a></p>
+<p><a href="https://schema.org/docs/schemas.html">Specification Reference</a></p>
 </section>
 
 
@@ -83,7 +84,15 @@ constructing RDF graphs without repeated string concatenation or term creation.<
 
 </dt>
 <dd>
-  Schema.org namespace and utility functions
+  Base Schema.org namespace and utility functions
+</dd>
+
+          <dt id="SchemaAddressProperties">
+  <span class="name "><a href="../schema_vocab/SchemaAddressProperties-class.html">SchemaAddressProperties</a></span> 
+
+</dt>
+<dd>
+  Address-related Schema.org property constants.
 </dd>
 
           <dt id="SchemaClasses">
@@ -115,7 +124,7 @@ constructing RDF graphs without repeated string concatenation or term creation.<
 
 </dt>
 <dd>
-  Core Schema.org property constants.
+  Schema.org predicate constants.
 </dd>
 
       </dl>
@@ -189,7 +198,7 @@ constructing RDF graphs without repeated string concatenation or term creation.<
 <footer>
   <span class="no-break">
     rdf_core
-      0.1.2
+      0.3.1
   </span>
   
 </footer>

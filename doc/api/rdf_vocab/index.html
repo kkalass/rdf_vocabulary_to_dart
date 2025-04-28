@@ -64,10 +64,11 @@
     
 <section class="desc markdown">
   <p>RDF Core Vocabulary</p>
-<p>Provides constants for the <a href="https://www.w3.org/TR/rdf11-concepts/">W3C RDF 1.1 Concepts and Abstract Syntax specification</a>.</p>
+<p>Provides constants for the <a href="http://www.w3.org/1999/02/22-rdf-syntax-ns#">RDF vocabulary</a>,
+which defines the core concepts and properties of the RDF data model.</p>
 <p>Example usage:</p>
 <pre class="language-dart"><code class="language-dart">import 'package:rdf_core/vocab/rdf.dart';
-final typePredicate = RdfPredicates.type;
+final type = RdfPredicates.type;
 </code></pre>
 <p>All constants are pre-constructed as IriTerm objects to enable direct use in
 constructing RDF graphs without repeated string concatenation or term creation.</p>
@@ -83,7 +84,7 @@ constructing RDF graphs without repeated string concatenation or term creation.<
 
 </dt>
 <dd>
-  Base RDF namespace and miscellaneous terms.
+  Base RDF namespace and utility functions
 </dd>
 
           <dt id="RdfPredicates">
@@ -173,7 +174,7 @@ constructing RDF graphs without repeated string concatenation or term creation.<
 <footer>
   <span class="no-break">
     rdf_core
-      0.1.2
+      0.3.1
   </span>
   
 </footer>

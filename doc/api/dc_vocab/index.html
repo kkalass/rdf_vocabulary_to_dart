@@ -63,16 +63,16 @@
 
     
 <section class="desc markdown">
-  <p>Dublin Core Elements Vocabulary</p>
-<p>Provides constants for the <a href="https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin-core-element-set/">Dublin Core Elements vocabulary</a>.
-Note that this is distinct from Dublin Core Terms (dcterms), which is an extension of the Elements set.</p>
+  <p>Dublin Core Vocabulary</p>
+<p>Provides constants for the <a href="http://purl.org/dc/elements/1.1/">Dublin Core Metadata Initiative vocabulary</a>,
+which defines basic metadata terms for describing resources.</p>
 <p>Example usage:</p>
 <pre class="language-dart"><code class="language-dart">import 'package:rdf_core/vocab/dc.dart';
 final title = DcPredicates.title;
 </code></pre>
 <p>All constants are pre-constructed as IriTerm objects to enable direct use in
 constructing RDF graphs without repeated string concatenation or term creation.</p>
-<p><a href="https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin-core-element-set/">Specification Reference</a></p>
+<p><a href="http://purl.org/dc/elements/1.1/">Specification Reference</a></p>
 </section>
 
 
@@ -84,7 +84,7 @@ constructing RDF graphs without repeated string concatenation or term creation.<
 
 </dt>
 <dd>
-  Base Dublin Core Elements namespace and utility functions
+  Base Dublin Core namespace and utility functions
 </dd>
 
           <dt id="DcPredicates">
@@ -92,7 +92,7 @@ constructing RDF graphs without repeated string concatenation or term creation.<
 
 </dt>
 <dd>
-  Dublin Core Elements predicate constants.
+  Dublin Core predicates.
 </dd>
 
       </dl>
@@ -166,7 +166,7 @@ constructing RDF graphs without repeated string concatenation or term creation.<
 <footer>
   <span class="no-break">
     rdf_core
-      0.1.2
+      0.3.1
   </span>
   
 </footer>
