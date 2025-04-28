@@ -346,5 +346,75 @@ void main() {
       // End of input
       expect(tokenizer.nextToken().type, equals(TokenType.eof));
     });
+
+    // Neue Tests für bisher nicht oder unvollständig getestete Bereiche
+
+    test('should properly handle prefixed names with empty prefix', () {
+      final tokenizer = TurtleTokenizer(':localName');
+      final token = tokenizer.nextToken();
+      expect(token.type, equals(TokenType.prefixedName));
+      expect(token.value, equals(':localName'));
+      expect(tokenizer.nextToken().type, equals(TokenType.eof));
+    });
+
+    test('should handle escaped characters in IRIs', () {
+      final tokenizer = TurtleTokenizer('<http://example.org/path\\u00A9>');
+      final token = tokenizer.nextToken();
+      expect(token.type, equals(TokenType.iri));
+      expect(token.value, equals('<http://example.org/path\\u00A9>'));
+      expect(tokenizer.nextToken().type, equals(TokenType.eof));
+    });
+
+    test('should handle recognizing \'a\' keyword in various contexts', () {
+      final tokenizer1 = TurtleTokenizer('a\n');
+      expect(tokenizer1.nextToken().type, equals(TokenType.a));
+
+      final tokenizer2 = TurtleTokenizer('a\t');
+      expect(tokenizer2.nextToken().type, equals(TokenType.a));
+
+      final tokenizer3 = TurtleTokenizer('abc');
+      // In diesem Fall sollte 'abc' als präfixierter Name erkannt werden
+      expect(tokenizer3.nextToken().type, equals(TokenType.prefixedName));
+    });
+
+    test('should handle incomplete or malformed prefixed names', () {
+      // Ein Präfix ohne lokalen Namen
+      final tokenizer1 = TurtleTokenizer('ex:');
+      final token1 = tokenizer1.nextToken();
+      expect(token1.type, equals(TokenType.prefixedName));
+      expect(token1.value, equals('ex:'));
+
+      // Nur ein Präfix ohne Doppelpunkt
+      final tokenizer2 = TurtleTokenizer('example');
+      final token2 = tokenizer2.nextToken();
+      expect(token2.type, equals(TokenType.prefixedName));
+      expect(token2.value, equals('example'));
+    });
+
+    test('should handle collections with parentheses', () {
+      final tokenizer = TurtleTokenizer(
+        '( <http://example.org/item1> <http://example.org/item2> )',
+      );
+      expect(tokenizer.nextToken().type, equals(TokenType.openParen));
+      expect(tokenizer.nextToken().type, equals(TokenType.iri));
+      expect(tokenizer.nextToken().type, equals(TokenType.iri));
+      expect(tokenizer.nextToken().type, equals(TokenType.closeParen));
+      expect(tokenizer.nextToken().type, equals(TokenType.eof));
+    });
+
+    test('should handle comma-separated object lists', () {
+      final tokenizer = TurtleTokenizer(
+        '<http://example.org/subject> <http://example.org/predicate> "obj1", "obj2", "obj3" .',
+      );
+      expect(tokenizer.nextToken().type, equals(TokenType.iri));
+      expect(tokenizer.nextToken().type, equals(TokenType.iri));
+      expect(tokenizer.nextToken().type, equals(TokenType.literal));
+      expect(tokenizer.nextToken().type, equals(TokenType.comma));
+      expect(tokenizer.nextToken().type, equals(TokenType.literal));
+      expect(tokenizer.nextToken().type, equals(TokenType.comma));
+      expect(tokenizer.nextToken().type, equals(TokenType.literal));
+      expect(tokenizer.nextToken().type, equals(TokenType.dot));
+      expect(tokenizer.nextToken().type, equals(TokenType.eof));
+    });
   });
 }

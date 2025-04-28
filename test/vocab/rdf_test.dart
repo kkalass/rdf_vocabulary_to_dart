@@ -51,6 +51,175 @@ void main() {
       );
     });
 
+    test('nil has correct value', () {
+      expect(
+        Rdf.nil,
+        equals(
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil',
+          ),
+        ),
+      );
+    });
+
+    test('list has correct value', () {
+      expect(
+        Rdf.list,
+        equals(
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#List',
+          ),
+        ),
+      );
+    });
+
+    test('alt has correct value', () {
+      expect(
+        Rdf.alt,
+        equals(
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt',
+          ),
+        ),
+      );
+    });
+
+    test('bag has correct value', () {
+      expect(
+        Rdf.bag,
+        equals(
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag',
+          ),
+        ),
+      );
+    });
+
+    test('seq has correct value', () {
+      expect(
+        Rdf.seq,
+        equals(
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq',
+          ),
+        ),
+      );
+    });
+
+    test('container has correct value', () {
+      expect(
+        Rdf.container,
+        equals(
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#Container',
+          ),
+        ),
+      );
+    });
+
+    test('xmlLiteral has correct value', () {
+      expect(
+        Rdf.xmlLiteral,
+        equals(
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral',
+          ),
+        ),
+      );
+    });
+
+    test('html has correct value', () {
+      expect(
+        Rdf.html,
+        equals(
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML',
+          ),
+        ),
+      );
+    });
+
+    test('subject has correct value', () {
+      expect(
+        Rdf.subject,
+        equals(
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#subject',
+          ),
+        ),
+      );
+    });
+
+    test('predicate has correct value', () {
+      expect(
+        Rdf.predicate,
+        equals(
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate',
+          ),
+        ),
+      );
+    });
+
+    test('object has correct value', () {
+      expect(
+        Rdf.object,
+        equals(
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#object',
+          ),
+        ),
+      );
+    });
+
+    test('first has correct value', () {
+      expect(
+        Rdf.first,
+        equals(
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#first',
+          ),
+        ),
+      );
+    });
+
+    test('rest has correct value', () {
+      expect(
+        Rdf.rest,
+        equals(
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
+          ),
+        ),
+      );
+    });
+
+    test('value has correct value', () {
+      expect(
+        Rdf.value,
+        equals(
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
+          ),
+        ),
+      );
+    });
+
+    test('json has correct value', () {
+      expect(
+        Rdf.json,
+        equals(
+          const IriTerm.prevalidated(
+            'http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON',
+          ),
+        ),
+      );
+    });
+
+    test('prefix has correct value', () {
+      expect(Rdf.prefix, equals('rdf'));
+    });
+
     test('constant IRIs are immutable', () {
       expect(() {
         // This should not compile, but we'll check it at runtime too
