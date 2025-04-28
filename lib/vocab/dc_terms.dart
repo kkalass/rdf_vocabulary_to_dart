@@ -1,30 +1,41 @@
 /// Dublin Core Terms Vocabulary
 ///
-/// Provides constants for the [Dublin Core Terms vocabulary](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/).
+/// Provides constants for the [Dublin Core Terms vocabulary](http://purl.org/dc/terms/),
+/// which extends the basic Dublin Core Elements with additional metadata terms.
 ///
 /// Example usage:
 /// ```dart
 /// import 'package:rdf_core/vocab/dc_terms.dart';
-/// final creator = DcTermsPredicates.creator;
+/// final title = DcTermsPredicates.title;
 /// ```
+///
+/// All constants are pre-constructed as IriTerm objects to enable direct use in
+/// constructing RDF graphs without repeated string concatenation or term creation.
+///
+/// [Specification Reference](http://purl.org/dc/terms/)
 library dc_terms_vocab;
 
 import 'package:rdf_core/graph/rdf_term.dart';
 
-/// Dublin Core Terms namespace and basic utility functions
+/// Base Dublin Core Terms namespace and utility functions
 class DcTerms {
+  // coverage:ignore-start
   const DcTerms._();
+  // coverage:ignore-end
 
   /// Base IRI for Dublin Core Terms vocabulary
+  /// [Spec](http://purl.org/dc/terms/)
   static const String namespace = 'http://purl.org/dc/terms/';
   static const String prefix = 'dcterms';
 }
 
-/// Dublin Core Terms classes
+/// Dublin Core Terms classes.
 ///
-/// Contains IRIs for Dublin Core Terms classes.
+/// Contains IRIs for classes defined in the Dublin Core Terms vocabulary.
 class DcTermsClasses {
+  // coverage:ignore-start
   const DcTermsClasses._();
+  // coverage:ignore-end
 
   /// IRI for dcterms:Agent
   /// [Spec](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/Agent)
@@ -87,11 +98,13 @@ class DcTermsClasses {
   );
 }
 
-/// Dublin Core Terms predicate constants
+/// Dublin Core Terms predicates.
 ///
-/// Contains IRIs for commonly used Dublin Core Terms properties.
+/// Contains IRIs for properties defined in the Dublin Core Terms vocabulary.
 class DcTermsPredicates {
+  // coverage:ignore-start
   const DcTermsPredicates._();
+  // coverage:ignore-end
 
   /// IRI for dcterms:abstract property
   /// [Spec](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/#http://purl.org/dc/terms/abstract)

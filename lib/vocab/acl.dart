@@ -19,7 +19,9 @@ import 'package:rdf_core/graph/rdf_term.dart';
 
 /// Base ACL namespace and utility functions
 class Acl {
+  // coverage:ignore-start
   const Acl._();
+  // coverage:ignore-end
 
   /// Base IRI for ACL vocabulary
   /// [Spec](http://www.w3.org/ns/auth/acl)
@@ -31,7 +33,9 @@ class Acl {
 ///
 /// Contains IRIs that represent classes defined in the ACL vocabulary.
 class AclClasses {
+  // coverage:ignore-start
   const AclClasses._();
+  // coverage:ignore-end
 
   /// IRI for acl:Authorization
   /// [Spec](http://www.w3.org/ns/auth/acl#Authorization)
@@ -54,7 +58,9 @@ class AclClasses {
 ///
 /// Contains IRIs for access modes defined in the ACL vocabulary.
 class AclModes {
+  // coverage:ignore-start
   const AclModes._();
+  // coverage:ignore-end
 
   /// IRI for acl:Read
   /// [Spec](http://www.w3.org/ns/auth/acl#Read)
@@ -87,7 +93,9 @@ class AclModes {
 ///
 /// Contains IRIs for properties defined in the ACL vocabulary.
 class AclPredicates {
+  // coverage:ignore-start
   const AclPredicates._();
+  // coverage:ignore-end
 
   /// IRI for acl:accessTo
   /// [Spec](http://www.w3.org/ns/auth/acl#accessTo)

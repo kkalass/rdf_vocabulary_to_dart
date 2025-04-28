@@ -1,6 +1,7 @@
 /// Schema.org Vocabulary
 ///
-/// Provides constants for the [Schema.org vocabulary](https://schema.org/).
+/// Provides constants for the [Schema.org vocabulary](https://schema.org/),
+/// which defines schemas for structured data on the internet.
 ///
 /// Example usage:
 /// ```dart
@@ -11,26 +12,30 @@
 /// All constants are pre-constructed as IriTerm objects to enable direct use in
 /// constructing RDF graphs without repeated string concatenation or term creation.
 ///
-/// [Specification Reference](https://schema.org/)
+/// [Specification Reference](https://schema.org/docs/schemas.html)
 library schema_vocab;
 
 import 'package:rdf_core/graph/rdf_term.dart';
 
-/// Schema.org namespace and utility functions
+/// Base Schema.org namespace and utility functions
 class Schema {
+  // coverage:ignore-start
   const Schema._();
+  // coverage:ignore-end
 
   /// Base IRI for Schema.org vocabulary
-  /// [Schema.org Documentation](https://schema.org/)
-  static const String namespace = 'http://schema.org/';
+  /// [Spec](http://schema.org/)
+  static const String namespace = 'https://schema.org/';
   static const String prefix = 'schema';
 }
 
 /// Schema.org class constants.
 ///
-/// Contains IRIs for core classes defined in the Schema.org vocabulary.
+/// Contains IRIs that represent classes defined in the Schema.org vocabulary.
 class SchemaClasses {
+  // coverage:ignore-start
   const SchemaClasses._();
+  // coverage:ignore-end
 
   /// IRI for schema:Thing
   /// [Spec](https://schema.org/Thing)
@@ -91,11 +96,13 @@ class SchemaClasses {
   static const offer = IriTerm.prevalidated('${Schema.namespace}Offer');
 }
 
-/// Core Schema.org property constants.
+/// Schema.org predicate constants.
 ///
-/// Contains IRIs for core properties defined in the Schema.org vocabulary.
+/// Contains IRIs for properties defined in the Schema.org vocabulary.
 class SchemaProperties {
+  // coverage:ignore-start
   const SchemaProperties._();
+  // coverage:ignore-end
 
   /// IRI for schema:name
   /// [Spec](https://schema.org/name)
@@ -170,7 +177,9 @@ class SchemaProperties {
 ///
 /// Contains IRIs for person-related properties in the Schema.org vocabulary.
 class SchemaPersonProperties {
+  // coverage:ignore-start
   const SchemaPersonProperties._();
+  // coverage:ignore-end
 
   /// IRI for schema:givenName
   /// [Spec](https://schema.org/givenName)
@@ -221,7 +230,9 @@ class SchemaPersonProperties {
 ///
 /// Contains IRIs for organization-related properties in the Schema.org vocabulary.
 class SchemaOrganizationProperties {
+  // coverage:ignore-start
   const SchemaOrganizationProperties._();
+  // coverage:ignore-end
 
   /// IRI for schema:legalName
   /// [Spec](https://schema.org/legalName)

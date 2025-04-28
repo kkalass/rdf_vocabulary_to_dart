@@ -1,6 +1,8 @@
 /// Simple Knowledge Organization System (SKOS) Vocabulary
 ///
-/// Provides constants for the [SKOS Vocabulary](https://www.w3.org/TR/skos-reference/).
+/// Provides constants for the [SKOS vocabulary](http://www.w3.org/2004/02/skos/core#),
+/// which is used for representing knowledge organization systems such as thesauri,
+/// classification schemes, subject heading lists and taxonomies.
 ///
 /// Example usage:
 /// ```dart
@@ -18,10 +20,12 @@ import 'package:rdf_core/graph/rdf_term.dart';
 
 /// Base SKOS namespace and utility functions
 class Skos {
+  // coverage:ignore-start
   const Skos._();
+  // coverage:ignore-end
 
   /// Base IRI for SKOS vocabulary
-  /// [Spec](https://www.w3.org/TR/skos-reference/)
+  /// [Spec](http://www.w3.org/2004/02/skos/core#)
   static const String namespace = 'http://www.w3.org/2004/02/skos/core#';
   static const String prefix = 'skos';
 }
@@ -30,7 +34,9 @@ class Skos {
 ///
 /// Contains IRIs that represent classes defined in the SKOS vocabulary.
 class SkosClasses {
+  // coverage:ignore-start
   const SkosClasses._();
+  // coverage:ignore-end
 
   /// IRI for skos:Concept
   /// [Spec](https://www.w3.org/TR/skos-reference/#concepts)
@@ -63,9 +69,11 @@ class SkosClasses {
 
 /// SKOS predicate constants for semantic relations.
 ///
-/// Contains IRIs for properties that represent semantic relations in the SKOS vocabulary.
+/// Contains IRIs for properties defined in the SKOS vocabulary.
 class SkosSemanticRelations {
+  // coverage:ignore-start
   const SkosSemanticRelations._();
+  // coverage:ignore-end
 
   /// IRI for skos:broader
   /// [Spec](https://www.w3.org/TR/skos-reference/#semantic-relations)

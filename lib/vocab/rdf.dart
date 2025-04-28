@@ -1,11 +1,12 @@
 /// RDF Core Vocabulary
 ///
-/// Provides constants for the [W3C RDF 1.1 Concepts and Abstract Syntax specification](https://www.w3.org/TR/rdf11-concepts/).
+/// Provides constants for the [RDF vocabulary](http://www.w3.org/1999/02/22-rdf-syntax-ns#),
+/// which defines the core concepts and properties of the RDF data model.
 ///
 /// Example usage:
 /// ```dart
 /// import 'package:rdf_core/vocab/rdf.dart';
-/// final typePredicate = RdfPredicates.type;
+/// final type = RdfPredicates.type;
 /// ```
 ///
 /// All constants are pre-constructed as IriTerm objects to enable direct use in
@@ -16,16 +17,14 @@ library rdf_vocab;
 
 import 'package:rdf_core/graph/rdf_term.dart';
 
-/// Base RDF namespace and miscellaneous terms.
-///
-/// Contains the namespace constant and any RDF terms that don't fit into
-/// more specific categories like types or predicates.
+/// Base RDF namespace and utility functions
 class Rdf {
-  // Private constructor prevents instantiation
+  // coverage:ignore-start
   const Rdf._();
+  // coverage:ignore-end
 
   /// Base IRI for RDF vocabulary
-  /// [Spec](https://www.w3.org/1999/02/22-rdf-syntax-ns#)
+  /// [Spec](http://www.w3.org/1999/02/22-rdf-syntax-ns#)
   static const String namespace = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#';
   static const String prefix = 'rdf';
 
@@ -133,10 +132,11 @@ class Rdf {
 
 /// RDF type/class constants.
 ///
-/// Contains IRIs that represent RDF classes or types defined in the core RDF vocabulary.
+/// Contains IRIs that represent classes or types defined in the RDF vocabulary.
 class RdfTypes {
-  // Private constructor prevents instantiation
+  // coverage:ignore-start
   const RdfTypes._();
+  // coverage:ignore-end
 
   /// IRI for rdf:langString datatype
   ///
@@ -153,10 +153,11 @@ class RdfTypes {
 
 /// RDF predicate constants.
 ///
-/// Contains IRIs that represent RDF predicates or properties defined in the core RDF vocabulary.
+/// Contains IRIs for properties defined in the RDF vocabulary.
 class RdfPredicates {
-  // Private constructor prevents instantiation
+  // coverage:ignore-start
   const RdfPredicates._();
+  // coverage:ignore-end
 
   /// IRI for rdf:type predicate
   /// [Spec](https://www.w3.org/TR/rdf11-concepts/#section-triples)

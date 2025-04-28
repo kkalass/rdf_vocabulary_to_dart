@@ -1,7 +1,7 @@
 /// Linked Data Platform (LDP) Vocabulary
 ///
-/// Provides constants for the [W3C Linked Data Platform (LDP) vocabulary](http://www.w3.org/ns/ldp#),
-/// which describes the concepts and features used in the Linked Data Platform specification.
+/// Provides constants for the [Linked Data Platform (LDP) vocabulary](http://www.w3.org/ns/ldp#),
+/// which is used for describing web resources that comply with the LDP specification.
 ///
 /// Example usage:
 /// ```dart
@@ -19,7 +19,9 @@ import 'package:rdf_core/graph/rdf_term.dart';
 
 /// Base LDP namespace and utility functions
 class Ldp {
+  // coverage:ignore-start
   const Ldp._();
+  // coverage:ignore-end
 
   /// Base IRI for LDP vocabulary
   /// [Spec](http://www.w3.org/ns/ldp#)
@@ -31,7 +33,9 @@ class Ldp {
 ///
 /// Contains IRIs that represent classes defined in the LDP vocabulary.
 class LdpClasses {
+  // coverage:ignore-start
   const LdpClasses._();
+  // coverage:ignore-end
 
   /// IRI for ldp:Resource
   /// [Spec](https://www.w3.org/TR/ldp/#ldpr-resource)
@@ -88,7 +92,9 @@ class LdpClasses {
 ///
 /// Contains IRIs for properties defined in the LDP vocabulary.
 class LdpPredicates {
+  // coverage:ignore-start
   const LdpPredicates._();
+  // coverage:ignore-end
 
   /// IRI for ldp:contains
   /// [Spec](https://www.w3.org/TR/ldp/#ldpc-containsrel)

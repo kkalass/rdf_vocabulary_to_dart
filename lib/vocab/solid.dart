@@ -1,25 +1,27 @@
-/// Solid Terms Vocabulary
+/// Solid Vocabulary
 ///
-/// Provides constants for the [Solid Terms vocabulary](http://www.w3.org/ns/solid/terms)
-/// used in the Solid specification.
+/// Provides constants for the [Solid vocabulary](http://www.w3.org/ns/solid/terms#),
+/// which defines terms related to the Solid project and decentralized data ecosystems.
 ///
 /// Example usage:
 /// ```dart
 /// import 'package:rdf_core/vocab/solid.dart';
-/// final publicTypeIndex = SolidPredicates.publicTypeIndex;
+/// final oidcIssuer = SolidPredicates.oidcIssuer;
 /// ```
 ///
 /// All constants are pre-constructed as IriTerm objects to enable direct use in
 /// constructing RDF graphs without repeated string concatenation or term creation.
 ///
-/// [Specification Reference](http://www.w3.org/ns/solid/terms)
+/// [Project Reference](https://solidproject.org/)
 library solid_vocab;
 
 import 'package:rdf_core/graph/rdf_term.dart';
 
 /// Base Solid namespace and utility functions
 class Solid {
+  // coverage:ignore-start
   const Solid._();
+  // coverage:ignore-end
 
   /// Base IRI for Solid vocabulary
   /// [Spec](http://www.w3.org/ns/solid/terms)
@@ -29,9 +31,11 @@ class Solid {
 
 /// Solid class constants.
 ///
-/// Contains IRIs for classes defined in the Solid vocabulary.
+/// Contains IRIs that represent classes defined in the Solid vocabulary.
 class SolidClasses {
+  // coverage:ignore-start
   const SolidClasses._();
+  // coverage:ignore-end
 
   /// IRI for solid:TypeRegistration
   /// [Spec](http://www.w3.org/ns/solid/terms#TypeRegistration)
@@ -70,11 +74,13 @@ class SolidClasses {
   static const workspace = IriTerm.prevalidated('${Solid.namespace}Workspace');
 }
 
-/// Solid predicates constants.
+/// Solid predicate constants.
 ///
 /// Contains IRIs for properties defined in the Solid vocabulary.
 class SolidPredicates {
+  // coverage:ignore-start
   const SolidPredicates._();
+  // coverage:ignore-end
 
   /// IRI for solid:oidcIssuer
   /// [Spec](http://www.w3.org/ns/solid/terms#oidcIssuer)

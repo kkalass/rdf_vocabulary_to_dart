@@ -1,25 +1,30 @@
 ///
-/// Provides constants for [XML Schema Definition (XSD) datatypes](https://www.w3.org/TR/xmlschema-2/) as used in RDF.
+/// XML Schema Definition (XSD) Vocabulary
+///
+/// Provides constants for the [XML Schema Definition vocabulary](http://www.w3.org/2001/XMLSchema#),
+/// which defines data types used in RDF literals.
 ///
 /// Example usage:
 /// ```dart
 /// import 'package:rdf_core/vocab/xsd.dart';
-/// final intType = XsdTypes.int;
+/// final integerType = Xsd.integer;
 /// ```
 ///
-/// All constants are pre-constructed as IriTerm objects for direct use in the library.
+/// All constants are pre-constructed as IriTerm objects to enable direct use in
+/// constructing RDF graphs without repeated string concatenation or term creation.
 ///
-/// [Specification Reference](https://www.w3.org/TR/xmlschema-2/)
+/// [Specification Reference](https://www.w3.org/TR/xmlschema11-2/)
 library xsd_vocab;
 
 import 'package:rdf_core/graph/rdf_term.dart';
 
-/// XML Schema Definition (XSD) namespace and utility functions
+/// XSD namespace and datatype constants
 ///
-/// Contains the namespace constant and utility methods for working with XSD terms.
+/// Contains IRIs for XML Schema datatypes commonly used in RDF.
 class Xsd {
-  // Private constructor prevents instantiation
+  // coverage:ignore-start
   const Xsd._();
+  // coverage:ignore-end
 
   /// Base IRI for XMLSchema datatypes
   /// [Spec](https://www.w3.org/TR/xmlschema-2/)
@@ -36,8 +41,10 @@ class Xsd {
 ///
 /// These constants are particularly important when creating typed literals in RDF graphs.
 class XsdTypes {
+  // coverage:ignore-start
   // Private constructor prevents instantiation
   const XsdTypes._();
+  // coverage:ignore-end
 
   /// IRI for xsd:string datatype
   /// [Spec](https://www.w3.org/TR/xmlschema-2/#string)

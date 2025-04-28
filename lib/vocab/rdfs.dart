@@ -1,4 +1,4 @@
-/// RDF Schema Vocabulary
+/// RDF Schema (RDFS) Vocabulary
 ///
 /// Provides constants for the [RDF Schema 1.1](https://www.w3.org/TR/rdf-schema/).
 ///
@@ -18,7 +18,9 @@ import 'package:rdf_core/graph/rdf_term.dart';
 
 /// Base RDFS namespace and utility functions
 class Rdfs {
+  // coverage:ignore-start
   const Rdfs._();
+  // coverage:ignore-end
 
   /// Base IRI for RDFS vocabulary
   /// [Spec](https://www.w3.org/TR/rdf-schema/)
@@ -30,7 +32,9 @@ class Rdfs {
 ///
 /// Contains IRIs that represent classes defined in the RDFS vocabulary.
 class RdfsClasses {
+  // coverage:ignore-start
   const RdfsClasses._();
+  // coverage:ignore-end
 
   /// IRI for rdfs:Resource
   /// [Spec](https://www.w3.org/TR/rdf-schema/#ch_resource)
@@ -76,7 +80,9 @@ class RdfsClasses {
 ///
 /// Contains IRIs for properties defined in the RDFS vocabulary.
 class RdfsPredicates {
+  // coverage:ignore-start
   const RdfsPredicates._();
+  // coverage:ignore-end
 
   /// IRI for rdfs:domain
   /// [Spec](https://www.w3.org/TR/rdf-schema/#ch_domain)

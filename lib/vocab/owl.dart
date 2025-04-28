@@ -18,7 +18,9 @@ import 'package:rdf_core/graph/rdf_term.dart';
 
 /// Base OWL namespace and utility functions
 class Owl {
+  // coverage:ignore-start
   const Owl._();
+  // coverage:ignore-end
 
   /// Base IRI for OWL vocabulary
   /// [Spec](https://www.w3.org/TR/owl2-overview/)
@@ -30,7 +32,9 @@ class Owl {
 ///
 /// Contains IRIs that represent classes defined in the OWL vocabulary.
 class OwlClasses {
+  // coverage:ignore-start
   const OwlClasses._();
+  // coverage:ignore-end
 
   /// IRI for owl:Class
   /// [Spec](https://www.w3.org/TR/owl2-syntax/#Classes)
@@ -101,7 +105,9 @@ class OwlClasses {
 ///
 /// Contains IRIs for properties defined in the OWL vocabulary.
 class OwlPredicates {
+  // coverage:ignore-start
   const OwlPredicates._();
+  // coverage:ignore-end
 
   /// IRI for owl:sameAs
   /// [Spec](https://www.w3.org/TR/owl2-syntax/#Individual_Equality)

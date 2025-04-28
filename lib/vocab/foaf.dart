@@ -1,6 +1,8 @@
 /// Friend of a Friend (FOAF) Vocabulary
 ///
-/// Provides constants for the [FOAF Vocabulary Specification](http://xmlns.com/foaf/spec/).
+/// Provides constants for the [FOAF vocabulary](http://xmlns.com/foaf/0.1/),
+/// which is used for describing people, their activities, and their relations to
+/// other people and objects.
 ///
 /// Example usage:
 /// ```dart
@@ -18,10 +20,12 @@ import 'package:rdf_core/graph/rdf_term.dart';
 
 /// Base FOAF namespace and utility functions
 class Foaf {
+  // coverage:ignore-start
   const Foaf._();
+  // coverage:ignore-end
 
   /// Base IRI for FOAF vocabulary
-  /// [Spec](http://xmlns.com/foaf/spec/)
+  /// [Spec](http://xmlns.com/foaf/0.1/)
   static const String namespace = 'http://xmlns.com/foaf/0.1/';
   static const String prefix = 'foaf';
 }
@@ -30,7 +34,9 @@ class Foaf {
 ///
 /// Contains IRIs that represent classes defined in the FOAF vocabulary.
 class FoafClasses {
+  // coverage:ignore-start
   const FoafClasses._();
+  // coverage:ignore-end
 
   /// IRI for foaf:Agent
   /// [Spec](http://xmlns.com/foaf/spec/#term_Agent)
@@ -89,7 +95,9 @@ class FoafClasses {
 ///
 /// Contains IRIs for properties defined in the FOAF vocabulary.
 class FoafPredicates {
+  // coverage:ignore-start
   const FoafPredicates._();
+  // coverage:ignore-end
 
   /// IRI for foaf:name
   /// [Spec](http://xmlns.com/foaf/spec/#term_name)

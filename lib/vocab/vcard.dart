@@ -1,12 +1,12 @@
-/// vCard Ontology Vocabulary
+/// vCard Vocabulary
 ///
-/// Provides constants for the [vCard Ontology](https://www.w3.org/TR/vcard-rdf/).
-/// This vocabulary corresponds to the RDF encoding of vCard data.
+/// Provides constants for the [vCard vocabulary](http://www.w3.org/2006/vcard/ns#),
+/// which is used for describing people and organizations.
 ///
 /// Example usage:
 /// ```dart
 /// import 'package:rdf_core/vocab/vcard.dart';
-/// final fullName = VcardPredicates.fn;
+/// final name = VcardPredicates.name;
 /// ```
 ///
 /// All constants are pre-constructed as IriTerm objects to enable direct use in
@@ -19,7 +19,9 @@ import 'package:rdf_core/graph/rdf_term.dart';
 
 /// Base vCard namespace and utility functions
 class Vcard {
+  // coverage:ignore-start
   const Vcard._();
+  // coverage:ignore-end
 
   /// Base IRI for vCard vocabulary
   /// [Spec](https://www.w3.org/TR/vcard-rdf/)
@@ -31,7 +33,9 @@ class Vcard {
 ///
 /// Contains IRIs that represent classes defined in the vCard vocabulary.
 class VcardClasses {
+  // coverage:ignore-start
   const VcardClasses._();
+  // coverage:ignore-end
 
   /// IRI for vcard:VCard
   /// [Spec](https://www.w3.org/TR/vcard-rdf/#d4e183)
@@ -76,7 +80,9 @@ class VcardClasses {
 ///
 /// Contains IRIs for properties defined in the vCard vocabulary.
 class VcardPredicates {
+  // coverage:ignore-start
   const VcardPredicates._();
+  // coverage:ignore-end
 
   /// IRI for vcard:fn
   /// [Spec](https://www.w3.org/TR/vcard-rdf/#d4e398)

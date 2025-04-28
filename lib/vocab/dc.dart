@@ -1,7 +1,7 @@
-/// Dublin Core Elements Vocabulary
+/// Dublin Core Vocabulary
 ///
-/// Provides constants for the [Dublin Core Elements vocabulary](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin-core-element-set/).
-/// Note that this is distinct from Dublin Core Terms (dcterms), which is an extension of the Elements set.
+/// Provides constants for the [Dublin Core Metadata Initiative vocabulary](http://purl.org/dc/elements/1.1/),
+/// which defines basic metadata terms for describing resources.
 ///
 /// Example usage:
 /// ```dart
@@ -12,26 +12,30 @@
 /// All constants are pre-constructed as IriTerm objects to enable direct use in
 /// constructing RDF graphs without repeated string concatenation or term creation.
 ///
-/// [Specification Reference](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin-core-element-set/)
+/// [Specification Reference](http://purl.org/dc/elements/1.1/)
 library dc_vocab;
 
 import 'package:rdf_core/graph/rdf_term.dart';
 
-/// Base Dublin Core Elements namespace and utility functions
+/// Base Dublin Core namespace and utility functions
 class Dc {
+  // coverage:ignore-start
   const Dc._();
+  // coverage:ignore-end
 
   /// Base IRI for Dublin Core Elements vocabulary
-  /// [Spec](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin-core-element-set/)
+  /// [Spec](http://purl.org/dc/elements/1.1/)
   static const String namespace = 'http://purl.org/dc/elements/1.1/';
   static const String prefix = 'dc';
 }
 
-/// Dublin Core Elements predicate constants.
+/// Dublin Core predicates.
 ///
 /// Contains IRIs for properties defined in the Dublin Core Elements vocabulary.
 class DcPredicates {
+  // coverage:ignore-start
   const DcPredicates._();
+  // coverage:ignore-end
 
   /// IRI for dc:title
   /// [Spec](https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/title/)
