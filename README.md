@@ -11,11 +11,86 @@
 
 ---
 
+<div align="center">
+  <h2>🔥 Looking for our Companion Project rdf_mapper - Dart Objects ↔️ RDF? 🔥</h2>
+  
+  <p><strong><a href="https://github.com/kkalass/rdf_mapper">Discover rdf_mapper now on GitHub!</a></strong></p>
+  
+</div>
+
+```dart
+import 'package:rdf_mapper/rdf_mapper.dart';
+
+final rdfMapper = RdfMapper.withDefaultRegistry(
+    ..registerMapper<Person>(PersonMapper());
+
+// From Dart objects to RDF turtle string
+final person = Person(
+  id: 'http://example.org/person/1',
+  name: 'John Smith',
+  age: 30,
+);
+
+final turtle = rdfMapper.serialize(person);
+
+// From RDF back to Dart objects
+final loadedPerson = rdfMapper.deserialize<Person>(turtleInput);
+```
+
+Implement the PersonMapper
+
+```dart
+// Powerful Mapper implementation:
+class PersonMapper implements IriNodeMapper<Person> {
+  @override
+  IriTerm? get typeIri => IriTerm('http://xmlns.com/foaf/0.1/Person');
+  
+  @override
+  (IriTerm, List<Triple>) toRdfNode(Person value, SerializationContext context, {RdfSubject? parentSubject}) {
+
+    // convert dart objects to triples using the fluent builder API
+    return context.nodeBuilder(IriTerm(value.id))
+      .literal(IriTerm('http://xmlns.com/foaf/0.1/name'), value.name)
+      .literal(IriTerm('http://xmlns.com/foaf/0.1/age'), value.age)
+      .build();
+  }
+  
+  @override
+  Person fromRdfNode(IriTerm term, DeserializationContext context) {
+    final reader = context.reader(term);
+    
+    return Person(
+      id: term.iri,
+      name: reader.require<String>(IriTerm('http://xmlns.com/foaf/0.1/name')),
+      age: reader.require<int>(IriTerm('http://xmlns.com/foaf/0.1/age')),
+    );
+  }
+}
+```
+
+... and the Person class - You can define it as you like, there is no requirement for immutability, 
+a specific base class or such.
+
+```dart
+class Person {
+  final String id;
+  final String name;
+  final int age;
+  
+  Person({required this.id, required this.name, required this.age});
+}
+```
+
+---
+&nbsp;
+---
+
+# RDF Core
+
 [🌐 **Official Homepage**](https://kkalass.github.io/rdf_core/)
 
 A type-safe, and extensible Dart library for representing and manipulating RDF data without any further dependencies.
 
----
 
 ## ✨ Features
 
@@ -25,7 +100,7 @@ A type-safe, and extensible Dart library for representing and manipulating RDF d
 - **Spec-compliant:** Follows [W3C RDF 1.1](https://www.w3.org/TR/rdf11-concepts/) and related standards
 - **Built-in vocabularies:** FOAF, Dublin Core (DC), SKOS, Schema.org, and more for easy discovery and usage, fully linked to the respective ontologies
 
----
+
 
 ## 🚀 Quick Start
 
