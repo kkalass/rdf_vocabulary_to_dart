@@ -11,13 +11,12 @@
 
 ---
 
-<div  style="background-color: #f5f5f5; border: 2px solid #4caf50; border-radius: 8px; padding: 20px; margin: 20px 0;">
 <div align="center">
   <h2>🔥 Looking for our Companion Project rdf_mapper - Dart Objects ↔️ RDF? 🔥</h2>
   
-  <strong><a href="https://github.com/kkalass/rdf_mapper">Discover rdf_mapper now on GitHub!</a></strong>
-  </div>
-
+  <p><strong><a href="https://github.com/kkalass/rdf_mapper">Discover rdf_mapper now on GitHub!</a></strong></p>
+  
+</div>
 
 ```dart
 import 'package:rdf_mapper/rdf_mapper.dart';
@@ -81,10 +80,10 @@ class Person {
   Person({required this.id, required this.name, required this.age});
 }
 ```
-</div>
 
+---
 &nbsp;
-
+---
 
 # RDF Core
 
