@@ -29,7 +29,7 @@ class VocabularyBuilder implements Builder {
   final String outputDir;
 
   /// The cross-vocabulary resolver that tracks relationships between vocabularies
-  final CrossVocabularyResolver _resolver = CrossVocabularyResolver();
+  final CrossVocabularyResolver _resolver;
   
   /// Map of vocabulary models by name
   final Map<String, VocabularyModel> _vocabularyModels = {};
@@ -50,16 +50,115 @@ class VocabularyBuilder implements Builder {
     'schema',
     'solid',
   ];
+  
+  // Map of standard vocabulary namespaces to their source URLs
+  static const Map<String, String> _standardVocabularies = {
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#': 
+      'https://www.w3.org/1999/02/22-rdf-syntax-ns.ttl',
+    'http://www.w3.org/2000/01/rdf-schema#': 
+      'https://www.w3.org/2000/01/rdf-schema.ttl',
+    'http://www.w3.org/2001/XMLSchema#': 
+      'https://www.w3.org/2001/XMLSchema.ttl',
+    'http://www.w3.org/2002/07/owl#':
+      'https://www.w3.org/2002/07/owl.ttl',
+  };
 
   /// Creates a new vocabulary builder.
   ///
   /// [manifestAssetPath] specifies the path to the manifest JSON file that defines
   /// the vocabularies to be generated.
   /// [outputDir] specifies where to generate the vocabulary files, relative to lib/.
-   VocabularyBuilder({
+  VocabularyBuilder({
     required this.manifestAssetPath,
     required this.outputDir,
-  });
+  }) : _resolver = CrossVocabularyResolver(
+         vocabularyLoader: _loadImpliedVocabulary,
+       );
+
+  /// Loads an implied vocabulary that was discovered through references
+  static Future<VocabularyModel?> _loadImpliedVocabulary(
+    String namespace, 
+    String name,
+  ) async {
+    log.info('Loading implied vocabulary "$name" from namespace $namespace');
+    
+    String? sourceUrl = _standardVocabularies[namespace];
+    if (sourceUrl == null) {
+      log.warning('No known source for vocabulary namespace: $namespace');
+      return null;
+    }
+    
+    try {
+      // Create a source for the vocabulary
+      final source = UrlVocabularySource(namespace, sourceUrl: sourceUrl);
+      
+      // Load the vocabulary content
+      final content = await source.loadContent();
+      if (content == null || content.isEmpty) {
+        log.warning('Empty content for implied vocabulary $name');
+        return null;
+      }
+      
+      // Parse the vocabulary
+      final rdfCore = RdfCore.withStandardFormats();
+      RdfGraph? graph;
+      
+      final formats = [
+        source.getFormat(),
+        'turtle',
+        'rdf/xml',
+        'json-ld',
+        'n-triples',
+      ];
+      
+      for (final format in formats) {
+        try {
+          final contentType = _getContentTypeForFormat(format);
+          log.info('Trying to parse $name with format $contentType');
+          graph = rdfCore.parse(content, contentType: contentType);
+          if (graph != null) {
+            log.info('Successfully parsed $name with format $contentType');
+            break;
+          }
+        } catch (e) {
+          log.warning('Failed to parse $name with format $format: $e');
+        }
+      }
+      
+      if (graph == null) {
+        log.severe('Failed to parse implied vocabulary $name with any format');
+        return null;
+      }
+      
+      // Extract the vocabulary model
+      final model = VocabularyModelExtractor.extractFrom(graph, namespace, name);
+      log.info('Successfully extracted vocabulary model for $name');
+      
+      return model;
+    } catch (e, stackTrace) {
+      log.severe(
+        'Error loading implied vocabulary $name from $namespace: $e\n$stackTrace',
+      );
+      return null;
+    }
+  }
+  
+  /// Maps format names to content types
+  static String _getContentTypeForFormat(String format) {
+    switch (format.toLowerCase()) {
+      case 'turtle':
+        return 'text/turtle';
+      case 'rdf/xml':
+      case 'xml':
+        return 'application/rdf+xml';
+      case 'json-ld':
+        return 'application/ld+json';
+      case 'n-triples':
+        return 'application/n-triples';
+      default:
+        return 'text/turtle'; // Default to Turtle
+    }
+  }
 
   @override
   Map<String, List<String>> get buildExtensions {
@@ -102,6 +201,9 @@ class VocabularyBuilder implements Builder {
 
     // Phase 1: Parse and register vocabularies
     await _parseVocabularies(buildStep, vocabularySources);
+    
+    // Load any vocabularies that were referenced but not explicitly defined
+    await _resolver.loadPendingVocabularies();
 
     // Phase 2: Generate code for each vocabulary
     final results = await _generateVocabularyClasses(buildStep);
@@ -304,23 +406,6 @@ class VocabularyBuilder implements Builder {
     }
     
     return results;
-  }
-
-  /// Maps format names to content types
-  String _getContentTypeForFormat(String format) {
-    switch (format.toLowerCase()) {
-      case 'turtle':
-        return 'text/turtle';
-      case 'rdf/xml':
-      case 'xml':
-        return 'application/rdf+xml';
-      case 'json-ld':
-        return 'application/ld+json';
-      case 'n-triples':
-        return 'application/n-triples';
-      default:
-        return 'text/turtle'; // Default to Turtle
-    }
   }
 
   /// Generates an index file that exports all generated vocabulary classes.

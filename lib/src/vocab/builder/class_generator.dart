@@ -238,7 +238,13 @@ class VocabularyClassGenerator {
 
       // Write all applicable properties
       for (final property in properties) {
-        _writeTerm(buffer, property, className, prefix: '  ');
+        _writeTerm(
+          buffer,
+          property,
+          className,
+          prefix: '  ',
+          classNamespace: model.namespace,
+        );
       }
 
       buffer.writeln('}');
@@ -252,8 +258,9 @@ class VocabularyClassGenerator {
     VocabularyTerm term,
     String className, {
     String prefix = '',
+    String? classNamespace,
   }) {
-    final dartName = _dartIdentifier(term.localName);
+    final dartName = _getPropertyName(term, classNamespace);
 
     // Write documentation
     buffer.writeln(
@@ -294,7 +301,8 @@ class VocabularyClassGenerator {
 
     // Write the constant declaration with correct indentation
     buffer.writeln(
-      "${prefix}static const $dartName = IriTerm.prevalidated('${term.iri}');",
+      "$prefix" +
+          "static const $dartName = IriTerm.prevalidated('${term.iri}');",
     );
     buffer.writeln();
   }
@@ -306,6 +314,68 @@ class VocabularyClassGenerator {
         .map((line) => line.trim())
         .where((line) => line.isNotEmpty)
         .join('\n  /// ');
+  }
+
+  /// Gets a property name with prefix if it comes from a different namespace
+  String _getPropertyName(VocabularyTerm term, String? classNamespace) {
+    final dartName = _dartIdentifier(term.localName);
+
+    // If classNamespace is null, we're generating the main class (no prefix needed)
+    if (classNamespace == null) return dartName;
+
+    // If the property belongs to a different namespace than the class,
+    // prefix it to avoid naming conflicts
+    if (!term.iri.startsWith(classNamespace)) {
+      // Extract the namespace from the IRI
+      final namespace = _extractNamespace(term.iri);
+      if (namespace != null && namespace != classNamespace) {
+        final foreignVocabPrefix = _getNamespacePrefix(namespace);
+        if (foreignVocabPrefix != null) {
+          // Combine prefix with camelCased name
+          return '$foreignVocabPrefix${_capitalize(dartName)}';
+        }
+      }
+    }
+
+    return dartName;
+  }
+
+  /// Extracts the namespace part from an IRI
+  String? _extractNamespace(String iri) {
+    // Try to find the namespace by common delimiters
+    final hashIndex = iri.lastIndexOf('#');
+    if (hashIndex != -1) {
+      return iri.substring(0, hashIndex + 1);
+    }
+
+    final slashIndex = iri.lastIndexOf('/');
+    if (slashIndex != -1) {
+      return iri.substring(0, slashIndex + 1);
+    }
+
+    return null;
+  }
+
+  /// Gets a prefix for a namespace
+  String? _getNamespacePrefix(String namespace) {
+    // Common namespace to prefix mappings
+    final prefixMap = {
+      'http://www.w3.org/1999/02/22-rdf-syntax-ns#': 'rdf',
+      'http://www.w3.org/2000/01/rdf-schema#': 'rdfs',
+      'http://www.w3.org/2001/XMLSchema#': 'xsd',
+      'http://www.w3.org/2002/07/owl#': 'owl',
+      'http://purl.org/dc/elements/1.1/': 'dc',
+      'http://purl.org/dc/terms/': 'dcterms',
+      'http://xmlns.com/foaf/0.1/': 'foaf',
+      'http://www.w3.org/2004/02/skos/core#': 'skos',
+      'http://www.w3.org/2006/vcard/ns#': 'vcard',
+      'http://www.w3.org/ns/auth/acl#': 'acl',
+      'http://www.w3.org/ns/ldp#': 'ldp',
+      'http://schema.org/': 'schema',
+      'http://www.w3.org/ns/solid/terms#': 'solid',
+    };
+
+    return prefixMap[namespace];
   }
 
   /// Builds a map of class IRI to list of all parent class IRIs (including inherited)

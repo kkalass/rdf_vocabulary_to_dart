@@ -551,7 +551,8 @@ class TurtleParser {
     _log.info('Parsing literal token: $literalToken');
 
     // Check if it's a triple-quoted multiline string
-    bool isTripleQuoted = literalToken.startsWith('"""') && literalToken.length >= 6;
+    bool isTripleQuoted =
+        literalToken.startsWith('"""') && literalToken.length >= 6;
 
     String value;
     if (isTripleQuoted) {
