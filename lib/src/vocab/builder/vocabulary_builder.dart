@@ -4,9 +4,14 @@
 
 import 'dart:async';
 import 'package:build/build.dart';
+import 'package:logging/logging.dart';
 import '../manifest.dart';
+import '../../../rdf_core.dart';
 import 'class_generator.dart';
 import 'model/vocabulary_model.dart';
+
+/// Logger for the vocabulary builder
+final log = Logger('rdf.vocab.builder');
 
 /// A builder that generates Dart classes for RDF vocabularies.
 ///
@@ -64,17 +69,12 @@ class VocabularyBuilder implements Builder {
       // Load vocabulary content
       final content = await source.loadContent();
       
-      // Choose the appropriate parser based on the content format
+      // Create RDF core instance with standard formats
+      final rdfCore = RdfCore.withStandardFormats();
+      
+      // Parse the vocabulary using the appropriate format
       final format = source.getFormat();
-      final parser = getRdfParserFor(format);
-      
-      if (parser == null) {
-        log.severe('No parser available for format: $format');
-        return;
-      }
-      
-      // Parse the vocabulary
-      final graph = await parser.parseString(content);
+      final graph = rdfCore.parse(content, contentType: _getContentTypeForFormat(format));
       
       // Extract vocabulary model from parsed graph
       final model = VocabularyModelExtractor.extractFrom(
@@ -98,6 +98,23 @@ class VocabularyBuilder implements Builder {
       log.info('Generated vocabulary class: $name');
     } catch (e, stackTrace) {
       log.severe('Error processing vocabulary $name: $e\n$stackTrace');
+    }
+  }
+  
+  /// Maps format names to content types
+  String _getContentTypeForFormat(String format) {
+    switch (format.toLowerCase()) {
+      case 'turtle':
+        return 'text/turtle';
+      case 'rdf/xml':
+      case 'xml':
+        return 'application/rdf+xml';
+      case 'json-ld':
+        return 'application/ld+json';
+      case 'n-triples':
+        return 'application/n-triples';
+      default:
+        return 'text/turtle'; // Default to Turtle
     }
   }
 

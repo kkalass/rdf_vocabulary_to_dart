@@ -123,7 +123,7 @@ class VocabularyModelExtractor {
   /// [namespace] The namespace IRI of the vocabulary
   /// [name] The name to use for the vocabulary
   static VocabularyModel extractFrom(
-    Graph graph,
+    RdfGraph graph,
     String namespace,
     String name,
   ) {
@@ -139,7 +139,7 @@ class VocabularyModelExtractor {
 
     for (final resource in vocabResources) {
       try {
-        final iri = resource.toString();
+        final iri = resource.iri;
         final localName = _extractLocalName(iri, namespace);
         final label = _findLabel(graph, resource);
         final comment = _findComment(graph, resource);
@@ -202,14 +202,17 @@ class VocabularyModelExtractor {
   }
 
   /// Finds all resources that are part of the vocabulary namespace.
-  static List<Term> _findVocabularyResources(Graph graph, String namespace) {
-    final resources = <Term>{};
+  static List<IriTerm> _findVocabularyResources(
+    RdfGraph graph,
+    String namespace,
+  ) {
+    final resources = <IriTerm>{};
 
     // Find resources as subjects
     for (final triple in graph.triples) {
       if (triple.subject is IriTerm) {
         final subject = triple.subject as IriTerm;
-        if (subject.value.startsWith(namespace)) {
+        if (subject.iri.startsWith(namespace)) {
           resources.add(subject);
         }
       }
@@ -217,8 +220,9 @@ class VocabularyModelExtractor {
 
     // Find resources as predicates
     for (final triple in graph.triples) {
-      if (triple.predicate.value.startsWith(namespace)) {
-        resources.add(triple.predicate);
+      IriTerm predicate = triple.predicate as IriTerm;
+      if (predicate.iri.startsWith(namespace)) {
+        resources.add(predicate);
       }
     }
 
@@ -226,7 +230,7 @@ class VocabularyModelExtractor {
     for (final triple in graph.triples) {
       if (triple.object is IriTerm) {
         final object = triple.object as IriTerm;
-        if (object.value.startsWith(namespace)) {
+        if (object.iri.startsWith(namespace)) {
           resources.add(object);
         }
       }
@@ -236,7 +240,7 @@ class VocabularyModelExtractor {
   }
 
   /// Determines if a resource is a class.
-  static bool _isClass(Graph graph, Term resource) {
+  static bool _isClass(RdfGraph graph, IriTerm resource) {
     const classTypes = [
       'http://www.w3.org/2000/01/rdf-schema#Class',
       'http://www.w3.org/2002/07/owl#Class',
@@ -258,7 +262,7 @@ class VocabularyModelExtractor {
   }
 
   /// Determines if a resource is a property.
-  static bool _isProperty(Graph graph, Term resource) {
+  static bool _isProperty(RdfGraph graph, IriTerm resource) {
     const propertyTypes = [
       'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property',
       'http://www.w3.org/2002/07/owl#ObjectProperty',
@@ -289,7 +293,7 @@ class VocabularyModelExtractor {
   }
 
   /// Determines if a resource is a datatype.
-  static bool _isDatatype(Graph graph, Term resource) {
+  static bool _isDatatype(RdfGraph graph, IriTerm resource) {
     final typeTriples = graph.findTriples(
       subject: resource,
       predicate: IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
@@ -300,7 +304,7 @@ class VocabularyModelExtractor {
   }
 
   /// Finds the label of a resource.
-  static String? _findLabel(Graph graph, Term resource) {
+  static String? _findLabel(RdfGraph graph, IriTerm resource) {
     final labelTriples = graph.findTriples(
       subject: resource,
       predicate: IriTerm('http://www.w3.org/2000/01/rdf-schema#label'),
@@ -317,7 +321,7 @@ class VocabularyModelExtractor {
   }
 
   /// Finds the comment of a resource.
-  static String? _findComment(Graph graph, Term resource) {
+  static String? _findComment(RdfGraph graph, IriTerm resource) {
     final commentTriples = graph.findTriples(
       subject: resource,
       predicate: IriTerm('http://www.w3.org/2000/01/rdf-schema#comment'),
@@ -334,7 +338,7 @@ class VocabularyModelExtractor {
   }
 
   /// Finds the superclasses of a class.
-  static List<String> _findSuperClasses(Graph graph, Term resource) {
+  static List<String> _findSuperClasses(RdfGraph graph, IriTerm resource) {
     final superClassTriples = graph.findTriples(
       subject: resource,
       predicate: IriTerm('http://www.w3.org/2000/01/rdf-schema#subClassOf'),
@@ -342,12 +346,12 @@ class VocabularyModelExtractor {
 
     return superClassTriples
         .where((triple) => triple.object is IriTerm)
-        .map((triple) => (triple.object as IriTerm).value)
+        .map((triple) => (triple.object as IriTerm).iri)
         .toList();
   }
 
   /// Finds the domains of a property.
-  static List<String> _findDomains(Graph graph, Term resource) {
+  static List<String> _findDomains(RdfGraph graph, IriTerm resource) {
     final domainTriples = graph.findTriples(
       subject: resource,
       predicate: IriTerm('http://www.w3.org/2000/01/rdf-schema#domain'),
@@ -355,12 +359,12 @@ class VocabularyModelExtractor {
 
     return domainTriples
         .where((triple) => triple.object is IriTerm)
-        .map((triple) => (triple.object as IriTerm).value)
+        .map((triple) => (triple.object as IriTerm).iri)
         .toList();
   }
 
   /// Finds the ranges of a property.
-  static List<String> _findRanges(Graph graph, Term resource) {
+  static List<String> _findRanges(RdfGraph graph, IriTerm resource) {
     final rangeTriples = graph.findTriples(
       subject: resource,
       predicate: IriTerm('http://www.w3.org/2000/01/rdf-schema#range'),
@@ -368,7 +372,7 @@ class VocabularyModelExtractor {
 
     return rangeTriples
         .where((triple) => triple.object is IriTerm)
-        .map((triple) => (triple.object as IriTerm).value)
+        .map((triple) => (triple.object as IriTerm).iri)
         .toList();
   }
 

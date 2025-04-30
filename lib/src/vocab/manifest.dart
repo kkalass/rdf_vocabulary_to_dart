@@ -35,6 +35,8 @@ abstract class VocabularySource {
   /// The URI namespace of this vocabulary.
   String get namespace;
 
+  const VocabularySource();
+
   /// Loads the vocabulary content.
   ///
   /// Returns the content as a string, which will be parsed by the appropriate
@@ -60,7 +62,7 @@ abstract class VocabularySource {
 }
 
 /// Vocabulary source that loads from a URL.
-class UrlVocabularySource implements VocabularySource {
+class UrlVocabularySource extends VocabularySource {
   @override
   final String namespace;
 
@@ -98,7 +100,7 @@ class UrlVocabularySource implements VocabularySource {
 }
 
 /// Vocabulary source that loads from a file.
-class FileVocabularySource implements VocabularySource {
+class FileVocabularySource extends VocabularySource {
   final String filePath;
 
   @override
