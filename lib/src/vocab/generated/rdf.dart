@@ -320,6 +320,24 @@ class RdfBag {
   /// Use this to specify that a resource is of this type.
   static const classIri = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag');
 
+  /// IRI for rdf:type
+  ///
+  /// The subject is an instance of a class.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
+  ///
+  static const type = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
+
+  /// IRI for rdf:value
+  ///
+  /// Idiomatic property used for structured values.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const value = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
+
 }
 
 /// Seq class from Rdf vocabulary
@@ -336,6 +354,24 @@ class RdfSeq {
   /// Use this to specify that a resource is of this type.
   static const classIri = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq');
 
+  /// IRI for rdf:type
+  ///
+  /// The subject is an instance of a class.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
+  ///
+  static const type = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
+
+  /// IRI for rdf:value
+  ///
+  /// Idiomatic property used for structured values.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const value = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
+
 }
 
 /// Alt class from Rdf vocabulary
@@ -351,6 +387,24 @@ class RdfAlt {
   /// IRI term for the Alt class
   /// Use this to specify that a resource is of this type.
   static const classIri = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt');
+
+  /// IRI for rdf:type
+  ///
+  /// The subject is an instance of a class.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
+  ///
+  static const type = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
+
+  /// IRI for rdf:value
+  ///
+  /// Idiomatic property used for structured values.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const value = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
 
 }
 

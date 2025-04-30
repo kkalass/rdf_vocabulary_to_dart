@@ -10,6 +10,7 @@ import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import '../../../rdf_core.dart';
 import 'class_generator.dart';
+import 'cross_vocabulary_resolver.dart';
 import 'model/vocabulary_model.dart';
 import 'vocabulary_source.dart';
 
@@ -26,6 +27,12 @@ class VocabularyBuilder implements Builder {
 
   /// Output directory for generated vocabulary files
   final String outputDir;
+
+  /// The cross-vocabulary resolver that tracks relationships between vocabularies
+  final CrossVocabularyResolver _resolver = CrossVocabularyResolver();
+  
+  /// Map of vocabulary models by name
+  final Map<String, VocabularyModel> _vocabularyModels = {};
 
   // Known vocabulary names for build_extensions
   static const _knownVocabularies = [
@@ -49,7 +56,7 @@ class VocabularyBuilder implements Builder {
   /// [manifestAssetPath] specifies the path to the manifest JSON file that defines
   /// the vocabularies to be generated.
   /// [outputDir] specifies where to generate the vocabulary files, relative to lib/.
-  const VocabularyBuilder({
+   VocabularyBuilder({
     required this.manifestAssetPath,
     required this.outputDir,
   });
@@ -83,31 +90,21 @@ class VocabularyBuilder implements Builder {
     log.info('Starting vocabulary generation');
 
     // Read the manifest file
-    final vocabularies = await _loadVocabularyManifest(buildStep);
-    if (vocabularies == null || vocabularies.isEmpty) {
+    final vocabularySources = await _loadVocabularyManifest(buildStep);
+    if (vocabularySources == null || vocabularySources.isEmpty) {
       log.severe('Failed to load vocabularies from $manifestAssetPath');
       return;
     }
 
-    // Process all vocabularies in the manifest
-    final results = <String, bool>{};
+    // Process all vocabularies in the manifest in two phases:
+    // 1. Parse all vocabulary sources and register them with the resolver
+    // 2. Generate code for all vocabularies using the resolver
 
-    // Process vocabularies sequentially with a small delay to avoid overwhelming external servers
-    for (final entry in vocabularies.entries) {
-      final name = entry.key;
-      final source = entry.value;
+    // Phase 1: Parse and register vocabularies
+    await _parseVocabularies(buildStep, vocabularySources);
 
-      try {
-        final success = await _processVocabulary(buildStep, name, source);
-        results[name] = success;
-
-        // Small delay between requests to be polite to servers
-        await Future.delayed(const Duration(milliseconds: 500));
-      } catch (e, stackTrace) {
-        log.severe('Error processing vocabulary $name: $e\n$stackTrace');
-        results[name] = false;
-      }
-    }
+    // Phase 2: Generate code for each vocabulary
+    final results = await _generateVocabularyClasses(buildStep);
 
     // Generate the index file for successful vocabularies
     final successfulVocabularies =
@@ -189,64 +186,68 @@ class VocabularyBuilder implements Builder {
     }
   }
 
-  /// Processes a single vocabulary and generates its Dart class.
-  /// Returns true if the vocabulary was successfully processed.
-  Future<bool> _processVocabulary(
+  /// Phase 1: Parses all vocabulary sources and registers them with the resolver
+  Future<void> _parseVocabularies(
     BuildStep buildStep,
-    String name,
-    VocabularySource source,
+    Map<String, VocabularySource> vocabularySources,
   ) async {
-    try {
-      log.info('Processing vocabulary: $name from ${source.namespace}');
+    log.info('Phase 1: Parsing vocabularies and registering with resolver');
+    
+    // Process vocabularies sequentially with a small delay to avoid overwhelming external servers
+    for (final entry in vocabularySources.entries) {
+      final name = entry.key;
+      final source = entry.value;
 
-      // Load vocabulary content
-      String? content;
       try {
-        content = await source.loadContent();
-      } catch (e) {
-        log.severe('Error loading vocabulary from ${source.namespace}: $e');
-        return false;
-      }
+        log.info('Processing vocabulary: $name from ${source.namespace}');
 
-      if (content == null || content.isEmpty) {
-        log.warning('Empty content for vocabulary $name');
-        return false;
-      }
-
-      // Create RDF core instance with standard formats
-      final rdfCore = RdfCore.withStandardFormats();
-
-      // Try multiple formats if the first one fails
-      RdfGraph? graph;
-      final formats = [
-        source.getFormat(), // Try the source's preferred format first
-        'turtle',
-        'rdf/xml',
-        'json-ld',
-        'n-triples',
-      ];
-
-      for (final format in formats) {
+        // Load vocabulary content
+        String? content;
         try {
-          final contentType = _getContentTypeForFormat(format);
-          log.info('Trying to parse $name with format $contentType');
-          graph = rdfCore.parse(content, contentType: contentType);
-          if (graph != null) {
-            log.info('Successfully parsed $name with format $contentType');
-            break;
-          }
+          content = await source.loadContent();
         } catch (e) {
-          log.warning('Failed to parse $name with format $format: $e');
-          // Continue to the next format
+          log.severe('Error loading vocabulary from ${source.namespace}: $e');
+          continue;
         }
-      }
 
-      if (graph == null) {
-        log.severe('Failed to parse vocabulary $name with any format');
-        return false;
-      }
+        if (content == null || content.isEmpty) {
+          log.warning('Empty content for vocabulary $name');
+          continue;
+        }
 
-      try {
+        // Create RDF core instance with standard formats
+        final rdfCore = RdfCore.withStandardFormats();
+
+        // Try multiple formats if the first one fails
+        RdfGraph? graph;
+        final formats = [
+          source.getFormat(), // Try the source's preferred format first
+          'turtle',
+          'rdf/xml',
+          'json-ld',
+          'n-triples',
+        ];
+
+        for (final format in formats) {
+          try {
+            final contentType = _getContentTypeForFormat(format);
+            log.info('Trying to parse $name with format $contentType');
+            graph = rdfCore.parse(content, contentType: contentType);
+            if (graph != null) {
+              log.info('Successfully parsed $name with format $contentType');
+              break;
+            }
+          } catch (e) {
+            log.warning('Failed to parse $name with format $format: $e');
+            // Continue to the next format
+          }
+        }
+
+        if (graph == null) {
+          log.severe('Failed to parse vocabulary $name with any format');
+          continue;
+        }
+
         // Extract vocabulary model from parsed graph
         final model = VocabularyModelExtractor.extractFrom(
           graph,
@@ -254,8 +255,38 @@ class VocabularyBuilder implements Builder {
           name,
         );
 
-        // Generate the Dart class
-        final generator = VocabularyClassGenerator();
+        // Store the model for later use
+        _vocabularyModels[name] = model;
+        
+        // Register the model with the cross-vocabulary resolver
+        _resolver.registerVocabulary(model);
+        
+        log.info('Registered vocabulary: $name');
+
+        // Small delay between requests to be polite to servers
+        await Future.delayed(const Duration(milliseconds: 500));
+      } catch (e, stackTrace) {
+        log.severe('Error processing vocabulary $name: $e\n$stackTrace');
+      }
+    }
+
+    log.info('Phase 1 complete. Registered ${_vocabularyModels.length} vocabularies');
+  }
+
+  /// Phase 2: Generate code for all vocabularies using the cross-vocabulary resolver
+  Future<Map<String, bool>> _generateVocabularyClasses(BuildStep buildStep) async {
+    log.info('Phase 2: Generating vocabulary classes');
+    
+    final results = <String, bool>{};
+    
+    // Generate classes for each vocabulary
+    for (final entry in _vocabularyModels.entries) {
+      final name = entry.key;
+      final model = entry.value;
+      
+      try {
+        // Generate the Dart class with cross-vocabulary awareness
+        final generator = VocabularyClassGenerator(resolver: _resolver);
         final dartCode = generator.generate(model);
 
         // Write the generated code to a file
@@ -265,15 +296,14 @@ class VocabularyBuilder implements Builder {
         await buildStep.writeAsString(outputId, dartCode);
 
         log.info('Generated vocabulary class: $name');
-        return true;
+        results[name] = true;
       } catch (e, stack) {
         log.severe('Error generating class for vocabulary $name: $e\n$stack');
-        return false;
+        results[name] = false;
       }
-    } catch (e, stackTrace) {
-      log.severe('Error processing vocabulary $name: $e\n$stackTrace');
-      return false;
     }
+    
+    return results;
   }
 
   /// Maps format names to content types

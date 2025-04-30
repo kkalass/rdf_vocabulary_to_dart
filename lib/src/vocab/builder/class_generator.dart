@@ -2,7 +2,13 @@
 // All rights reserved. Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+import 'package:logging/logging.dart';
+
+import 'cross_vocabulary_resolver.dart';
 import 'model/vocabulary_model.dart';
+
+/// Logger for class generator operations
+final _log = Logger('VocabularyClassGenerator');
 
 /// Generator for creating Dart classes from vocabulary models.
 ///
@@ -10,8 +16,13 @@ import 'model/vocabulary_model.dart';
 /// representing a vocabulary, with proper class structure, documentation,
 /// and type safety.
 class VocabularyClassGenerator {
+  /// Optional cross-vocabulary resolver for handling properties across vocabulary boundaries
+  final CrossVocabularyResolver? resolver;
+
   /// Creates a new vocabulary class generator.
-  const VocabularyClassGenerator();
+  ///
+  /// [resolver] Optional cross-vocabulary resolver for property inheritance across vocabularies
+  const VocabularyClassGenerator({this.resolver});
 
   /// Generates Dart code for a vocabulary model.
   String generate(VocabularyModel model) {
@@ -220,6 +231,7 @@ class VocabularyClassGenerator {
       // Get all properties that can be used with this class
       final properties = _getPropertiesForClass(
         rdfClass.iri,
+        model.namespace,
         classHierarchy,
         propertyMap,
       );
@@ -335,9 +347,19 @@ class VocabularyClassGenerator {
   /// Gets all properties applicable to a given class including inherited properties
   List<VocabularyProperty> _getPropertiesForClass(
     String classIri,
+    String vocabNamespace,
     Map<String, Set<String>> classHierarchy,
     Map<String, VocabularyProperty> propertyMap,
   ) {
+    // If a cross-vocabulary resolver is available, use it
+    if (resolver != null) {
+      _log.fine('Using cross-vocabulary resolver for class $classIri');
+      return resolver!.getPropertiesForClass(classIri, vocabNamespace);
+    }
+
+    // Otherwise fall back to the original implementation (local vocabulary only)
+    _log.fine('Using local property resolution for class $classIri');
+
     final result = <VocabularyProperty>[];
     final allParentClasses = {classIri, ...(classHierarchy[classIri] ?? {})};
 
