@@ -3,13 +3,14 @@ targets:
     builders:
       rdf_core|vocabulary_builder:
         enabled: true
-        generate_for:
-          - lib/src/vocab/manifest.dart
+        options:
+          manifest_asset_path: "lib/src/vocab/manifest.json"
+          output_dir: "src/vocab/generated"
 
 builders:
   vocabulary_builder:
-    import: "package:rdf_core/src/vocab/builder/builder.dart"
+    import: "package:rdf_core/vocab_builder.dart"
     builder_factories: ["vocabularyBuilder"]
-    build_extensions: {"$lib$": ["src/vocab/generated/_index.dart"]}
-    auto_apply: dependents
+    build_extensions: {"lib/src/vocab/manifest.json": ["lib/src/vocab/generated/_index.dart"]}
     build_to: source
+    auto_apply: dependents
