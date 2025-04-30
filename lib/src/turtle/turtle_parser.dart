@@ -550,25 +550,49 @@ class TurtleParser {
   LiteralTerm _parseLiteralValue(String literalToken) {
     _log.info('Parsing literal token: $literalToken');
 
-    // Extract the literal content (between the quotes)
-    final valueMatch = RegExp(
-      r'"([^"\\]*(?:\\.[^"\\]*)*)"',
-    ).firstMatch(literalToken);
-    if (valueMatch == null) {
-      _log.severe('Invalid literal format: $literalToken');
-      throw RdfSyntaxException(
-        'Invalid literal format',
-        format: _format,
-        source: SourceLocation(
-          line: _currentToken.line,
-          column: _currentToken.column,
-          context: literalToken,
-        ),
-      );
-    }
+    // Check if it's a triple-quoted multiline string
+    bool isTripleQuoted = literalToken.startsWith('"""') && literalToken.length >= 6;
 
-    final escapedValue = valueMatch.group(1)!;
-    final value = _unescapeTurtleString(escapedValue);
+    String value;
+    if (isTripleQuoted) {
+      // Extract the content between triple quotes
+      final closingIndex = literalToken.lastIndexOf('"""');
+      if (closingIndex > 0) {
+        final escapedValue = literalToken.substring(3, closingIndex);
+        value = _unescapeTurtleString(escapedValue);
+      } else {
+        _log.severe('Invalid triple-quoted literal format: $literalToken');
+        throw RdfSyntaxException(
+          'Invalid triple-quoted literal format',
+          format: _format,
+          source: SourceLocation(
+            line: _currentToken.line,
+            column: _currentToken.column,
+            context: literalToken,
+          ),
+        );
+      }
+    } else {
+      // Handle regular quoted literals
+      final valueMatch = RegExp(
+        r'"([^"\\]*(?:\\.[^"\\]*)*)"',
+      ).firstMatch(literalToken);
+      if (valueMatch == null) {
+        _log.severe('Invalid literal format: $literalToken');
+        throw RdfSyntaxException(
+          'Invalid literal format',
+          format: _format,
+          source: SourceLocation(
+            line: _currentToken.line,
+            column: _currentToken.column,
+            context: literalToken,
+          ),
+        );
+      }
+
+      final escapedValue = valueMatch.group(1)!;
+      value = _unescapeTurtleString(escapedValue);
+    }
 
     // Check for language tag (@lang)
     final langMatch = RegExp(r'@([a-zA-Z\-]+)$').firstMatch(literalToken);

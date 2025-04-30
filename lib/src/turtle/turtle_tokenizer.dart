@@ -395,12 +395,14 @@ class TurtleTokenizer {
   ///
   /// Literals in Turtle represent string values and can have several forms:
   /// - Simple strings: "Hello"
+  /// - Multi-line strings: """Hello
+  ///   World"""
   /// - Language-tagged strings: "Hello"@en
   /// - Typed literals with datatype IRI: "123"^^<http://www.w3.org/2001/XMLSchema#integer>
   /// - Typed literals with prefixed names: "123"^^xsd:integer
   ///
   /// This method handles:
-  /// - The opening and closing quotes
+  /// - The opening and closing quotes (both single and triple quotes)
   /// - Escape sequences within the string
   /// - Optional language tags (@lang)
   /// - Optional datatype annotations (^^datatype)
@@ -416,30 +418,83 @@ class TurtleTokenizer {
     // Save the starting position to capture the entire literal
     final startPos = _position;
 
-    // Skip opening quote and scan to find the closing quote
-    _position++; // Skip opening "
-    _column++;
+    // Check for triple quotes (multi-line literal)
+    final isTripleQuoted =
+        _position + 2 < _input.length &&
+        _input[_position] == '"' &&
+        _input[_position + 1] == '"' &&
+        _input[_position + 2] == '"';
 
-    while (_position < _input.length && _input[_position] != '"') {
-      if (_input[_position] == '\\') {
-        _position++;
-        _column++;
-        if (_position < _input.length) {
+    if (isTripleQuoted) {
+      // Skip the opening triple quotes
+      _position += 3;
+      _column += 3;
+
+      // Find the closing triple quotes
+      bool foundClosing = false;
+      while (_position + 2 <= _input.length) {
+        if (_position + 2 < _input.length &&
+            _input[_position] == '"' &&
+            _input[_position + 1] == '"' &&
+            _input[_position + 2] == '"') {
+          // Found closing triple quotes
+          _position += 3;
+          _column += 3;
+          foundClosing = true;
+          break;
+        }
+
+        if (_input[_position] == '\n') {
+          _line++;
+          _column = 1;
+          _position++;
+        } else if (_input[_position] == '\\') {
+          // Handle escape sequence
+          _position++;
+          _column++;
+          if (_position < _input.length) {
+            _position++;
+            _column++;
+          }
+        } else {
           _position++;
           _column++;
         }
-      } else {
-        _position++;
-        _column++;
       }
-    }
 
-    if (_position >= _input.length) {
-      throw FormatException('Unclosed literal at $startLine:$startColumn');
-    }
+      // Check if we reached the end of the input without finding closing quotes
+      if (!foundClosing) {
+        throw FormatException(
+          'Unclosed multi-line literal at $startLine:$startColumn',
+        );
+      }
+    } else {
+      // Regular single-line literal with single quotes
+      // Skip opening quote and scan to find the closing quote
+      _position++; // Skip opening "
+      _column++;
 
-    _position++; // Skip closing "
-    _column++;
+      while (_position < _input.length && _input[_position] != '"') {
+        if (_input[_position] == '\\') {
+          _position++;
+          _column++;
+          if (_position < _input.length) {
+            _position++;
+            _column++;
+          }
+        } else {
+          _position++;
+          _column++;
+        }
+      }
+
+      if (_position >= _input.length) {
+        throw FormatException('Unclosed literal at $startLine:$startColumn');
+      }
+
+      _position++; // Skip closing "
+      _column++;
+    }
 
     // Check for language tag or datatype annotation
     if (_position < _input.length) {
