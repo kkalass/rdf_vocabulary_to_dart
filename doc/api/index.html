@@ -55,8 +55,12 @@
 <a href="https://codecov.io/gh/kkalass/rdf_core"><img src="https://codecov.io/gh/kkalass/rdf_core/branch/main/graph/badge.svg" alt="codecov"></a>
 <a href="https://github.com/kkalass/rdf_core/blob/main/LICENSE"><img src="https://img.shields.io/github/license/kkalass/rdf_core.svg" alt="license"></a></p>
 <hr>
+<h1 id="rdf-core">RDF Core</h1>
 <p><a href="https://kkalass.github.io/rdf_core/">🌐 <strong>Official Homepage</strong></a></p>
 <p>A type-safe, and extensible Dart library for representing and manipulating RDF data without any further dependencies.</p>
+<hr>
+<h2 id="looking-for-mapping-dart-objects--rdf">Looking for mapping Dart Objects ↔️ RDF?</h2>
+<p>=&gt; Discover our companion project <a href="https://github.com/kkalass/rdf_mapper">rdf_mapper</a> now on GitHub!</p>
 <hr>
 <h2 id="-features">✨ Features</h2>
 <ul>
@@ -64,9 +68,7 @@
 <li><strong>Serialization-agnostic:</strong> Clean separation from Turtle/JSON-LD</li>
 <li><strong>Extensible &amp; modular:</strong> Build your own adapters, plugins, and integrations</li>
 <li><strong>Spec-compliant:</strong> Follows <a href="https://www.w3.org/TR/rdf11-concepts/">W3C RDF 1.1</a> and related standards</li>
-<li><strong>Built-in vocabularies:</strong> FOAF, Dublin Core (DC), SKOS, Schema.org, and more for easy discovery and usage, fully linked to the respective ontologies</li>
 </ul>
-<hr>
 <h2 id="-quick-start">🚀 Quick Start</h2>
 <h3 id="manual-graph-creation">Manual Graph Creation</h3>
 <pre class="language-dart"><code class="language-dart">import 'package:rdf_core/rdf_core.dart';
@@ -104,29 +106,6 @@ void main() {
   print('\nSerialized Turtle:\n$serialized');
 }
 </code></pre>
-<h3 id="use-built-in-rdf-vocabularies">Use Built-in RDF Vocabularies</h3>
-<p>The <code>vocab/</code> directory provides ready-to-use, type-safe access to many well-known RDF vocabularies and ontologies, including FOAF, Dublin Core (DC), SKOS, Schema.org, and more. This makes it easy to build interoperable RDF graphs without having to look up or type out long IRIs by hand.</p>
-<p><strong>Why does this matter?</strong></p>
-<ul>
-<li><strong>Less boilerplate:</strong> Use <code>FoafClasses.person</code> or <code>DcPredicates.title</code> instead of raw strings.</li>
-<li><strong>Fewer mistakes:</strong> Avoid typos in IRIs and get autocompletion in your IDE.</li>
-<li><strong>Interoperability:</strong> Build RDF graphs that follow standards, making your data more portable and reusable.</li>
-</ul>
-<h4 id="example-using-vocabularies">Example: Using Vocabularies</h4>
-<pre class="language-dart"><code class="language-dart">import 'package:rdf_core/vocab.dart';
-
-final alice = IriTerm('http://example.org/alice');
-
-final graph = RdfGraph(
-  triples: [
-    Triple(alice, RdfPredicates.type, FoafClasses.person),
-    Triple(alice, FoafPredicates.knows, IriTerm('http://example.org/bob')),
-    Triple(alice, FoafPredicates.name, LiteralTerm.string('Alice')),
-  ],
-);
-</code></pre>
-<p>See the <code>vocab/</code> directory for all available vocabularies and their terms.</p>
-<hr>
 <h2 id="-advanced-usage">🧑‍💻 Advanced Usage</h2>
 <h3 id="graph-merging">Graph Merging</h3>
 <pre class="language-dart"><code class="language-dart">final merged = graph1.merge(graph2);
@@ -209,6 +188,7 @@ final parsedGraph = jsonLdParser.parse();
 <hr>
 <h2 id="-roadmap--next-steps">🛣️ Roadmap / Next Steps</h2>
 <ul>
+<li>Remove vocab directory and replace it with a much cleaner and more discoverable generated alternative, maybe in a separate project. This should also support generating discoverable vocab classes for arbitrary Vocabularies.</li>
 <li>Support base uri in jsonld and turtle serialization</li>
 <li>More serialization formats (N-Triples, RDF/XML)</li>
 <li>SHACL and schema validation</li>
@@ -275,7 +255,7 @@ final parsedGraph = jsonLdParser.parse();
 <footer>
   <span class="no-break">
     rdf_core
-      0.4.0
+      0.5.0
   </span>
   
 </footer>

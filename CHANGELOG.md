@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## 0.5.0
+## [0.5.0] - 2025-04-30
 
 - **BREAKING CHANGE**: Marked all vocabulary classes as deprecated
   - Added `@deprecated` annotation to all classes in vocabulary modules (acl, dc, dc_terms, foaf, ldp, etc.)
@@ -11,7 +11,7 @@ All notable changes to this project will be documented in this file.
 - Improved code documentation
 - Enhanced developer warnings for approaching breaking changes
 
-## 0.4.0
+## [0.4.0] - 2025-04-29
 
 - **BREAKING CHANGE**: Reorganized API structure for better modularity and usability
 - Added `RdfNamespaceMappings` for improved namespace handling
