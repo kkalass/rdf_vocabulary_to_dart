@@ -18,6 +18,7 @@ library dc_vocab;
 import 'package:rdf_core/src/graph/rdf_term.dart';
 
 /// Base Dublin Core namespace and utility functions
+@deprecated
 class Dc {
   // coverage:ignore-start
   const Dc._();
@@ -32,6 +33,7 @@ class Dc {
 /// Dublin Core predicates.
 ///
 /// Contains IRIs for properties defined in the Dublin Core Elements vocabulary.
+@deprecated
 class DcPredicates {
   // coverage:ignore-start
   const DcPredicates._();

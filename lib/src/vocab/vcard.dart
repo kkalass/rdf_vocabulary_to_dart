@@ -18,6 +18,7 @@ library vcard_vocab;
 import 'package:rdf_core/src/graph/rdf_term.dart';
 
 /// Base vCard namespace and utility functions
+@deprecated
 class Vcard {
   // coverage:ignore-start
   const Vcard._();
@@ -32,6 +33,7 @@ class Vcard {
 /// vCard class constants.
 ///
 /// Contains IRIs that represent classes defined in the vCard vocabulary.
+@deprecated
 class VcardClasses {
   // coverage:ignore-start
   const VcardClasses._();
@@ -79,6 +81,7 @@ class VcardClasses {
 /// vCard predicate constants.
 ///
 /// Contains IRIs for properties defined in the vCard vocabulary.
+@deprecated
 class VcardPredicates {
   // coverage:ignore-start
   const VcardPredicates._();

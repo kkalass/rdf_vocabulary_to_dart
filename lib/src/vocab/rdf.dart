@@ -18,6 +18,7 @@ library rdf_vocab;
 import 'package:rdf_core/src/graph/rdf_term.dart';
 
 /// Base RDF namespace and utility functions
+@deprecated
 class Rdf {
   // coverage:ignore-start
   const Rdf._();
@@ -133,6 +134,7 @@ class Rdf {
 /// RDF type/class constants.
 ///
 /// Contains IRIs that represent classes or types defined in the RDF vocabulary.
+@deprecated
 class RdfTypes {
   // coverage:ignore-start
   const RdfTypes._();
@@ -154,6 +156,7 @@ class RdfTypes {
 /// RDF predicate constants.
 ///
 /// Contains IRIs for properties defined in the RDF vocabulary.
+@deprecated
 class RdfPredicates {
   // coverage:ignore-start
   const RdfPredicates._();

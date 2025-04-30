@@ -18,6 +18,7 @@ library solid_vocab;
 import 'package:rdf_core/src/graph/rdf_term.dart';
 
 /// Base Solid namespace and utility functions
+@deprecated
 class Solid {
   // coverage:ignore-start
   const Solid._();
@@ -32,6 +33,7 @@ class Solid {
 /// Solid class constants.
 ///
 /// Contains IRIs that represent classes defined in the Solid vocabulary.
+@deprecated
 class SolidClasses {
   // coverage:ignore-start
   const SolidClasses._();
@@ -77,6 +79,7 @@ class SolidClasses {
 /// Solid predicate constants.
 ///
 /// Contains IRIs for properties defined in the Solid vocabulary.
+@deprecated
 class SolidPredicates {
   // coverage:ignore-start
   const SolidPredicates._();

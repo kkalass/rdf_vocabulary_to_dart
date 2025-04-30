@@ -19,6 +19,7 @@ library skos_vocab;
 import 'package:rdf_core/src/graph/rdf_term.dart';
 
 /// Base SKOS namespace and utility functions
+@deprecated
 class Skos {
   // coverage:ignore-start
   const Skos._();
@@ -33,6 +34,7 @@ class Skos {
 /// SKOS class constants.
 ///
 /// Contains IRIs that represent classes defined in the SKOS vocabulary.
+@deprecated
 class SkosClasses {
   // coverage:ignore-start
   const SkosClasses._();
@@ -70,6 +72,7 @@ class SkosClasses {
 /// SKOS predicate constants for semantic relations.
 ///
 /// Contains IRIs for properties defined in the SKOS vocabulary.
+@deprecated
 class SkosSemanticRelations {
   // coverage:ignore-start
   const SkosSemanticRelations._();
@@ -121,6 +124,7 @@ class SkosSemanticRelations {
 /// SKOS predicate constants for concept scheme membership and mapping.
 ///
 /// Contains IRIs for properties related to concept schemes and concept mapping.
+@deprecated
 class SkosConceptSchemePredicates {
   // coverage:ignore-start
   const SkosConceptSchemePredicates._();
@@ -152,6 +156,7 @@ class SkosConceptSchemePredicates {
 /// SKOS predicate constants for lexical labels.
 ///
 /// Contains IRIs for properties that represent lexical labels in the SKOS vocabulary.
+@deprecated
 class SkosLabelRelations {
   // coverage:ignore-start
   const SkosLabelRelations._();
@@ -181,6 +186,7 @@ class SkosLabelRelations {
 /// SKOS predicate constants for documentation properties.
 ///
 /// Contains IRIs for properties that represent documentation in the SKOS vocabulary.
+@deprecated
 class SkosDocumentationProps {
   // coverage:ignore-start
   const SkosDocumentationProps._();
@@ -222,6 +228,7 @@ class SkosDocumentationProps {
 /// SKOS predicate constants for mapping properties.
 ///
 /// Contains IRIs for properties that represent mappings between concepts in different schemes.
+@deprecated
 class SkosMappingProps {
   // coverage:ignore-start
   const SkosMappingProps._();

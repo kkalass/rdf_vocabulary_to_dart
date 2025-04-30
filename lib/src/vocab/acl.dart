@@ -18,6 +18,7 @@ library acl_vocab;
 import 'package:rdf_core/src/graph/rdf_term.dart';
 
 /// Base ACL namespace and utility functions
+@deprecated
 class Acl {
   // coverage:ignore-start
   const Acl._();
@@ -32,6 +33,7 @@ class Acl {
 /// ACL class constants.
 ///
 /// Contains IRIs that represent classes defined in the ACL vocabulary.
+@deprecated
 class AclClasses {
   // coverage:ignore-start
   const AclClasses._();
@@ -57,6 +59,7 @@ class AclClasses {
 /// ACL mode constants.
 ///
 /// Contains IRIs for access modes defined in the ACL vocabulary.
+@deprecated
 class AclModes {
   // coverage:ignore-start
   const AclModes._();
@@ -92,6 +95,7 @@ class AclModes {
 /// ACL predicate constants.
 ///
 /// Contains IRIs for properties defined in the ACL vocabulary.
+@deprecated
 class AclPredicates {
   // coverage:ignore-start
   const AclPredicates._();

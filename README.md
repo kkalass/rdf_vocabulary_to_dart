@@ -18,7 +18,8 @@
 A type-safe, and extensible Dart library for representing and manipulating RDF data without any further dependencies.
 
 ---
-### Looking for mapping Dart Objects ↔️ RDF?
+
+## Looking for mapping Dart Objects ↔️ RDF?
 
 => Discover our companion project [rdf_mapper](https://github.com/kkalass/rdf_mapper) now on GitHub!
 
@@ -30,7 +31,6 @@ A type-safe, and extensible Dart library for representing and manipulating RDF d
 - **Serialization-agnostic:** Clean separation from Turtle/JSON-LD
 - **Extensible & modular:** Build your own adapters, plugins, and integrations
 - **Spec-compliant:** Follows [W3C RDF 1.1](https://www.w3.org/TR/rdf11-concepts/) and related standards
-- **Built-in vocabularies:** FOAF, Dublin Core (DC), SKOS, Schema.org, and more for easy discovery and usage, fully linked to the respective ontologies
 
 
 
@@ -77,37 +77,6 @@ void main() {
   print('\nSerialized Turtle:\n$serialized');
 }
 ```
-
-### Use Built-in RDF Vocabularies
-
-The `vocab/` directory provides ready-to-use, type-safe access to many well-known RDF vocabularies and ontologies, including FOAF, Dublin Core (DC), SKOS, Schema.org, and more. This makes it easy to build interoperable RDF graphs without having to look up or type out long IRIs by hand.
-
-**Why does this matter?**
-
-- **Less boilerplate:** Use `FoafClasses.person` or `DcPredicates.title` instead of raw strings.
-- **Fewer mistakes:** Avoid typos in IRIs and get autocompletion in your IDE.
-- **Interoperability:** Build RDF graphs that follow standards, making your data more portable and reusable.
-
-#### Example: Using Vocabularies
-
-```dart
-import 'package:rdf_core/rdf_core.dart';
-import 'package:rdf_core/vocab.dart';
-
-final alice = IriTerm('http://example.org/alice');
-
-final graph = RdfGraph(
-  triples: [
-    Triple(alice, RdfPredicates.type, FoafClasses.person),
-    Triple(alice, FoafPredicates.knows, IriTerm('http://example.org/bob')),
-    Triple(alice, FoafPredicates.name, LiteralTerm.string('Alice')),
-  ],
-);
-```
-
-See the `vocab/` directory for all available vocabularies and their terms.
-
----
 
 ## 🧑‍💻 Advanced Usage
 
@@ -182,6 +151,7 @@ final parsedGraph = jsonLdParser.parse();
 
 ## 🛣️ Roadmap / Next Steps
 
+- Remove vocab directory and replace it with a much cleaner and more discoverable generated alternative, maybe in a separate project. This should also support generating discoverable vocab classes for arbitrary Vocabularies.
 - Support base uri in jsonld and turtle serialization
 - More serialization formats (N-Triples, RDF/XML)
 - SHACL and schema validation

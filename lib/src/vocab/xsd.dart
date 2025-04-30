@@ -21,6 +21,7 @@ import 'package:rdf_core/src/graph/rdf_term.dart';
 /// XSD namespace and datatype constants
 ///
 /// Contains IRIs for XML Schema datatypes commonly used in RDF.
+@deprecated
 class Xsd {
   // coverage:ignore-start
   const Xsd._();
@@ -40,6 +41,7 @@ class Xsd {
 /// as its primary type system for literal values.
 ///
 /// These constants are particularly important when creating typed literals in RDF graphs.
+@deprecated
 class XsdTypes {
   // coverage:ignore-start
   // Private constructor prevents instantiation

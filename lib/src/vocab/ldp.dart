@@ -18,6 +18,7 @@ library ldp_vocab;
 import 'package:rdf_core/src/graph/rdf_term.dart';
 
 /// Base LDP namespace and utility functions
+@deprecated
 class Ldp {
   // coverage:ignore-start
   const Ldp._();
@@ -32,6 +33,7 @@ class Ldp {
 /// LDP class constants.
 ///
 /// Contains IRIs that represent classes defined in the LDP vocabulary.
+@deprecated
 class LdpClasses {
   // coverage:ignore-start
   const LdpClasses._();
@@ -91,6 +93,7 @@ class LdpClasses {
 /// LDP predicate constants.
 ///
 /// Contains IRIs for properties defined in the LDP vocabulary.
+@deprecated
 class LdpPredicates {
   // coverage:ignore-start
   const LdpPredicates._();
@@ -152,6 +155,7 @@ class LdpPredicates {
 /// LDP preference constants.
 ///
 /// Contains IRIs for LDP preferences that can be used in the Prefer header.
+@deprecated
 class LdpPreferences {
   // coverage:ignore-start
   const LdpPreferences._();

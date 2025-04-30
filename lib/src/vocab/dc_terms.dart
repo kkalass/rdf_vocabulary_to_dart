@@ -18,6 +18,7 @@ library dc_terms_vocab;
 import 'package:rdf_core/src/graph/rdf_term.dart';
 
 /// Base Dublin Core Terms namespace and utility functions
+@deprecated
 class DcTerms {
   // coverage:ignore-start
   const DcTerms._();
@@ -32,6 +33,7 @@ class DcTerms {
 /// Dublin Core Terms classes.
 ///
 /// Contains IRIs for classes defined in the Dublin Core Terms vocabulary.
+@deprecated
 class DcTermsClasses {
   // coverage:ignore-start
   const DcTermsClasses._();
@@ -101,6 +103,7 @@ class DcTermsClasses {
 /// Dublin Core Terms predicates.
 ///
 /// Contains IRIs for properties defined in the Dublin Core Terms vocabulary.
+@deprecated
 class DcTermsPredicates {
   // coverage:ignore-start
   const DcTermsPredicates._();

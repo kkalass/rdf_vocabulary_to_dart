@@ -104,12 +104,6 @@ nav a:hover, nav a:focus {
       <h3><i class="fa-solid fa-certificate"></i> Standards-Compliant</h3>
       <p>Implements <a href="https://www.w3.org/TR/rdf11-concepts/">W3C RDF 1.1</a> and related specs for maximum interoperability.</p>
     </div>
-    <div class="feature">
-      <h3><i class="fa-solid fa-book"></i> Built-in Vocabularies</h3>
-      <p>
-        Instantly access well-known RDF vocabularies (FOAF, DC, SKOS, Schema.org, and more) for type-safe, standards-based graphs.
-      </p>
-    </div>
   </section>
 
  
@@ -163,27 +157,6 @@ print(turtle);
     </div>
   </section>
 
-  <section class="advanced" id="advanced">
-    <h2>💡 Advanced Usage: Built-in Vocabularies</h2>
-    <p>
-      Use the <a href="api/vocab/">vocab/</a> directory for type-safe access to popular RDF vocabularies and ontologies. This reduces boilerplate and helps avoid mistakes.
-    </p>
-    <pre><code class="language-dart">import 'package:rdf_core/rdf_core.dart';
-import 'package:rdf_core/vocab.dart';
-
-final alice = IriTerm('http://example.org/alice');
-final knows = FoafPredicates.knows;
-final name = FoafPredicates.name;
-
-final graph = RdfGraph(triples: [
-  Triple(alice, knows, IriTerm('http://example.org/bob')),
-  Triple(alice, name, LiteralTerm.string('Alice')),
-]);
-</code></pre>
-    <p>
-      Explore the <a href="api/vocab/">vocab/</a> directory for all available vocabularies and terms.
-    </p>
-  </section>
 
   <footer>
     <div style="margin-bottom:0.5rem;">

@@ -17,6 +17,7 @@ library owl_vocab;
 import 'package:rdf_core/src/graph/rdf_term.dart';
 
 /// Base OWL namespace and utility functions
+@deprecated
 class Owl {
   // coverage:ignore-start
   const Owl._();
@@ -31,6 +32,7 @@ class Owl {
 /// OWL class constants.
 ///
 /// Contains IRIs that represent classes defined in the OWL vocabulary.
+@deprecated
 class OwlClasses {
   // coverage:ignore-start
   const OwlClasses._();
@@ -104,6 +106,7 @@ class OwlClasses {
 /// OWL predicate constants.
 ///
 /// Contains IRIs for properties defined in the OWL vocabulary.
+@deprecated
 class OwlPredicates {
   // coverage:ignore-start
   const OwlPredicates._();
@@ -177,6 +180,7 @@ class OwlPredicates {
 /// OWL constraint and value constants.
 ///
 /// Contains IRIs for constraint and value types defined in the OWL vocabulary.
+@deprecated
 class OwlConstraints {
   // coverage:ignore-start
   const OwlConstraints._();

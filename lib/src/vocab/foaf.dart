@@ -19,6 +19,7 @@ library foaf_vocab;
 import 'package:rdf_core/src/graph/rdf_term.dart';
 
 /// Base FOAF namespace and utility functions
+@deprecated
 class Foaf {
   // coverage:ignore-start
   const Foaf._();
@@ -33,6 +34,7 @@ class Foaf {
 /// FOAF class constants.
 ///
 /// Contains IRIs that represent classes defined in the FOAF vocabulary.
+@deprecated
 class FoafClasses {
   // coverage:ignore-start
   const FoafClasses._();
@@ -94,6 +96,7 @@ class FoafClasses {
 /// FOAF predicate constants.
 ///
 /// Contains IRIs for properties defined in the FOAF vocabulary.
+@deprecated
 class FoafPredicates {
   // coverage:ignore-start
   const FoafPredicates._();

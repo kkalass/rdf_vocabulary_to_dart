@@ -18,6 +18,7 @@ library schema_vocab;
 import 'package:rdf_core/src/graph/rdf_term.dart';
 
 /// Base Schema.org namespace and utility functions
+@deprecated
 class Schema {
   // coverage:ignore-start
   const Schema._();
@@ -32,6 +33,7 @@ class Schema {
 /// Schema.org class constants.
 ///
 /// Contains IRIs that represent classes defined in the Schema.org vocabulary.
+@deprecated
 class SchemaClasses {
   // coverage:ignore-start
   const SchemaClasses._();
@@ -121,6 +123,7 @@ class SchemaClasses {
 /// Schema.org predicate constants.
 ///
 /// Contains IRIs for properties defined in the Schema.org vocabulary.
+@deprecated
 class SchemaProperties {
   // coverage:ignore-start
   const SchemaProperties._();
@@ -198,6 +201,7 @@ class SchemaProperties {
 /// Person-related Schema.org property constants.
 ///
 /// Contains IRIs for person-related properties in the Schema.org vocabulary.
+@deprecated
 class SchemaPersonProperties {
   // coverage:ignore-start
   const SchemaPersonProperties._();
@@ -251,6 +255,7 @@ class SchemaPersonProperties {
 /// Organization-related Schema.org property constants.
 ///
 /// Contains IRIs for organization-related properties in the Schema.org vocabulary.
+@deprecated
 class SchemaOrganizationProperties {
   // coverage:ignore-start
   const SchemaOrganizationProperties._();
@@ -287,6 +292,7 @@ class SchemaOrganizationProperties {
 ///
 /// Contains IRIs for address-related properties in the Schema.org vocabulary.
 /// These properties are typically used with PostalAddress entities.
+@deprecated
 class SchemaAddressProperties {
   // coverage:ignore-start
   const SchemaAddressProperties._();
