@@ -6,6 +6,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
+import 'package:logging/logging.dart';
+
+/// Logger for vocabulary sources
+final _log = Logger('rdf.vocab.source');
 
 /// Base class for vocabulary sources.
 ///
@@ -34,6 +38,8 @@ abstract class VocabularySource {
       return 'turtle';
     } else if (namespace.endsWith('.rdf') || namespace.endsWith('.xml')) {
       return 'rdf/xml';
+    } else if (namespace.endsWith('.jsonld') || namespace.endsWith('.json')) {
+      return 'json-ld';
     } else {
       // Default to Turtle for most vocabularies
       return 'turtle';
@@ -46,18 +52,52 @@ class UrlVocabularySource extends VocabularySource {
   @override
   final String namespace;
 
-  const UrlVocabularySource(this.namespace);
+  /// Maximum number of redirects to follow
+  final int maxRedirects;
+
+  /// Timeout for HTTP requests in seconds
+  final int timeoutSeconds;
+
+  const UrlVocabularySource(
+    this.namespace, {
+    this.maxRedirects = 5,
+    this.timeoutSeconds = 30,
+  });
 
   @override
   Future<String> loadContent() async {
+    final client = http.Client();
     try {
       // Add content negotiation headers for RDF
       final headers = {
         'Accept':
-            'text/turtle, application/rdf+xml;q=0.9, application/xml;q=0.8',
+            'text/turtle, application/rdf+xml;q=0.9, application/ld+json;q=0.8, text/html;q=0.7',
+        'User-Agent': 'RDF Vocabulary Builder (Dart/HTTP Client)',
       };
 
-      final response = await http.get(Uri.parse(namespace), headers: headers);
+      _log.info('Loading vocabulary from URL: $namespace');
+
+      final request = http.Request('GET', Uri.parse(namespace));
+      request.headers.addAll(headers);
+
+      // Create a custom HTTP client that can handle redirects manually
+      final response = await client
+          .send(request)
+          .timeout(Duration(seconds: timeoutSeconds));
+
+      // Handle redirects manually to avoid issues with server redirects
+      if (response.isRedirect && maxRedirects > 0) {
+        final redirectUrl = response.headers['location'];
+        if (redirectUrl != null) {
+          _log.info('Following redirect to: $redirectUrl');
+          client.close();
+          return await UrlVocabularySource(
+            redirectUrl,
+            maxRedirects: maxRedirects - 1,
+            timeoutSeconds: timeoutSeconds,
+          ).loadContent();
+        }
+      }
 
       if (response.statusCode != 200) {
         throw Exception(
@@ -65,16 +105,79 @@ class UrlVocabularySource extends VocabularySource {
         );
       }
 
-      return utf8.decode(response.bodyBytes);
+      final bytes = await response.stream.toBytes();
+
+      // Try to determine the correct encoding
+      String? charset;
+      if (response.headers.containsKey('content-type')) {
+        final contentType = response.headers['content-type']!;
+        final charsetMatch = RegExp(
+          r'charset=([^\s;]+)',
+        ).firstMatch(contentType);
+        if (charsetMatch != null) {
+          charset = charsetMatch.group(1);
+        }
+      }
+
+      // Detect format from content-type if available
+      if (response.headers.containsKey('content-type')) {
+        final contentType = response.headers['content-type']!.toLowerCase();
+        if (contentType.contains('turtle')) {
+          _log.info('Detected Turtle format from Content-Type');
+        } else if (contentType.contains('rdf+xml') ||
+            contentType.contains('xml')) {
+          _log.info('Detected RDF/XML format from Content-Type');
+        } else if (contentType.contains('json')) {
+          _log.info('Detected JSON format from Content-Type');
+        }
+      }
+
+      // Try to decode with the specified charset, fallback to UTF-8
+      try {
+        if (charset != null) {
+          return utf8.decode(bytes, allowMalformed: true);
+        } else {
+          return utf8.decode(bytes);
+        }
+      } catch (e) {
+        // Fallback to Latin-1 (ISO-8859-1) if UTF-8 decoding fails
+        _log.warning('UTF-8 decoding failed, trying ISO-8859-1: $e');
+        return latin1.decode(bytes);
+      }
     } catch (e) {
       throw Exception('Error loading vocabulary from $namespace: $e');
+    } finally {
+      client.close();
     }
   }
 
   @override
   String getFormat() {
-    // Try to detect format from content-type header
-    // For simplicity, we default to the parent implementation
+    // Try to detect format from URL path or extension first
+    final uri = Uri.tryParse(namespace);
+    if (uri != null && uri.path.isNotEmpty) {
+      final extension = path.extension(uri.path).toLowerCase();
+
+      switch (extension) {
+        case '.ttl':
+          return 'turtle';
+        case '.rdf':
+        case '.xml':
+        case '.owl':
+          return 'rdf/xml';
+        case '.jsonld':
+        case '.json':
+          return 'json-ld';
+        case '.nt':
+          return 'n-triples';
+      }
+    }
+
+    // For schema.org and similar endpoints, prefer JSON-LD
+    if (namespace.contains('schema.org')) {
+      return 'json-ld';
+    }
+
     return super.getFormat();
   }
 }
@@ -112,11 +215,13 @@ class FileVocabularySource extends VocabularySource {
         return 'turtle';
       case '.rdf':
       case '.xml':
+      case '.owl':
         return 'rdf/xml';
       case '.jsonld':
+      case '.json':
         return 'json-ld';
-      case '.n3':
-        return 'notation3';
+      case '.nt':
+        return 'n-triples';
       default:
         return super.getFormat();
     }
