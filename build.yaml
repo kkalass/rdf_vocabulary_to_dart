@@ -1,0 +1,15 @@
+targets:
+  $default:
+    builders:
+      rdf_core|vocabulary_builder:
+        enabled: true
+        generate_for:
+          - lib/src/vocab/manifest.dart
+
+builders:
+  vocabulary_builder:
+    import: "package:rdf_core/src/vocab/builder/builder.dart"
+    builder_factories: ["vocabularyBuilder"]
+    build_extensions: {"$lib$": ["src/vocab/generated/_index.dart"]}
+    auto_apply: dependents
+    build_to: source
