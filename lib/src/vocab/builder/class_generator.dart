@@ -20,20 +20,17 @@ class VocabularyClassGenerator {
     // Add header and copyright
     _writeHeader(buffer);
 
-    // Import necessary packages
-    _writeImports(buffer);
-
-    // Write library documentation
+    // Write library documentation and declaration first
     _writeLibraryDoc(buffer, model);
 
-    // Write primary (deprecated) class
+    // Import necessary packages (after library declaration)
+    _writeImports(buffer);
+
+    // Write primary class containing all terms
     _writePrimaryClass(buffer, model);
 
-    // Write types class
-    _writeTypesClass(buffer, model);
-
-    // Write predicates class
-    _writePredicatesClass(buffer, model);
+    // Write individual class for each RDF class
+    _writeIndividualClasses(buffer, model);
 
     return buffer.toString();
   }
@@ -74,12 +71,23 @@ class VocabularyClassGenerator {
 
     if (model.properties.isNotEmpty) {
       final exampleProp = _dartIdentifier(model.properties.first.localName);
-      buffer.writeln('/// final property = ${name}Predicates.$exampleProp;');
+      buffer.writeln(
+        '/// final property = ${name}.$exampleProp; // Access property directly from main class',
+      );
     }
 
     if (model.classes.isNotEmpty) {
       final exampleClass = _dartIdentifier(model.classes.first.localName);
-      buffer.writeln('/// final type = ${name}Types.$exampleClass;');
+      buffer.writeln(
+        '/// final type = ${name}$exampleClass.type; // Access class type',
+      );
+
+      if (model.properties.isNotEmpty) {
+        final exampleProp = _dartIdentifier(model.properties.first.localName);
+        buffer.writeln(
+          '/// final property = ${name}$exampleClass.$exampleProp; // Access property from class',
+        );
+      }
     }
 
     buffer.writeln('/// ```');
@@ -96,16 +104,20 @@ class VocabularyClassGenerator {
     buffer.writeln();
   }
 
-  /// Writes the primary vocabulary class.
+  /// Writes the primary vocabulary class that contains all terms.
   void _writePrimaryClass(StringBuffer buffer, VocabularyModel model) {
     final className = _capitalize(model.name);
 
-    buffer.writeln('/// Base ${className} namespace and utility functions');
-    buffer.writeln('@deprecated');
+    buffer.writeln(
+      '/// Main ${className} vocabulary class containing all terms',
+    );
+    buffer.writeln('///');
+    buffer.writeln(
+      '/// Contains all terms defined in the ${model.namespace} vocabulary.',
+    );
     buffer.writeln('class $className {');
-    buffer.writeln('  // coverage:ignore-start');
+    buffer.writeln('  // Private constructor prevents instantiation');
     buffer.writeln('  const ${className}._();');
-    buffer.writeln('  // coverage:ignore-end');
     buffer.writeln();
     buffer.writeln('  /// Base IRI for ${className} vocabulary');
     buffer.writeln('  /// [Spec](${model.namespace})');
@@ -131,110 +143,186 @@ class VocabularyClassGenerator {
     buffer.writeln();
   }
 
-  /// Writes the types class with class and datatype terms.
-  void _writeTypesClass(StringBuffer buffer, VocabularyModel model) {
-    if (model.classes.isEmpty && model.datatypes.isEmpty) {
-      return; // Skip if there are no types
-    }
+  /// Writes a class for each RDF class in the vocabulary.
+  void _writeIndividualClasses(StringBuffer buffer, VocabularyModel model) {
+    if (model.classes.isEmpty) return;
 
     final className = _capitalize(model.name);
 
-    buffer.writeln('/// ${className} type/class constants.');
-    buffer.writeln('///');
-    buffer.writeln(
-      '/// Contains IRIs that represent classes or types defined in the ${className} vocabulary.',
-    );
-    buffer.writeln('@deprecated');
-    buffer.writeln('class ${className}Types {');
-    buffer.writeln('  // coverage:ignore-start');
-    buffer.writeln('  const ${className}Types._();');
-    buffer.writeln('  // coverage:ignore-end');
-    buffer.writeln();
+    // Build class hierarchy for property inheritance
+    final classHierarchy = _buildClassHierarchy(model);
 
-    // Add class and datatype terms
-    for (final clazz in model.classes) {
-      _writeTerm(buffer, clazz, className);
+    // Map of property IRIs to property objects
+    final propertyMap = {for (final prop in model.properties) prop.iri: prop};
+
+    // Generate a class for each RDF class
+    for (final rdfClass in model.classes) {
+      final dartClassName = '$className${_dartIdentifier(rdfClass.localName)}';
+
+      buffer.writeln(
+        '/// ${rdfClass.localName} class from ${className} vocabulary',
+      );
+      buffer.writeln('///');
+
+      if (rdfClass.comment != null) {
+        final formattedComment = _formatMultilineComment(rdfClass.comment!);
+        buffer.writeln('/// $formattedComment');
+        buffer.writeln('///');
+      }
+
+      buffer.writeln(
+        '/// This class provides access to all properties that can be used with ${rdfClass.localName}.',
+      );
+      buffer.writeln('/// [Class Reference](${rdfClass.iri})');
+
+      buffer.writeln('class $dartClassName {');
+      buffer.writeln('  // Private constructor prevents instantiation');
+      buffer.writeln('  const ${dartClassName}._();');
+      buffer.writeln();
+
+      // Add the type field
+      buffer.writeln('  /// IRI term for the ${rdfClass.localName} class');
+      buffer.writeln(
+        '  /// Use this to specify that a resource is of this type.',
+      );
+      buffer.writeln(
+        "  static const type = IriTerm.prevalidated('${rdfClass.iri}');",
+      );
+      buffer.writeln();
+
+      // Get all properties that can be used with this class
+      final properties = _getPropertiesForClass(
+        rdfClass.iri,
+        classHierarchy,
+        propertyMap,
+      );
+
+      // Write all applicable properties
+      for (final property in properties) {
+        _writeTerm(buffer, property, className, prefix: '  ');
+      }
+
+      buffer.writeln('}');
+      buffer.writeln();
     }
-
-    for (final datatype in model.datatypes) {
-      _writeTerm(buffer, datatype, className);
-    }
-
-    buffer.writeln('}');
-    buffer.writeln();
-  }
-
-  /// Writes the predicates class with property terms.
-  void _writePredicatesClass(StringBuffer buffer, VocabularyModel model) {
-    if (model.properties.isEmpty) {
-      return; // Skip if there are no predicates
-    }
-
-    final className = _capitalize(model.name);
-
-    buffer.writeln('/// ${className} predicate constants.');
-    buffer.writeln('///');
-    buffer.writeln(
-      '/// Contains IRIs for properties defined in the ${className} vocabulary.',
-    );
-    buffer.writeln('@deprecated');
-    buffer.writeln('class ${className}Predicates {');
-    buffer.writeln('  // coverage:ignore-start');
-    buffer.writeln('  const ${className}Predicates._();');
-    buffer.writeln('  // coverage:ignore-end');
-    buffer.writeln();
-
-    // Add property terms
-    for (final property in model.properties) {
-      _writeTerm(buffer, property, className);
-    }
-
-    buffer.writeln('}');
-    buffer.writeln();
   }
 
   /// Writes a single term as a static constant.
-  void _writeTerm(StringBuffer buffer, VocabularyTerm term, String className) {
+  void _writeTerm(
+    StringBuffer buffer,
+    VocabularyTerm term,
+    String className, {
+    String prefix = '',
+  }) {
     final dartName = _dartIdentifier(term.localName);
 
     // Write documentation
     buffer.writeln(
-      '  /// IRI for ${className.toLowerCase()}:${term.localName}',
+      '$prefix/// IRI for ${className.toLowerCase()}:${term.localName}',
     );
-    buffer.writeln('  ///');
+    buffer.writeln('$prefix///');
 
     if (term.comment != null) {
       // Format the comment for Dart documentation
-      final formattedComment = term.comment!
-          .split('\n')
-          .map((line) => line.trim())
-          .where((line) => line.isNotEmpty)
-          .join('\n  /// ');
-
-      buffer.writeln('  /// $formattedComment');
-      buffer.writeln('  ///');
+      final formattedComment = _formatMultilineComment(term.comment!);
+      buffer.writeln('$prefix/// $formattedComment');
+      buffer.writeln('$prefix///');
     }
 
     // Add domain and range information for properties
     if (term is VocabularyProperty) {
       if (term.domains.isNotEmpty) {
-        buffer.writeln('  /// Domain: ${term.domains.join(', ')}');
+        buffer.writeln('$prefix/// Domain: ${term.domains.join(', ')}');
       }
 
       if (term.ranges.isNotEmpty) {
-        buffer.writeln('  /// Range: ${term.ranges.join(', ')}');
+        buffer.writeln('$prefix/// Range: ${term.ranges.join(', ')}');
       }
 
       if (term.domains.isNotEmpty || term.ranges.isNotEmpty) {
-        buffer.writeln('  ///');
+        buffer.writeln('$prefix///');
       }
     }
 
-    // Write the constant declaration
+    // Write the constant declaration with correct indentation
+    // Korrektur: Entferne das Leerzeichen zwischen Präfix und "static const"
     buffer.writeln(
-      "  static const $dartName = IriTerm.prevalidated('\${${className}.namespace}${term.localName}');",
+      "${prefix}static const $dartName = IriTerm.prevalidated('${term.iri}');",
     );
     buffer.writeln();
+  }
+
+  /// Formats a multiline comment for Dart documentation
+  String _formatMultilineComment(String comment) {
+    return comment
+        .split('\n')
+        .map((line) => line.trim())
+        .where((line) => line.isNotEmpty)
+        .join('\n  /// ');
+  }
+
+  /// Builds a map of class IRI to list of all parent class IRIs (including inherited)
+  Map<String, Set<String>> _buildClassHierarchy(VocabularyModel model) {
+    final hierarchy = <String, Set<String>>{};
+
+    // Initialize with direct parent classes
+    for (final rdfClass in model.classes) {
+      hierarchy[rdfClass.iri] = Set.from(rdfClass.superClasses);
+    }
+
+    // Resolve full inheritance (transitive closure)
+    bool changed;
+    do {
+      changed = false;
+
+      for (final entry in hierarchy.entries) {
+        final classIri = entry.key;
+        final parents = Set<String>.from(entry.value);
+
+        for (final parentIri in parents.toList()) {
+          // Add parent's parents
+          if (hierarchy.containsKey(parentIri)) {
+            final grandparents = hierarchy[parentIri]!;
+            final sizeBefore = parents.length;
+            parents.addAll(grandparents);
+            if (parents.length > sizeBefore) {
+              changed = true;
+              hierarchy[classIri] = parents;
+            }
+          }
+        }
+      }
+    } while (changed);
+
+    return hierarchy;
+  }
+
+  /// Gets all properties applicable to a given class including inherited properties
+  List<VocabularyProperty> _getPropertiesForClass(
+    String classIri,
+    Map<String, Set<String>> classHierarchy,
+    Map<String, VocabularyProperty> propertyMap,
+  ) {
+    final result = <VocabularyProperty>[];
+    final allParentClasses = {classIri, ...(classHierarchy[classIri] ?? {})};
+
+    for (final property in propertyMap.values) {
+      // If property has no domains, it can be used with any class
+      if (property.domains.isEmpty) {
+        result.add(property);
+        continue;
+      }
+
+      // Check if any domain of the property is compatible with this class
+      for (final domain in property.domains) {
+        if (allParentClasses.contains(domain)) {
+          result.add(property);
+          break;
+        }
+      }
+    }
+
+    return result;
   }
 
   /// Converts a local name to a valid Dart identifier.

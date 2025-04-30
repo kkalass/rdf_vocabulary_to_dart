@@ -117,6 +117,13 @@ class VocabularyDatatype extends VocabularyTerm {
 
 /// Utility for extracting vocabulary models from RDF graphs.
 class VocabularyModelExtractor {
+  // URIs that should be excluded from generation
+  static final _excludedUriPatterns = [
+    RegExp(r'#$'), // IRIs ending with just a hash
+    RegExp(r'[\-#]\d+$'), // IRIs ending with dash or hash followed by numbers
+    RegExp(r'(rdf|xml)-syntax'), // Syntax-related IRIs
+  ];
+
   /// Extracts a vocabulary model from an RDF graph.
   ///
   /// [graph] The RDF graph containing the vocabulary definition
@@ -140,7 +147,21 @@ class VocabularyModelExtractor {
     for (final resource in vocabResources) {
       try {
         final iri = resource.iri;
+
+        // Skip excluded URIs that are not actual vocabulary terms
+        if (_shouldExcludeUri(iri)) {
+          _log.fine('Skipping excluded URI: $iri');
+          continue;
+        }
+
         final localName = _extractLocalName(iri, namespace);
+
+        // Skip if the local name is invalid or couldn't be sanitized properly
+        if (localName.isEmpty || !_isValidDartIdentifier(localName)) {
+          _log.warning('Skipping invalid identifier: $localName from $iri');
+          continue;
+        }
+
         final label = _findLabel(graph, resource);
         final comment = _findComment(graph, resource);
 
@@ -376,30 +397,71 @@ class VocabularyModelExtractor {
         .toList();
   }
 
-  /// Extracts the local name from an IRI.
+  /// Extracts the local name from an IRI and sanitizes it for use as a Dart identifier.
   static String _extractLocalName(String iri, String namespace) {
+    String rawLocalName;
+
     if (iri.startsWith(namespace)) {
-      final localName = iri.substring(namespace.length);
+      rawLocalName = iri.substring(namespace.length);
       // If there's a hash or slash at the end of the namespace, it's already separated
-      if (localName.isNotEmpty) {
-        return localName;
+      if (rawLocalName.isNotEmpty) {
+        return _sanitizeDartIdentifier(rawLocalName);
       }
     }
 
     // Fallback: extract the last segment after # or /
     final hashIndex = iri.lastIndexOf('#');
     if (hashIndex != -1 && hashIndex < iri.length - 1) {
-      return iri.substring(hashIndex + 1);
+      rawLocalName = iri.substring(hashIndex + 1);
+      return _sanitizeDartIdentifier(rawLocalName);
     }
 
     final slashIndex = iri.lastIndexOf('/');
     if (slashIndex != -1 && slashIndex < iri.length - 1) {
-      return iri.substring(slashIndex + 1);
+      rawLocalName = iri.substring(slashIndex + 1);
+      return _sanitizeDartIdentifier(rawLocalName);
     }
 
     // Couldn't determine a reasonable local name
     _log.warning('Could not extract local name from IRI: $iri');
-    return iri;
+    return '';
+  }
+
+  /// Sanitizes a string to be a valid Dart identifier.
+  static String _sanitizeDartIdentifier(String input) {
+    if (input.isEmpty) return '';
+
+    // Replace disallowed characters with underscores
+    var sanitized = input.replaceAll(RegExp(r'[^\w$]'), '_');
+
+    // Ensure the first character is valid (not a number or underscore)
+    if (sanitized.startsWith(RegExp(r'[0-9]'))) {
+      sanitized = 'n$sanitized';
+    }
+
+    // Make sure it's not a reserved word
+    if (_reservedWords.contains(sanitized)) {
+      sanitized = '${sanitized}_';
+    }
+
+    return sanitized;
+  }
+
+  /// Checks if a string is a valid Dart identifier
+  static bool _isValidDartIdentifier(String identifier) {
+    return identifier.isNotEmpty &&
+        !_reservedWords.contains(identifier) &&
+        RegExp(r'^[a-zA-Z$][a-zA-Z0-9_$]*$').hasMatch(identifier);
+  }
+
+  /// Determines if a URI should be excluded from generation
+  static bool _shouldExcludeUri(String uri) {
+    // Check against the list of exclusion patterns
+    for (final pattern in _excludedUriPatterns) {
+      if (pattern.hasMatch(uri)) return true;
+    }
+
+    return false;
   }
 
   /// Determines the preferred prefix for a vocabulary name.
@@ -411,4 +473,71 @@ class VocabularyModelExtractor {
         return name.toLowerCase();
     }
   }
+
+  /// Dart reserved words that can't be used as identifiers
+  static const _reservedWords = {
+    'abstract',
+    'as',
+    'assert',
+    'async',
+    'await',
+    'break',
+    'case',
+    'catch',
+    'class',
+    'const',
+    'continue',
+    'covariant',
+    'default',
+    'deferred',
+    'do',
+    'dynamic',
+    'else',
+    'enum',
+    'export',
+    'extends',
+    'extension',
+    'external',
+    'factory',
+    'false',
+    'final',
+    'finally',
+    'for',
+    'Function',
+    'get',
+    'hide',
+    'if',
+    'implements',
+    'import',
+    'in',
+    'interface',
+    'is',
+    'late',
+    'library',
+    'mixin',
+    'new',
+    'null',
+    'on',
+    'operator',
+    'part',
+    'required',
+    'rethrow',
+    'return',
+    'set',
+    'show',
+    'static',
+    'super',
+    'switch',
+    'sync',
+    'this',
+    'throw',
+    'true',
+    'try',
+    'typedef',
+    'var',
+    'void',
+    'while',
+    'with',
+    'yield',
+  };
 }
