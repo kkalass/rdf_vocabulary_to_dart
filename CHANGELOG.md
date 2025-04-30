@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.1] - 2025-04-30
+
+### Fixed
+- Fixed release script to correctly parse the changelog format with square brackets
+- Added missing development dependencies required for the release tooling
+
 ## [0.5.0] - 2025-04-30
 
 - **BREAKING CHANGE**: Marked all vocabulary classes as deprecated
