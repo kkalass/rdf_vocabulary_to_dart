@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## 0.5.0
+
+- **BREAKING CHANGE**: Marked all vocabulary classes as deprecated
+  - Added `@deprecated` annotation to all classes in vocabulary modules (acl, dc, dc_terms, foaf, ldp, etc.)
+  - Classes will be removed in a future release due to API design concerns
+  - Users should migrate to the upcoming new vocabulary API
+- Improved code documentation
+- Enhanced developer warnings for approaching breaking changes
+
 ## 0.4.0
 
 - **BREAKING CHANGE**: Reorganized API structure for better modularity and usability
