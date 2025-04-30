@@ -52,6 +52,9 @@ class UrlVocabularySource extends VocabularySource {
   @override
   final String namespace;
 
+  /// The actual URL to load the vocabulary content from
+  final String sourceUrl;
+
   /// Maximum number of redirects to follow
   final int maxRedirects;
 
@@ -60,9 +63,10 @@ class UrlVocabularySource extends VocabularySource {
 
   const UrlVocabularySource(
     this.namespace, {
+    String? sourceUrl,
     this.maxRedirects = 5,
     this.timeoutSeconds = 30,
-  });
+  }) : sourceUrl = sourceUrl ?? namespace;
 
   @override
   Future<String> loadContent() async {
@@ -75,9 +79,11 @@ class UrlVocabularySource extends VocabularySource {
         'User-Agent': 'RDF Vocabulary Builder (Dart/HTTP Client)',
       };
 
-      _log.info('Loading vocabulary from URL: $namespace');
+      _log.info(
+        'Loading vocabulary from URL: $sourceUrl (namespace: $namespace)',
+      );
 
-      final request = http.Request('GET', Uri.parse(namespace));
+      final request = http.Request('GET', Uri.parse(sourceUrl));
       request.headers.addAll(headers);
 
       // Create a custom HTTP client that can handle redirects manually
@@ -92,7 +98,8 @@ class UrlVocabularySource extends VocabularySource {
           _log.info('Following redirect to: $redirectUrl');
           client.close();
           return await UrlVocabularySource(
-            redirectUrl,
+            namespace,
+            sourceUrl: redirectUrl,
             maxRedirects: maxRedirects - 1,
             timeoutSeconds: timeoutSeconds,
           ).loadContent();
@@ -101,7 +108,7 @@ class UrlVocabularySource extends VocabularySource {
 
       if (response.statusCode != 200) {
         throw Exception(
-          'Failed to load vocabulary from $namespace: ${response.statusCode}',
+          'Failed to load vocabulary from $sourceUrl: ${response.statusCode}',
         );
       }
 
@@ -145,7 +152,7 @@ class UrlVocabularySource extends VocabularySource {
         return latin1.decode(bytes);
       }
     } catch (e) {
-      throw Exception('Error loading vocabulary from $namespace: $e');
+      throw Exception('Error loading vocabulary from $sourceUrl: $e');
     } finally {
       client.close();
     }
@@ -154,7 +161,7 @@ class UrlVocabularySource extends VocabularySource {
   @override
   String getFormat() {
     // Try to detect format from URL path or extension first
-    final uri = Uri.tryParse(namespace);
+    final uri = Uri.tryParse(sourceUrl);
     if (uri != null && uri.path.isNotEmpty) {
       final extension = path.extension(uri.path).toLowerCase();
 
@@ -174,7 +181,7 @@ class UrlVocabularySource extends VocabularySource {
     }
 
     // For schema.org and similar endpoints, prefer JSON-LD
-    if (namespace.contains('schema.org')) {
+    if (sourceUrl.contains('schema.org')) {
       return 'json-ld';
     }
 

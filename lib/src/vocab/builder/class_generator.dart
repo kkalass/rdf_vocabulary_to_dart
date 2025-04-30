@@ -17,6 +17,9 @@ class VocabularyClassGenerator {
   String generate(VocabularyModel model) {
     final buffer = StringBuffer();
 
+    // Validate model has terms
+    _validateModelHasTerms(model);
+
     // Add header and copyright
     _writeHeader(buffer);
 
@@ -33,6 +36,23 @@ class VocabularyClassGenerator {
     _writeIndividualClasses(buffer, model);
 
     return buffer.toString();
+  }
+
+  /// Validates that the model contains at least some terms (classes, properties, datatypes, or other terms).
+  /// Throws an exception if the model is empty.
+  void _validateModelHasTerms(VocabularyModel model) {
+    final hasTerms =
+        model.classes.isNotEmpty ||
+        model.properties.isNotEmpty ||
+        model.datatypes.isNotEmpty ||
+        model.otherTerms.isNotEmpty;
+
+    if (!hasTerms) {
+      throw StateError(
+        'No terms found for vocabulary: ${model.name} (${model.namespace}). '
+        'The vocabulary source may be inaccessible or incorrectly formatted.',
+      );
+    }
   }
 
   /// Writes the file header with copyright information.
@@ -79,7 +99,7 @@ class VocabularyClassGenerator {
     if (model.classes.isNotEmpty) {
       final exampleClass = _dartIdentifier(model.classes.first.localName);
       buffer.writeln(
-        '/// final type = ${name}$exampleClass.type; // Access class type',
+        '/// final classIri = ${name}$exampleClass.classIri; // Access class IRI',
       );
 
       if (model.properties.isNotEmpty) {
@@ -175,18 +195,25 @@ class VocabularyClassGenerator {
       );
       buffer.writeln('/// [Class Reference](${rdfClass.iri})');
 
+      // Add seeAlso references if available
+      if (rdfClass.seeAlso.isNotEmpty) {
+        for (final seeAlso in rdfClass.seeAlso) {
+          buffer.writeln('/// [See also]($seeAlso)');
+        }
+      }
+
       buffer.writeln('class $dartClassName {');
       buffer.writeln('  // Private constructor prevents instantiation');
       buffer.writeln('  const ${dartClassName}._();');
       buffer.writeln();
 
-      // Add the type field
+      // Add the classIri field for the class itself
       buffer.writeln('  /// IRI term for the ${rdfClass.localName} class');
       buffer.writeln(
         '  /// Use this to specify that a resource is of this type.',
       );
       buffer.writeln(
-        "  static const type = IriTerm.prevalidated('${rdfClass.iri}');",
+        "  static const classIri = IriTerm.prevalidated('${rdfClass.iri}');",
       );
       buffer.writeln();
 
@@ -220,32 +247,40 @@ class VocabularyClassGenerator {
     buffer.writeln(
       '$prefix/// IRI for ${className.toLowerCase()}:${term.localName}',
     );
-    buffer.writeln('$prefix///');
 
     if (term.comment != null) {
       // Format the comment for Dart documentation
       final formattedComment = _formatMultilineComment(term.comment!);
-      buffer.writeln('$prefix/// $formattedComment');
       buffer.writeln('$prefix///');
+      buffer.writeln('$prefix/// $formattedComment');
     }
 
-    // Add domain and range information for properties
+    // Add domain and range information for properties in a more developer-friendly way
     if (term is VocabularyProperty) {
+      buffer.writeln('$prefix///');
+
       if (term.domains.isNotEmpty) {
-        buffer.writeln('$prefix/// Domain: ${term.domains.join(', ')}');
+        buffer.writeln('$prefix/// Can be used on: ${term.domains.join(', ')}');
       }
 
       if (term.ranges.isNotEmpty) {
-        buffer.writeln('$prefix/// Range: ${term.ranges.join(', ')}');
-      }
-
-      if (term.domains.isNotEmpty || term.ranges.isNotEmpty) {
-        buffer.writeln('$prefix///');
+        buffer.writeln(
+          '$prefix/// Expects values of type: ${term.ranges.join(', ')}',
+        );
       }
     }
 
+    // Add seeAlso references if available
+    if (term.seeAlso.isNotEmpty) {
+      buffer.writeln('$prefix///');
+      for (final seeAlso in term.seeAlso) {
+        buffer.writeln('$prefix/// [See also]($seeAlso)');
+      }
+    }
+
+    buffer.writeln('$prefix///');
+
     // Write the constant declaration with correct indentation
-    // Korrektur: Entferne das Leerzeichen zwischen Präfix und "static const"
     buffer.writeln(
       "${prefix}static const $dartName = IriTerm.prevalidated('${term.iri}');",
     );

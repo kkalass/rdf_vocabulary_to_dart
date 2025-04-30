@@ -14,7 +14,7 @@
 /// ```dart
 /// import 'package:rdf_core/vocab.dart';
 /// final property = Ldp.hasMemberRelation; // Access property directly from main class
-/// final type = LdpResource.type; // Access class type
+/// final classIri = LdpResource.classIri; // Access class IRI
 /// final property = LdpResource.hasMemberRelation; // Access property from class
 /// ```
 ///
@@ -114,6 +114,8 @@ static const PreferMembership = IriTerm.prevalidated('http://www.w3.org/ns/ldp#P
 ///
 /// Archaic alias for ldp:PreferMinimalContainer
 ///
+/// [See also](http://www.w3.org/ns/ldp#PreferMinimalContainer)
+///
 static const PreferEmptyContainer = IriTerm.prevalidated('http://www.w3.org/ns/ldp#PreferEmptyContainer');
 
 /// IRI for ldp:PreferMinimalContainer
@@ -138,8 +140,8 @@ static const Descending = IriTerm.prevalidated('http://www.w3.org/ns/ldp#Descend
 ///
 /// Indicates which predicate is used in membership triples, and that the membership triple pattern is < membership-constant-URI , object-of-hasMemberRelation, member-URI >.
 ///
-/// Domain: http://www.w3.org/ns/ldp#Container
-/// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+/// Can be used on: http://www.w3.org/ns/ldp#Container
+/// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
 ///
 static const hasMemberRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#hasMemberRelation');
 
@@ -147,8 +149,8 @@ static const hasMemberRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#
 ///
 /// Indicates which predicate is used in membership triples, and that the membership triple pattern is < member-URI , object-of-isMemberOfRelation, membership-constant-URI >.
 ///
-/// Domain: http://www.w3.org/ns/ldp#Container
-/// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+/// Can be used on: http://www.w3.org/ns/ldp#Container
+/// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
 ///
 static const isMemberOfRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#isMemberOfRelation');
 
@@ -156,8 +158,8 @@ static const isMemberOfRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp
 ///
 /// Indicates the membership-constant-URI in a membership triple.  Depending upon the membership triple pattern a container uses, as indicated by the presence of ldp:hasMemberRelation or ldp:isMemberOfRelation, the membership-constant-URI might occupy either the subject or object position in membership triples.
 ///
-/// Domain: http://www.w3.org/ns/ldp#Container
-/// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+/// Can be used on: http://www.w3.org/ns/ldp#Container
+/// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
 ///
 static const membershipResource = IriTerm.prevalidated('http://www.w3.org/ns/ldp#membershipResource');
 
@@ -165,8 +167,8 @@ static const membershipResource = IriTerm.prevalidated('http://www.w3.org/ns/ldp
 ///
 /// Indicates which triple in a creation request should be used as the member-URI value in the membership triple added when the creation request is successful.
 ///
-/// Domain: http://www.w3.org/ns/ldp#Container
-/// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+/// Can be used on: http://www.w3.org/ns/ldp#Container
+/// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
 ///
 static const insertedContentRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#insertedContentRelation');
 
@@ -174,8 +176,8 @@ static const insertedContentRelation = IriTerm.prevalidated('http://www.w3.org/n
 ///
 /// LDP servers should use this predicate as the membership predicate if there is no obvious predicate from an application vocabulary to use.
 ///
-/// Domain: http://www.w3.org/ns/ldp#Resource
-/// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+/// Can be used on: http://www.w3.org/ns/ldp#Resource
+/// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
 ///
 static const member = IriTerm.prevalidated('http://www.w3.org/ns/ldp#member');
 
@@ -183,8 +185,8 @@ static const member = IriTerm.prevalidated('http://www.w3.org/ns/ldp#member');
 ///
 /// Links a container with resources created through the container.
 ///
-/// Domain: http://www.w3.org/ns/ldp#Container
-/// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+/// Can be used on: http://www.w3.org/ns/ldp#Container
+/// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
 ///
 static const contains = IriTerm.prevalidated('http://www.w3.org/ns/ldp#contains');
 
@@ -192,8 +194,8 @@ static const contains = IriTerm.prevalidated('http://www.w3.org/ns/ldp#contains'
 ///
 /// Links a resource with constraints that the server requires requests like creation and update to conform to.
 ///
-/// Domain: http://www.w3.org/ns/ldp#Resource
-/// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+/// Can be used on: http://www.w3.org/ns/ldp#Resource
+/// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
 ///
 static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
@@ -201,8 +203,8 @@ static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#cons
 ///
 /// Link to the list of sorting criteria used by the server in a representation.  Typically used on Link response headers as an extension link relation URI in the rel= parameter.
 ///
-/// Domain: http://www.w3.org/ns/ldp#Page
-/// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#List
+/// Can be used on: http://www.w3.org/ns/ldp#Page
+/// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#List
 ///
 static const pageSortCriteria = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortCriteria');
 
@@ -210,8 +212,8 @@ static const pageSortCriteria = IriTerm.prevalidated('http://www.w3.org/ns/ldp#p
 ///
 /// Predicate used to specify the order of the members across a page sequence's in-sequence page resources; it asserts nothing about the order of members in the representation of a single page.
 ///
-/// Domain: http://www.w3.org/ns/ldp#PageSortCriterion
-/// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+/// Can be used on: http://www.w3.org/ns/ldp#PageSortCriterion
+/// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
 ///
 static const pageSortPredicate = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortPredicate');
 
@@ -219,8 +221,8 @@ static const pageSortPredicate = IriTerm.prevalidated('http://www.w3.org/ns/ldp#
 ///
 /// The ascending/descending/etc order used to order the members across pages in a page sequence.
 ///
-/// Domain: http://www.w3.org/ns/ldp#PageSortCriterion
-/// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource
+/// Can be used on: http://www.w3.org/ns/ldp#PageSortCriterion
+/// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource
 ///
 static const pageSortOrder = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortOrder');
 
@@ -228,8 +230,8 @@ static const pageSortOrder = IriTerm.prevalidated('http://www.w3.org/ns/ldp#page
 ///
 /// The collation used to order the members across pages in a page sequence when comparing strings.
 ///
-/// Domain: http://www.w3.org/ns/ldp#PageSortCriterion
-/// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+/// Can be used on: http://www.w3.org/ns/ldp#PageSortCriterion
+/// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
 ///
 static const pageSortCollation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortCollation');
 
@@ -237,11 +239,13 @@ static const pageSortCollation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#
 ///
 /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
 ///
+///
 static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
 /// IRI for ldp:inbox
 ///
 /// Links a resource to a container where notifications for the resource can be created and discovered.
+///
 ///
 static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -259,14 +263,14 @@ class LdpResource {
 
   /// IRI term for the Resource class
   /// Use this to specify that a resource is of this type.
-  static const type = IriTerm.prevalidated('http://www.w3.org/ns/ldp#Resource');
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#Resource');
 
   /// IRI for ldp:member
   ///
   /// LDP servers should use this predicate as the membership predicate if there is no obvious predicate from an application vocabulary to use.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Resource
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const member = IriTerm.prevalidated('http://www.w3.org/ns/ldp#member');
 
@@ -274,8 +278,8 @@ class LdpResource {
   ///
   /// Links a resource with constraints that the server requires requests like creation and update to conform to.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Resource
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
@@ -283,11 +287,13 @@ class LdpResource {
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  ///
   static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
+  ///
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -305,14 +311,14 @@ class LdpRDFSource {
 
   /// IRI term for the RDFSource class
   /// Use this to specify that a resource is of this type.
-  static const type = IriTerm.prevalidated('http://www.w3.org/ns/ldp#RDFSource');
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#RDFSource');
 
   /// IRI for ldp:member
   ///
   /// LDP servers should use this predicate as the membership predicate if there is no obvious predicate from an application vocabulary to use.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Resource
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const member = IriTerm.prevalidated('http://www.w3.org/ns/ldp#member');
 
@@ -320,8 +326,8 @@ class LdpRDFSource {
   ///
   /// Links a resource with constraints that the server requires requests like creation and update to conform to.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Resource
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
@@ -329,11 +335,13 @@ class LdpRDFSource {
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  ///
   static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
+  ///
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -351,14 +359,14 @@ class LdpNonRDFSource {
 
   /// IRI term for the NonRDFSource class
   /// Use this to specify that a resource is of this type.
-  static const type = IriTerm.prevalidated('http://www.w3.org/ns/ldp#NonRDFSource');
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#NonRDFSource');
 
   /// IRI for ldp:member
   ///
   /// LDP servers should use this predicate as the membership predicate if there is no obvious predicate from an application vocabulary to use.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Resource
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const member = IriTerm.prevalidated('http://www.w3.org/ns/ldp#member');
 
@@ -366,8 +374,8 @@ class LdpNonRDFSource {
   ///
   /// Links a resource with constraints that the server requires requests like creation and update to conform to.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Resource
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
@@ -375,11 +383,13 @@ class LdpNonRDFSource {
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  ///
   static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
+  ///
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -397,14 +407,14 @@ class LdpContainer {
 
   /// IRI term for the Container class
   /// Use this to specify that a resource is of this type.
-  static const type = IriTerm.prevalidated('http://www.w3.org/ns/ldp#Container');
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#Container');
 
   /// IRI for ldp:hasMemberRelation
   ///
   /// Indicates which predicate is used in membership triples, and that the membership triple pattern is < membership-constant-URI , object-of-hasMemberRelation, member-URI >.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
   static const hasMemberRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#hasMemberRelation');
 
@@ -412,8 +422,8 @@ class LdpContainer {
   ///
   /// Indicates which predicate is used in membership triples, and that the membership triple pattern is < member-URI , object-of-isMemberOfRelation, membership-constant-URI >.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
   static const isMemberOfRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#isMemberOfRelation');
 
@@ -421,8 +431,8 @@ class LdpContainer {
   ///
   /// Indicates the membership-constant-URI in a membership triple.  Depending upon the membership triple pattern a container uses, as indicated by the presence of ldp:hasMemberRelation or ldp:isMemberOfRelation, the membership-constant-URI might occupy either the subject or object position in membership triples.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const membershipResource = IriTerm.prevalidated('http://www.w3.org/ns/ldp#membershipResource');
 
@@ -430,8 +440,8 @@ class LdpContainer {
   ///
   /// Indicates which triple in a creation request should be used as the member-URI value in the membership triple added when the creation request is successful.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
   static const insertedContentRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#insertedContentRelation');
 
@@ -439,8 +449,8 @@ class LdpContainer {
   ///
   /// LDP servers should use this predicate as the membership predicate if there is no obvious predicate from an application vocabulary to use.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Resource
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const member = IriTerm.prevalidated('http://www.w3.org/ns/ldp#member');
 
@@ -448,8 +458,8 @@ class LdpContainer {
   ///
   /// Links a container with resources created through the container.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const contains = IriTerm.prevalidated('http://www.w3.org/ns/ldp#contains');
 
@@ -457,8 +467,8 @@ class LdpContainer {
   ///
   /// Links a resource with constraints that the server requires requests like creation and update to conform to.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Resource
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
@@ -466,11 +476,13 @@ class LdpContainer {
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  ///
   static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
+  ///
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -488,14 +500,14 @@ class LdpBasicContainer {
 
   /// IRI term for the BasicContainer class
   /// Use this to specify that a resource is of this type.
-  static const type = IriTerm.prevalidated('http://www.w3.org/ns/ldp#BasicContainer');
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#BasicContainer');
 
   /// IRI for ldp:hasMemberRelation
   ///
   /// Indicates which predicate is used in membership triples, and that the membership triple pattern is < membership-constant-URI , object-of-hasMemberRelation, member-URI >.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
   static const hasMemberRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#hasMemberRelation');
 
@@ -503,8 +515,8 @@ class LdpBasicContainer {
   ///
   /// Indicates which predicate is used in membership triples, and that the membership triple pattern is < member-URI , object-of-isMemberOfRelation, membership-constant-URI >.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
   static const isMemberOfRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#isMemberOfRelation');
 
@@ -512,8 +524,8 @@ class LdpBasicContainer {
   ///
   /// Indicates the membership-constant-URI in a membership triple.  Depending upon the membership triple pattern a container uses, as indicated by the presence of ldp:hasMemberRelation or ldp:isMemberOfRelation, the membership-constant-URI might occupy either the subject or object position in membership triples.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const membershipResource = IriTerm.prevalidated('http://www.w3.org/ns/ldp#membershipResource');
 
@@ -521,8 +533,8 @@ class LdpBasicContainer {
   ///
   /// Indicates which triple in a creation request should be used as the member-URI value in the membership triple added when the creation request is successful.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
   static const insertedContentRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#insertedContentRelation');
 
@@ -530,8 +542,8 @@ class LdpBasicContainer {
   ///
   /// LDP servers should use this predicate as the membership predicate if there is no obvious predicate from an application vocabulary to use.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Resource
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const member = IriTerm.prevalidated('http://www.w3.org/ns/ldp#member');
 
@@ -539,8 +551,8 @@ class LdpBasicContainer {
   ///
   /// Links a container with resources created through the container.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const contains = IriTerm.prevalidated('http://www.w3.org/ns/ldp#contains');
 
@@ -548,8 +560,8 @@ class LdpBasicContainer {
   ///
   /// Links a resource with constraints that the server requires requests like creation and update to conform to.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Resource
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
@@ -557,11 +569,13 @@ class LdpBasicContainer {
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  ///
   static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
+  ///
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -579,14 +593,14 @@ class LdpDirectContainer {
 
   /// IRI term for the DirectContainer class
   /// Use this to specify that a resource is of this type.
-  static const type = IriTerm.prevalidated('http://www.w3.org/ns/ldp#DirectContainer');
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#DirectContainer');
 
   /// IRI for ldp:hasMemberRelation
   ///
   /// Indicates which predicate is used in membership triples, and that the membership triple pattern is < membership-constant-URI , object-of-hasMemberRelation, member-URI >.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
   static const hasMemberRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#hasMemberRelation');
 
@@ -594,8 +608,8 @@ class LdpDirectContainer {
   ///
   /// Indicates which predicate is used in membership triples, and that the membership triple pattern is < member-URI , object-of-isMemberOfRelation, membership-constant-URI >.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
   static const isMemberOfRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#isMemberOfRelation');
 
@@ -603,8 +617,8 @@ class LdpDirectContainer {
   ///
   /// Indicates the membership-constant-URI in a membership triple.  Depending upon the membership triple pattern a container uses, as indicated by the presence of ldp:hasMemberRelation or ldp:isMemberOfRelation, the membership-constant-URI might occupy either the subject or object position in membership triples.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const membershipResource = IriTerm.prevalidated('http://www.w3.org/ns/ldp#membershipResource');
 
@@ -612,8 +626,8 @@ class LdpDirectContainer {
   ///
   /// Indicates which triple in a creation request should be used as the member-URI value in the membership triple added when the creation request is successful.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
   static const insertedContentRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#insertedContentRelation');
 
@@ -621,8 +635,8 @@ class LdpDirectContainer {
   ///
   /// LDP servers should use this predicate as the membership predicate if there is no obvious predicate from an application vocabulary to use.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Resource
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const member = IriTerm.prevalidated('http://www.w3.org/ns/ldp#member');
 
@@ -630,8 +644,8 @@ class LdpDirectContainer {
   ///
   /// Links a container with resources created through the container.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const contains = IriTerm.prevalidated('http://www.w3.org/ns/ldp#contains');
 
@@ -639,8 +653,8 @@ class LdpDirectContainer {
   ///
   /// Links a resource with constraints that the server requires requests like creation and update to conform to.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Resource
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
@@ -648,11 +662,13 @@ class LdpDirectContainer {
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  ///
   static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
+  ///
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -670,14 +686,14 @@ class LdpIndirectContainer {
 
   /// IRI term for the IndirectContainer class
   /// Use this to specify that a resource is of this type.
-  static const type = IriTerm.prevalidated('http://www.w3.org/ns/ldp#IndirectContainer');
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#IndirectContainer');
 
   /// IRI for ldp:hasMemberRelation
   ///
   /// Indicates which predicate is used in membership triples, and that the membership triple pattern is < membership-constant-URI , object-of-hasMemberRelation, member-URI >.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
   static const hasMemberRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#hasMemberRelation');
 
@@ -685,8 +701,8 @@ class LdpIndirectContainer {
   ///
   /// Indicates which predicate is used in membership triples, and that the membership triple pattern is < member-URI , object-of-isMemberOfRelation, membership-constant-URI >.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
   static const isMemberOfRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#isMemberOfRelation');
 
@@ -694,8 +710,8 @@ class LdpIndirectContainer {
   ///
   /// Indicates the membership-constant-URI in a membership triple.  Depending upon the membership triple pattern a container uses, as indicated by the presence of ldp:hasMemberRelation or ldp:isMemberOfRelation, the membership-constant-URI might occupy either the subject or object position in membership triples.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const membershipResource = IriTerm.prevalidated('http://www.w3.org/ns/ldp#membershipResource');
 
@@ -703,8 +719,8 @@ class LdpIndirectContainer {
   ///
   /// Indicates which triple in a creation request should be used as the member-URI value in the membership triple added when the creation request is successful.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
   static const insertedContentRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#insertedContentRelation');
 
@@ -712,8 +728,8 @@ class LdpIndirectContainer {
   ///
   /// LDP servers should use this predicate as the membership predicate if there is no obvious predicate from an application vocabulary to use.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Resource
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const member = IriTerm.prevalidated('http://www.w3.org/ns/ldp#member');
 
@@ -721,8 +737,8 @@ class LdpIndirectContainer {
   ///
   /// Links a container with resources created through the container.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Container
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Container
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const contains = IriTerm.prevalidated('http://www.w3.org/ns/ldp#contains');
 
@@ -730,8 +746,8 @@ class LdpIndirectContainer {
   ///
   /// Links a resource with constraints that the server requires requests like creation and update to conform to.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Resource
-  /// Range: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
@@ -739,11 +755,13 @@ class LdpIndirectContainer {
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  ///
   static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
+  ///
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -761,14 +779,14 @@ class LdpPageSortCriterion {
 
   /// IRI term for the PageSortCriterion class
   /// Use this to specify that a resource is of this type.
-  static const type = IriTerm.prevalidated('http://www.w3.org/ns/ldp#PageSortCriterion');
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#PageSortCriterion');
 
   /// IRI for ldp:pageSortPredicate
   ///
   /// Predicate used to specify the order of the members across a page sequence's in-sequence page resources; it asserts nothing about the order of members in the representation of a single page.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#PageSortCriterion
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Can be used on: http://www.w3.org/ns/ldp#PageSortCriterion
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
   static const pageSortPredicate = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortPredicate');
 
@@ -776,8 +794,8 @@ class LdpPageSortCriterion {
   ///
   /// The ascending/descending/etc order used to order the members across pages in a page sequence.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#PageSortCriterion
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource
+  /// Can be used on: http://www.w3.org/ns/ldp#PageSortCriterion
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource
   ///
   static const pageSortOrder = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortOrder');
 
@@ -785,8 +803,8 @@ class LdpPageSortCriterion {
   ///
   /// The collation used to order the members across pages in a page sequence when comparing strings.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#PageSortCriterion
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Can be used on: http://www.w3.org/ns/ldp#PageSortCriterion
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
   static const pageSortCollation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortCollation');
 
@@ -794,11 +812,13 @@ class LdpPageSortCriterion {
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  ///
   static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
+  ///
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -816,14 +836,14 @@ class LdpPage {
 
   /// IRI term for the Page class
   /// Use this to specify that a resource is of this type.
-  static const type = IriTerm.prevalidated('http://www.w3.org/ns/ldp#Page');
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#Page');
 
   /// IRI for ldp:pageSortCriteria
   ///
   /// Link to the list of sorting criteria used by the server in a representation.  Typically used on Link response headers as an extension link relation URI in the rel= parameter.
   ///
-  /// Domain: http://www.w3.org/ns/ldp#Page
-  /// Range: http://www.w3.org/1999/02/22-rdf-syntax-ns#List
+  /// Can be used on: http://www.w3.org/ns/ldp#Page
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#List
   ///
   static const pageSortCriteria = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortCriteria');
 
@@ -831,11 +851,13 @@ class LdpPage {
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  ///
   static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
+  ///
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 

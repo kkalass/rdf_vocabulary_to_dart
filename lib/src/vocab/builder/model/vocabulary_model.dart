@@ -61,12 +61,16 @@ class VocabularyTerm {
   /// Human-readable description of the term
   final String? comment;
 
+  /// Related resources referenced via rdfs:seeAlso
+  final List<String> seeAlso;
+
   /// Creates a new vocabulary term.
   const VocabularyTerm({
     required this.localName,
     required this.iri,
     this.label,
     this.comment,
+    this.seeAlso = const [],
   });
 }
 
@@ -81,6 +85,7 @@ class VocabularyClass extends VocabularyTerm {
     required super.iri,
     super.label,
     super.comment,
+    super.seeAlso,
     this.superClasses = const [],
   });
 }
@@ -99,6 +104,7 @@ class VocabularyProperty extends VocabularyTerm {
     required super.iri,
     super.label,
     super.comment,
+    super.seeAlso,
     this.domains = const [],
     this.ranges = const [],
   });
@@ -112,6 +118,7 @@ class VocabularyDatatype extends VocabularyTerm {
     required super.iri,
     super.label,
     super.comment,
+    super.seeAlso,
   });
 }
 
@@ -121,7 +128,7 @@ class VocabularyModelExtractor {
   static final _excludedUriPatterns = [
     RegExp(r'#$'), // IRIs ending with just a hash
     RegExp(r'[\-#]\d+$'), // IRIs ending with dash or hash followed by numbers
-    RegExp(r'(rdf|xml)-syntax'), // Syntax-related IRIs
+    RegExp(r'xml-syntax'), // XML-Syntax-related IRIs, but allow rdf-syntax
   ];
 
   /// Extracts a vocabulary model from an RDF graph.
@@ -172,6 +179,7 @@ class VocabularyModelExtractor {
               iri: iri,
               label: label,
               comment: comment,
+              seeAlso: _findSeeAlso(graph, resource),
               superClasses: _findSuperClasses(graph, resource),
             ),
           );
@@ -182,6 +190,7 @@ class VocabularyModelExtractor {
               iri: iri,
               label: label,
               comment: comment,
+              seeAlso: _findSeeAlso(graph, resource),
               domains: _findDomains(graph, resource),
               ranges: _findRanges(graph, resource),
             ),
@@ -193,6 +202,7 @@ class VocabularyModelExtractor {
               iri: iri,
               label: label,
               comment: comment,
+              seeAlso: _findSeeAlso(graph, resource),
             ),
           );
         } else {
@@ -203,6 +213,7 @@ class VocabularyModelExtractor {
               iri: iri,
               label: label,
               comment: comment,
+              seeAlso: _findSeeAlso(graph, resource),
             ),
           );
         }
@@ -392,6 +403,19 @@ class VocabularyModelExtractor {
     );
 
     return rangeTriples
+        .where((triple) => triple.object is IriTerm)
+        .map((triple) => (triple.object as IriTerm).iri)
+        .toList();
+  }
+
+  /// Finds all rdfs:seeAlso references for a resource.
+  static List<String> _findSeeAlso(RdfGraph graph, IriTerm resource) {
+    final seeAlsoTriples = graph.findTriples(
+      subject: resource,
+      predicate: IriTerm('http://www.w3.org/2000/01/rdf-schema#seeAlso'),
+    );
+
+    return seeAlsoTriples
         .where((triple) => triple.object is IriTerm)
         .map((triple) => (triple.object as IriTerm).iri)
         .toList();

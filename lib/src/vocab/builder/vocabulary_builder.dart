@@ -162,7 +162,9 @@ class VocabularyBuilder implements Builder {
         try {
           switch (type) {
             case 'url':
-              source = UrlVocabularySource(namespace);
+              // Use 'source' field if available, otherwise fall back to namespace
+              final sourceUrl = vocabConfig['source'] as String? ?? namespace;
+              source = UrlVocabularySource(namespace, sourceUrl: sourceUrl);
               break;
             case 'file':
               final filePath = vocabConfig['filePath'] as String;
