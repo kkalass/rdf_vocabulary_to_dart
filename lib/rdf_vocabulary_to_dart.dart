@@ -2,8 +2,8 @@
 // All rights reserved. Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-/// This library exposes the builder factory for generating RDF vocabulary classes
-/// from a JSON vocabulary manifest.
+/// This library exposes the builder factory for generating Dart classes
+/// from RDF vocabulary namespace IRIs.
 library rdf_vocabulary_to_dart;
 
 import 'package:build/build.dart';
@@ -13,7 +13,7 @@ import 'src/vocab/builder/vocabulary_builder.dart';
 const fallbackVocabJsonPath = 'lib/src/vocab/vocabulary_sources.vocab.json';
 const fallbackOutputDir = 'lib/src/vocab/generated';
 
-/// Creates a vocabulary builder with the given options.
+/// Creates a vocabulary to Dart code generator with the given options.
 ///
 /// Configuration options:
 /// - vocabulary_config_path: Path to the JSON manifest file (default: 'lib/src/vocab/vocabulary_sources.vocab.json')
