@@ -16,13 +16,13 @@ final _log = Logger('VocabularyClassGenerator');
 /// representing a vocabulary, with proper class structure, documentation,
 /// and type safety.
 class VocabularyClassGenerator {
-  /// Optional cross-vocabulary resolver for handling properties across vocabulary boundaries
-  final CrossVocabularyResolver? resolver;
+  /// Cross-vocabulary resolver for handling properties across vocabulary boundaries
+  final CrossVocabularyResolver resolver;
 
   /// Creates a new vocabulary class generator.
   ///
-  /// [resolver] Optional cross-vocabulary resolver for property inheritance across vocabularies
-  const VocabularyClassGenerator({this.resolver});
+  /// [resolver] Cross-vocabulary resolver for property inheritance across vocabularies
+  const VocabularyClassGenerator({required this.resolver});
 
   /// Generates Dart code for a vocabulary model.
   String generate(VocabularyModel model) {
@@ -506,44 +506,8 @@ class VocabularyClassGenerator {
     Map<String, Set<String>> classHierarchy,
     Map<String, VocabularyProperty> propertyMap,
   ) {
-    // If a cross-vocabulary resolver is available, use it
-    if (resolver != null) {
-      _log.fine('Using cross-vocabulary resolver for class $classIri');
-      return resolver!.getPropertiesForClass(classIri, vocabNamespace);
-    }
-
-    // Otherwise fall back to the original implementation (local vocabulary only)
-    _log.fine('Using local property resolution for class $classIri');
-
-    final result = <VocabularyProperty>[];
-    final allParentClasses = {classIri, ...(classHierarchy[classIri] ?? {})};
-
-    for (final property in propertyMap.values) {
-      // If property has explicit domains, check if any matches this class hierarchy
-      if (property.domains.isNotEmpty) {
-        // Check if any domain of the property is compatible with this class
-        for (final domain in property.domains) {
-          if (allParentClasses.contains(domain)) {
-            result.add(property);
-            break;
-          }
-        }
-        continue;
-      }
-
-      // For properties without explicit domains:
-      // Only include properties from the same namespace as the class
-      // This ensures that namespace-specific predicates stay within their namespace
-      final propertyNamespace = _extractNamespace(property.iri);
-
-      if (propertyNamespace == vocabNamespace) {
-        // Add properties from the same vocabulary to their own classes
-        result.add(property);
-      }
-      // We're explicitly NOT adding properties from other namespaces without explicit domains
-    }
-
-    return result;
+    _log.fine('Using cross-vocabulary resolver for class $classIri');
+    return resolver.getPropertiesForClass(classIri, vocabNamespace);
   }
 
   /// Provides documentation about property domain applicability
