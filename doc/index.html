@@ -7,6 +7,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Highlight.js für Code-Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/atom-one-light.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/dart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/languages/yaml.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
+        });
+    </script>
     <style>
         :root {
             --primary: #0175C2;
@@ -207,11 +220,32 @@
             border: 1px solid var(--code-border);
             margin: 20px 0;
             line-height: 1.4;
+            position: relative;
         }
 
         pre code {
             background-color: transparent;
             padding: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Style für Highlight.js */
+        .hljs {
+            background-color: transparent;
+            padding: 0;
+        }
+
+        /* Code-Block-Label */
+        .code-label {
+            position: absolute;
+            top: 0;
+            right: 10px;
+            background-color: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 0 0 4px 4px;
+            opacity: 0.8;
         }
 
         .configuration {
@@ -379,27 +413,27 @@
                     <h3>Vocabulary Classes</h3>
                     <p>Each vocabulary (like Schema.org, FOAF) gets a dedicated class containing constants for all terms in that vocabulary.</p>
                     <p>Perfect for developers already familiar with RDF concepts, providing direct access to vocabulary terms with proper typing.</p>
-                    <pre><code>// Access Schema.org terms directly
+                    <pre><code class="language-dart">// Access Schema.org terms directly
 import 'package:my_package/vocab/generated/schema.dart';
 
 final triple = Triple(
   IriTerm('http://example.org/john'),
   Schema.name,  // https://schema.org/name
   LiteralTerm('John Doe')
-);</code></pre>
+);</code><div class="code-label">Dart</div></pre>
                 </div>
                 <div class="approach-card">
                     <h3>RDF Class-Specific Classes</h3>
                     <p>For each RDF class within a vocabulary (like schema:Person), a dedicated Dart class containing all properties from that class and its superclasses.</p>
                     <p>Ideal for Dart developers new to RDF, providing a familiar object-oriented approach.</p>
-                    <pre><code>// Using the class-specific approach
+                    <pre><code class="language-dart">// Using the class-specific approach
 import 'package:my_package/vocab/generated/schema_person.dart';
 
 // SchemaPerson contains all properties related to Person
 Triple(person, SchemaPerson.name, LiteralTerm('Jane Doe')),
 Triple(person, SchemaPerson.email, LiteralTerm('jane@example.com')),
 // Properties from other vocabularies are properly prefixed
-Triple(person, SchemaPerson.rdfType, SchemaPerson.classIri),</code></pre>
+Triple(person, SchemaPerson.rdfType, SchemaPerson.classIri),</code><div class="code-label">Dart</div></pre>
                 </div>
             </div>
         </div>
@@ -442,16 +476,16 @@ Triple(person, SchemaPerson.rdfType, SchemaPerson.classIri),</code></pre>
             <h2>Getting Started</h2>
             <h3>1. Installation</h3>
             <p>Add the dependencies to your <code>pubspec.yaml</code>:</p>
-            <pre><code>dependencies:
+            <pre><code class="language-yaml">dependencies:
   rdf_core: ^0.6.2  # Core library for working with RDF data
 
 dev_dependencies:
   build_runner: ^2.4.0  # Runs the code generator
-  rdf_vocabulary_to_dart: ^0.1.0  # The code generator</code></pre>
+  rdf_vocabulary_to_dart: ^0.1.0  # The code generator</code><div class="code-label">YAML</div></pre>
 
             <h3>2. Configuration</h3>
             <p>Create a vocabulary configuration file in your project:</p>
-            <pre><code>// lib/src/vocab/vocabulary_sources.vocab.json
+            <pre><code class="language-json">// lib/src/vocab/vocabulary_sources.vocab.json
 {
   "vocabularies": {
     "schema": {
@@ -468,21 +502,21 @@ dev_dependencies:
       "filePath": "lib/src/vocab/custom_vocab.ttl"
     }
   }
-}</code></pre>
+}</code><div class="code-label">JSON</div></pre>
 
             <p>Configure <code>build.yaml</code> in your project root:</p>
-            <pre><code>targets:
+            <pre><code class="language-yaml">targets:
   $default:
     builders:
       rdf_vocabulary_to_dart|rdf_to_dart_generator:
         enabled: true
         options:
           vocabulary_config_path: "lib/src/vocab/vocabulary_sources.vocab.json"
-          output_dir: "lib/src/vocab/generated"</code></pre>
+          output_dir: "lib/src/vocab/generated"</code><div class="code-label">YAML</div></pre>
 
             <h3>3. Generate Code</h3>
             <p>Run the build_runner to generate Dart files from your RDF vocabularies:</p>
-            <pre><code>dart run build_runner build</code></pre>
+            <pre><code class="language-bash">dart run build_runner build</code><div class="code-label">Shell</div></pre>
         </div>
     </section>
 
@@ -492,7 +526,7 @@ dev_dependencies:
             <div class="usage-examples">
                 <div class="example">
                     <h3>Using Vocabulary Classes</h3>
-                    <pre><code>import 'package:rdf_core/rdf_core.dart';
+                    <pre><code class="language-dart">import 'package:rdf_core/rdf_core.dart';
 import 'package:your_package/src/vocab/generated/schema.dart';
 import 'package:your_package/src/vocab/generated/foaf.dart';
 
@@ -510,11 +544,11 @@ final nameQuery = graph.find(
   subject: null,
   predicate: Schema.name,
   object: null
-);</code></pre>
+);</code><div class="code-label">Dart</div></pre>
                 </div>
                 <div class="example">
                     <h3>Using Class-Specific Classes</h3>
-                    <pre><code>import 'package:rdf_core/rdf_core.dart';
+                    <pre><code class="language-dart">import 'package:rdf_core/rdf_core.dart';
 import 'package:your_package/src/vocab/generated/schema_person.dart';
 
 void createPersonTriples(IriTerm person) {
@@ -526,7 +560,7 @@ void createPersonTriples(IriTerm person) {
     Triple(person, SchemaPerson.name, LiteralTerm('Jane Doe')),
     Triple(person, SchemaPerson.email, LiteralTerm('jane@example.com')),
   ]);
-}</code></pre>
+}</code><div class="code-label">Dart</div></pre>
                 </div>
             </div>
         </div>
@@ -566,7 +600,7 @@ void createPersonTriples(IriTerm person) {
             <p>For a vocabulary like Schema.org, the generator produces these types of files:</p>
             
             <h3>1. Schema.dart - All vocabulary terms:</h3>
-            <pre><code>/// Schema.org Vocabulary 
+            <pre><code class="language-dart">/// Schema.org Vocabulary 
 class Schema {
   Schema._();
   
@@ -580,10 +614,10 @@ class Schema {
   static const name = IriTerm('https://schema.org/name');
   
   // ... many more terms
-}</code></pre>
+}</code><div class="code-label">Dart</div></pre>
 
             <h3>2. SchemaPerson.dart - Properties for the Person class:</h3>
-            <pre><code>/// Properties for the Schema.org Person class
+            <pre><code class="language-dart">/// Properties for the Schema.org Person class
 class SchemaPerson {
   SchemaPerson._();
   
@@ -600,7 +634,7 @@ class SchemaPerson {
   static const foafKnows = FOAF.knows;
   
   // ... including inherited properties from parent classes
-}</code></pre>
+}</code><div class="code-label">Dart</div></pre>
         </div>
     </section>
 
