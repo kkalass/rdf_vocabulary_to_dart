@@ -22,7 +22,8 @@ A build_runner for generating type-safe Dart classes from RDF vocabulary namespa
 - **Automatic RDF Vocabulary Generation:** Generates Dart classes from RDF vocabulary namespace IRIs
 - **Type-safe Vocabulary Access:** Creates strongly-typed constants for all vocabulary terms
 - **IDE Auto-completion:** Discoverable vocabulary terms with inline documentation
-- **Minimal Dependencies:** Focused solely on the build generation process
+- **Cross-vocabulary References:** Automatically resolves references between vocabularies
+- **Smart Format Detection:** Supports multiple RDF formats (Turtle, RDF/XML, JSON-LD, N-Triples)
 - **Build Integration:** Seamlessly integrates with your build process via build_runner
 
 ## 🚀 Quick Start
@@ -38,28 +39,51 @@ dev_dependencies:
   rdf_vocabulary_builder: ^0.1.0
 ```
 
-### 2. Configure Build
+### 2. Create a Manifest File
 
-Create a `build.yaml` file in your project root:
+Create a JSON manifest file (e.g., `lib/src/vocab/manifest.json`) to define your vocabularies:
+
+```json
+{
+  "vocabularies": {
+    "rdf": {
+      "type": "url",
+      "namespace": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+      "source": "https://www.w3.org/1999/02/22-rdf-syntax-ns.ttl"
+    },
+    "rdfs": {
+      "type": "url",
+      "namespace": "http://www.w3.org/2000/01/rdf-schema#"
+    },
+    "foaf": {
+      "type": "url",
+      "namespace": "http://xmlns.com/foaf/0.1/"
+    },
+    "customVocab": {
+      "type": "file",
+      "namespace": "http://example.org/custom#",
+      "filePath": "lib/src/vocab/custom_vocab.ttl"
+    }
+  }
+}
+```
+
+### 3. Configure Build
+
+Create or update your `build.yaml` file in your project root:
 
 ```yaml
 targets:
   $default:
     builders:
-      rdf_vocabulary_builder:vocabularyBuilder:
+      rdf_vocabulary_builder|vocabulary_builder:
+        enabled: true
         options:
-          vocabularies:
-            # Example vocabularies
-            - uri: http://www.w3.org/1999/02/22-rdf-syntax-ns#
-              prefix: rdf
-            - uri: http://www.w3.org/2000/01/rdf-schema#
-              prefix: rdfs
-            # Add your custom vocabularies
-            - uri: http://example.org/my-vocabulary#
-              prefix: myVocab
+          manifest_asset_path: "lib/src/vocab/manifest.json"
+          output_dir: "lib/src/vocab/generated"
 ```
 
-### 3. Generate Vocabulary Classes
+### 4. Generate Vocabulary Classes
 
 Run the build_runner to generate vocabulary classes:
 
@@ -67,11 +91,13 @@ Run the build_runner to generate vocabulary classes:
 dart run build_runner build
 ```
 
-### 4. Use Generated Classes
+### 5. Use Generated Classes
 
 ```dart
-import 'package:your_package/generated/rdf.dart';
-import 'package:your_package/generated/rdfs.dart';
+import 'package:your_package/src/vocab/generated/_index.dart';
+// Alternatively, import individual vocabularies:
+// import 'package:your_package/src/vocab/generated/rdf.dart';
+// import 'package:your_package/src/vocab/generated/rdfs.dart';
 import 'package:rdf_core/rdf_core.dart';
 
 void main() {
@@ -86,81 +112,97 @@ void main() {
 }
 ```
 
-## 🧑‍💻 Advanced Configuration
+## 🧑‍💻 Configuration Details
 
-The `build.yaml` file offers flexible configuration options:
+### Manifest File Format
+
+The manifest file is a JSON document that defines the vocabularies to generate:
+
+```json
+{
+  "vocabularies": {
+    "rdf": {
+      "type": "url",
+      "namespace": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+      "source": "https://www.w3.org/1999/02/22-rdf-syntax-ns.ttl"
+    },
+    "ldp": {
+      "type": "url",
+      "namespace": "http://www.w3.org/ns/ldp#"
+    }
+  }
+}
+```
+
+Each vocabulary entry in the manifest consists of:
+
+- **Key**: The name of the vocabulary to generate (also used as the class name in PascalCase)
+- **type**: Either "url" (remote vocabulary) or "file" (local vocabulary file)
+- **namespace**: The base IRI namespace of the vocabulary
+- **source** (optional): For "url" type, a specific source URL to fetch the vocabulary from (defaults to namespace)
+- **filePath** (required for "file" type): For local files, the path to the vocabulary file
+
+### Builder Configuration
+
+In your `build.yaml`, you can configure the builder with these options:
 
 ```yaml
 targets:
   $default:
     builders:
-      rdf_vocabulary_builder:vocabularyBuilder:
+      rdf_vocabulary_builder|vocabulary_builder:
+        enabled: true
         options:
-          # Base directory for generated files (optional, defaults to 'lib/generated')
-          outputDir: lib/src/vocabularies
-          # Whether to generate an index file (optional, defaults to true)
-          generateIndex: true
-          # Individual vocabulary configurations
-          vocabularies:
-            - uri: http://xmlns.com/foaf/0.1/
-              prefix: foaf
-              # Override default output path
-              outputPath: lib/src/vocabularies/foaf.dart
-              # Override class name (default would be FOAF)
-              className: FoafVocabulary
-              # Custom documentation for the vocabulary
-              documentation: "Friend of a Friend vocabulary"
-            
-            - uri: http://example.org/custom#
-              prefix: custom
-              # You can provide a local file path instead of a URI
-              filePath: path/to/local/vocabulary.ttl
-              # Format of the local file (turtle, rdf/xml, json-ld)
-              format: turtle
+          # Path to the manifest file (default: "lib/src/vocab/manifest.json")
+          manifest_asset_path: "path/to/your/manifest.json"
+          # Output directory for generated files (default: "lib/src/vocab/generated")
+          output_dir: "path/to/output/dir"
 ```
 
-### Working with Generated Classes
+### Understanding the Build Configuration
 
-Each generated vocabulary class contains:
+The `build.yaml` file defines two main sections:
 
-- Constants for all terms defined in the vocabulary
-- Type information (Class, Property, Datatype)
-- Documentation from the original vocabulary
+1. **targets**: Configures how the builder is applied to your package
+   - The builder is enabled with specific options for manifest path and output directory
+   - These options control where the builder looks for input files and where it generates output
 
-```dart
-// Example of using a generated FOAF vocabulary
-import 'package:your_package/src/vocabularies/foaf.dart';
+2. **builders**: Defines the builder itself
+   - Specifies the location and factory method for creating the builder
+   - Defines the build extensions and build behavior
+   - The `auto_apply: dependents` setting means this builder will automatically run in any package that depends on yours
 
-// FOAF.name is an IriTerm for http://xmlns.com/foaf/0.1/name
-final nameProperty = FOAF.name;
-```
+The combination of these settings ensures that:
+1. In your own package, the builder runs with the configured paths to generate vocabularies
+2. In dependent packages, the builder can be configured with their own paths to generate custom vocabularies
 
-### Refreshing Vocabularies
+This setup follows the dependency inversion principle, allowing consumers of your package to control their vocabulary definitions while reusing your builder's implementation.
 
-To update your vocabulary classes with the latest definitions:
+## 🔧 How It Works
 
-```bash
-dart run build_runner build --delete-conflicting-outputs
-```
+The RDF Vocabulary Builder operates in several stages:
 
-## 🔧 Technical Details
+1. **Loading**: Parses the manifest file to determine which vocabularies to generate
+2. **Fetching**: Retrieves vocabulary content from either URLs or local files
+3. **Parsing**: Processes vocabularies in their native format (Turtle, RDF/XML, etc.)
+4. **Resolution**: Identifies and resolves cross-vocabulary references
+5. **Generation**: Creates Dart classes with constants for each term in the vocabulary
+6. **Indexing**: Produces an index file for easy importing of all vocabularies
 
-### How It Works
-
-1. The builder fetches RDF vocabularies from the provided URIs or local files
-2. It parses the RDF data to extract terms, their types, and documentation
-3. It generates Dart classes with constants for each term in the vocabulary
-4. The generated code is optimized for IDE auto-completion and type safety
+For remote vocabularies, the builder intelligently attempts to locate the vocabulary content if the exact URL isn't provided, trying several common patterns for vocabulary publication.
 
 ### Generated Code Structure
 
-For each vocabulary, the builder generates:
+For each vocabulary, the builder generates a Dart class with the following structure:
 
 ```dart
 /// Documentation for the vocabulary
 class VocabularyName {
   /// Private constructor to prevent instantiation
   VocabularyName._();
+  
+  /// Base namespace for this vocabulary
+  static const namespace = 'http://example.org/vocabulary#';
   
   /// Documentation for term1
   static const term1 = IriTerm('http://example.org/vocabulary#term1');
@@ -170,6 +212,15 @@ class VocabularyName {
   
   // ... more terms
 }
+```
+
+An index file is also generated to provide easy access to all vocabularies:
+
+```dart
+// _index.dart
+export 'rdf.dart';
+export 'rdfs.dart';
+// ... more exports
 ```
 
 ## 🛣️ Roadmap

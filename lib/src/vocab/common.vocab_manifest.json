@@ -2,8 +2,7 @@
   "vocabularies": {
     "rdf": {
       "type": "url",
-      "namespace": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-      "source": "https://www.w3.org/1999/02/22-rdf-syntax-ns.ttl"
+      "namespace": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
     },
     "ldp": {
       "type": "url",

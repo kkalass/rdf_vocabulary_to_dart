@@ -291,6 +291,94 @@ class RdfProperty {
   static const value = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
   );
+
+  /// IRI for rdf:subPropertyOf
+  ///
+  /// The subject is a subproperty of a property.
+  ///
+  /// Can be used on: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  ///
+  static const rdfsSubPropertyOf = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#subPropertyOf',
+  );
+
+  /// IRI for rdf:comment
+  ///
+  /// A description of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
+  ///
+  static const rdfsComment = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#comment',
+  );
+
+  /// IRI for rdf:label
+  ///
+  /// A human-readable name for the subject.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
+  ///
+  static const rdfsLabel = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#label',
+  );
+
+  /// IRI for rdf:domain
+  ///
+  /// A domain of the subject property.
+  ///
+  /// Can be used on: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
+  ///
+  static const rdfsDomain = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#domain',
+  );
+
+  /// IRI for rdf:range
+  ///
+  /// A range of the subject property.
+  ///
+  /// Can be used on: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
+  ///
+  static const rdfsRange = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#range',
+  );
+
+  /// IRI for rdf:seeAlso
+  ///
+  /// Further information about the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsSeeAlso = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
+  );
+
+  /// IRI for rdf:isDefinedBy
+  ///
+  /// The definition of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsIsDefinedBy = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
+  );
+
+  /// IRI for rdf:member
+  ///
+  /// A member of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsMember = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#member',
+  );
 }
 
 /// Statement class from Rdf vocabulary
@@ -363,6 +451,61 @@ class RdfStatement {
   static const value = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
   );
+
+  /// IRI for rdf:comment
+  ///
+  /// A description of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
+  ///
+  static const rdfsComment = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#comment',
+  );
+
+  /// IRI for rdf:label
+  ///
+  /// A human-readable name for the subject.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
+  ///
+  static const rdfsLabel = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#label',
+  );
+
+  /// IRI for rdf:seeAlso
+  ///
+  /// Further information about the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsSeeAlso = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
+  );
+
+  /// IRI for rdf:isDefinedBy
+  ///
+  /// The definition of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsIsDefinedBy = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
+  );
+
+  /// IRI for rdf:member
+  ///
+  /// A member of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsMember = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#member',
+  );
 }
 
 /// Bag class from Rdf vocabulary
@@ -401,6 +544,61 @@ class RdfBag {
   ///
   static const value = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
+  );
+
+  /// IRI for rdf:comment
+  ///
+  /// A description of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
+  ///
+  static const rdfsComment = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#comment',
+  );
+
+  /// IRI for rdf:label
+  ///
+  /// A human-readable name for the subject.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
+  ///
+  static const rdfsLabel = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#label',
+  );
+
+  /// IRI for rdf:seeAlso
+  ///
+  /// Further information about the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsSeeAlso = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
+  );
+
+  /// IRI for rdf:isDefinedBy
+  ///
+  /// The definition of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsIsDefinedBy = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
+  );
+
+  /// IRI for rdf:member
+  ///
+  /// A member of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsMember = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#member',
   );
 }
 
@@ -441,6 +639,61 @@ class RdfSeq {
   static const value = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
   );
+
+  /// IRI for rdf:comment
+  ///
+  /// A description of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
+  ///
+  static const rdfsComment = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#comment',
+  );
+
+  /// IRI for rdf:label
+  ///
+  /// A human-readable name for the subject.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
+  ///
+  static const rdfsLabel = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#label',
+  );
+
+  /// IRI for rdf:seeAlso
+  ///
+  /// Further information about the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsSeeAlso = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
+  );
+
+  /// IRI for rdf:isDefinedBy
+  ///
+  /// The definition of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsIsDefinedBy = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
+  );
+
+  /// IRI for rdf:member
+  ///
+  /// A member of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsMember = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#member',
+  );
 }
 
 /// Alt class from Rdf vocabulary
@@ -479,6 +732,61 @@ class RdfAlt {
   ///
   static const value = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
+  );
+
+  /// IRI for rdf:comment
+  ///
+  /// A description of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
+  ///
+  static const rdfsComment = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#comment',
+  );
+
+  /// IRI for rdf:label
+  ///
+  /// A human-readable name for the subject.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
+  ///
+  static const rdfsLabel = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#label',
+  );
+
+  /// IRI for rdf:seeAlso
+  ///
+  /// Further information about the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsSeeAlso = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
+  );
+
+  /// IRI for rdf:isDefinedBy
+  ///
+  /// The definition of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsIsDefinedBy = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
+  );
+
+  /// IRI for rdf:member
+  ///
+  /// A member of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsMember = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#member',
   );
 }
 
@@ -540,6 +848,61 @@ class RdfList {
   ///
   static const rest = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
+  );
+
+  /// IRI for rdf:comment
+  ///
+  /// A description of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
+  ///
+  static const rdfsComment = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#comment',
+  );
+
+  /// IRI for rdf:label
+  ///
+  /// A human-readable name for the subject.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
+  ///
+  static const rdfsLabel = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#label',
+  );
+
+  /// IRI for rdf:seeAlso
+  ///
+  /// Further information about the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsSeeAlso = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
+  );
+
+  /// IRI for rdf:isDefinedBy
+  ///
+  /// The definition of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsIsDefinedBy = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
+  );
+
+  /// IRI for rdf:member
+  ///
+  /// A member of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsMember = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#member',
   );
 }
 
@@ -604,5 +967,60 @@ class RdfCompoundLiteral {
   ///
   static const direction = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#direction',
+  );
+
+  /// IRI for rdf:comment
+  ///
+  /// A description of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
+  ///
+  static const rdfsComment = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#comment',
+  );
+
+  /// IRI for rdf:label
+  ///
+  /// A human-readable name for the subject.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
+  ///
+  static const rdfsLabel = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#label',
+  );
+
+  /// IRI for rdf:seeAlso
+  ///
+  /// Further information about the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsSeeAlso = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
+  );
+
+  /// IRI for rdf:isDefinedBy
+  ///
+  /// The definition of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsIsDefinedBy = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
+  );
+
+  /// IRI for rdf:member
+  ///
+  /// A member of the subject resource.
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const rdfsMember = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#member',
   );
 }

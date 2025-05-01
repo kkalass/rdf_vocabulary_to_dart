@@ -4,7 +4,7 @@ targets:
       rdf_vocabulary_builder|vocabulary_builder:
         enabled: true
         options:
-          manifest_asset_path: "lib/src/vocab/manifest.json"
+          manifest_asset_path: "lib/src/vocab/common.vocab_manifest.json"
           output_dir: "lib/src/vocab/generated"
 
 builders:
