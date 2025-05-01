@@ -277,10 +277,9 @@ class VocabularyClassGenerator {
     // Add domain and range information for properties in a more developer-friendly way
     if (term is VocabularyProperty) {
       buffer.writeln('$prefix///');
-
-      if (term.domains.isNotEmpty) {
-        buffer.writeln('$prefix/// Can be used on: ${term.domains.join(', ')}');
-      }
+      buffer.writeln(
+        '$prefix/// ${_getDomainDescription(term, classNamespace)}',
+      );
 
       if (term.ranges.isNotEmpty) {
         buffer.writeln(
@@ -434,22 +433,44 @@ class VocabularyClassGenerator {
     final allParentClasses = {classIri, ...(classHierarchy[classIri] ?? {})};
 
     for (final property in propertyMap.values) {
-      // If property has no domains, it can be used with any class
-      if (property.domains.isEmpty) {
-        result.add(property);
+      // If property has explicit domains, check if any matches this class hierarchy
+      if (property.domains.isNotEmpty) {
+        // Check if any domain of the property is compatible with this class
+        for (final domain in property.domains) {
+          if (allParentClasses.contains(domain)) {
+            result.add(property);
+            break;
+          }
+        }
         continue;
       }
 
-      // Check if any domain of the property is compatible with this class
-      for (final domain in property.domains) {
-        if (allParentClasses.contains(domain)) {
-          result.add(property);
-          break;
-        }
+      // For properties without explicit domains:
+      // Only include properties from the same namespace as the class
+      // This ensures that namespace-specific predicates stay within their namespace
+      final propertyNamespace = _extractNamespace(property.iri);
+
+      if (propertyNamespace == vocabNamespace) {
+        // Add properties from the same vocabulary to their own classes
+        result.add(property);
       }
+      // We're explicitly NOT adding properties from other namespaces without explicit domains
     }
 
     return result;
+  }
+
+  /// Provides documentation about property domain applicability
+  String _getDomainDescription(
+    VocabularyProperty property,
+    String? classNamespace,
+  ) {
+    if (property.domains.isNotEmpty) {
+      return "Can be used on: ${property.domains.join(', ')}";
+    }
+
+    // For properties without explicit domains but in the same vocabulary
+    return "Can be used on all classes in this vocabulary";
   }
 
   /// Converts a local name to a valid Dart identifier.

@@ -38,268 +38,219 @@ class Ldp {
   static const String namespace = 'http://www.w3.org/ns/ldp#';
   static const String prefix = 'ldp';
 
-  /// IRI for ldp:Resource
-  ///
-  /// A HTTP-addressable resource whose lifecycle is managed by a LDP server.
-  ///
-  static const Resource = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#Resource',
-  );
+/// IRI for ldp:Resource
+///
+/// A HTTP-addressable resource whose lifecycle is managed by a LDP server.
+///
+static const Resource = IriTerm.prevalidated('http://www.w3.org/ns/ldp#Resource');
 
-  /// IRI for ldp:RDFSource
-  ///
-  /// A Linked Data Platform Resource (LDPR) whose state is represented as RDF.
-  ///
-  static const RDFSource = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#RDFSource',
-  );
+/// IRI for ldp:RDFSource
+///
+/// A Linked Data Platform Resource (LDPR) whose state is represented as RDF.
+///
+static const RDFSource = IriTerm.prevalidated('http://www.w3.org/ns/ldp#RDFSource');
 
-  /// IRI for ldp:NonRDFSource
-  ///
-  /// A Linked Data Platform Resource (LDPR) whose state is NOT represented as RDF.
-  ///
-  static const NonRDFSource = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#NonRDFSource',
-  );
+/// IRI for ldp:NonRDFSource
+///
+/// A Linked Data Platform Resource (LDPR) whose state is NOT represented as RDF.
+///
+static const NonRDFSource = IriTerm.prevalidated('http://www.w3.org/ns/ldp#NonRDFSource');
 
-  /// IRI for ldp:Container
-  ///
-  /// A Linked Data Platform RDF Source (LDP-RS) that also conforms to additional patterns and conventions for managing membership. Readers should refer to the specification defining this ontology for the list of behaviors associated with it.
-  ///
-  static const Container = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#Container',
-  );
+/// IRI for ldp:Container
+///
+/// A Linked Data Platform RDF Source (LDP-RS) that also conforms to additional patterns and conventions for managing membership. Readers should refer to the specification defining this ontology for the list of behaviors associated with it.
+///
+static const Container = IriTerm.prevalidated('http://www.w3.org/ns/ldp#Container');
 
-  /// IRI for ldp:BasicContainer
-  ///
-  /// An LDPC that uses a predefined predicate to simply link to its contained resources.
-  ///
-  static const BasicContainer = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#BasicContainer',
-  );
+/// IRI for ldp:BasicContainer
+///
+/// An LDPC that uses a predefined predicate to simply link to its contained resources.
+///
+static const BasicContainer = IriTerm.prevalidated('http://www.w3.org/ns/ldp#BasicContainer');
 
-  /// IRI for ldp:DirectContainer
-  ///
-  /// An LDPC that is similar to a LDP-DC but it allows an indirection with the ability to list as member a resource, such as a URI representing a real-world object, that is different from the resource that is created.
-  ///
-  static const DirectContainer = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#DirectContainer',
-  );
+/// IRI for ldp:DirectContainer
+///
+/// An LDPC that is similar to a LDP-DC but it allows an indirection with the ability to list as member a resource, such as a URI representing a real-world object, that is different from the resource that is created.
+///
+static const DirectContainer = IriTerm.prevalidated('http://www.w3.org/ns/ldp#DirectContainer');
 
-  /// IRI for ldp:IndirectContainer
-  ///
-  /// An LDPC that has the flexibility of choosing what form the membership triples take.
-  ///
-  static const IndirectContainer = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#IndirectContainer',
-  );
+/// IRI for ldp:IndirectContainer
+///
+/// An LDPC that has the flexibility of choosing what form the membership triples take.
+///
+static const IndirectContainer = IriTerm.prevalidated('http://www.w3.org/ns/ldp#IndirectContainer');
 
-  /// IRI for ldp:PageSortCriterion
-  ///
-  /// Element in the list of sorting criteria used by the server to assign container members to pages.
-  ///
-  static const PageSortCriterion = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#PageSortCriterion',
-  );
+/// IRI for ldp:PageSortCriterion
+///
+/// Element in the list of sorting criteria used by the server to assign container members to pages.
+///
+static const PageSortCriterion = IriTerm.prevalidated('http://www.w3.org/ns/ldp#PageSortCriterion');
 
-  /// IRI for ldp:Page
-  ///
-  /// URI signifying that the resource is an in-sequence page resource, as defined by LDP Paging.  Typically used on Link rel='type' response headers.
-  ///
-  static const Page = IriTerm.prevalidated('http://www.w3.org/ns/ldp#Page');
+/// IRI for ldp:Page
+///
+/// URI signifying that the resource is an in-sequence page resource, as defined by LDP Paging.  Typically used on Link rel='type' response headers.
+///
+static const Page = IriTerm.prevalidated('http://www.w3.org/ns/ldp#Page');
 
-  /// IRI for ldp:MemberSubject
-  ///
-  /// Used to indicate default and typical behavior for ldp:insertedContentRelation, where the member-URI value in the membership triple added when a creation request is successful is the URI assigned to the newly created resource.
-  ///
-  static const MemberSubject = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#MemberSubject',
-  );
+/// IRI for ldp:MemberSubject
+///
+/// Used to indicate default and typical behavior for ldp:insertedContentRelation, where the member-URI value in the membership triple added when a creation request is successful is the URI assigned to the newly created resource.
+///
+static const MemberSubject = IriTerm.prevalidated('http://www.w3.org/ns/ldp#MemberSubject');
 
-  /// IRI for ldp:PreferContainment
-  ///
-  /// URI identifying a LDPC's containment triples, for example to allow clients to express interest in receiving them.
-  ///
-  static const PreferContainment = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#PreferContainment',
-  );
+/// IRI for ldp:PreferContainment
+///
+/// URI identifying a LDPC's containment triples, for example to allow clients to express interest in receiving them.
+///
+static const PreferContainment = IriTerm.prevalidated('http://www.w3.org/ns/ldp#PreferContainment');
 
-  /// IRI for ldp:PreferMembership
-  ///
-  /// URI identifying a LDPC's membership triples, for example to allow clients to express interest in receiving them.
-  ///
-  static const PreferMembership = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#PreferMembership',
-  );
+/// IRI for ldp:PreferMembership
+///
+/// URI identifying a LDPC's membership triples, for example to allow clients to express interest in receiving them.
+///
+static const PreferMembership = IriTerm.prevalidated('http://www.w3.org/ns/ldp#PreferMembership');
 
-  /// IRI for ldp:PreferEmptyContainer
-  ///
-  /// Archaic alias for ldp:PreferMinimalContainer
-  ///
-  /// [See also](http://www.w3.org/ns/ldp#PreferMinimalContainer)
-  ///
-  static const PreferEmptyContainer = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#PreferEmptyContainer',
-  );
+/// IRI for ldp:PreferEmptyContainer
+///
+/// Archaic alias for ldp:PreferMinimalContainer
+///
+/// [See also](http://www.w3.org/ns/ldp#PreferMinimalContainer)
+///
+static const PreferEmptyContainer = IriTerm.prevalidated('http://www.w3.org/ns/ldp#PreferEmptyContainer');
 
-  /// IRI for ldp:PreferMinimalContainer
-  ///
-  /// URI identifying the subset of a LDPC's triples present in an empty LDPC, for example to allow clients to express interest in receiving them.  Currently this excludes containment and membership triples, but in the future other exclusions might be added.  This definition is written to automatically exclude those new classes of triples.
-  ///
-  static const PreferMinimalContainer = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#PreferMinimalContainer',
-  );
+/// IRI for ldp:PreferMinimalContainer
+///
+/// URI identifying the subset of a LDPC's triples present in an empty LDPC, for example to allow clients to express interest in receiving them.  Currently this excludes containment and membership triples, but in the future other exclusions might be added.  This definition is written to automatically exclude those new classes of triples.
+///
+static const PreferMinimalContainer = IriTerm.prevalidated('http://www.w3.org/ns/ldp#PreferMinimalContainer');
 
-  /// IRI for ldp:Ascending
-  ///
-  /// Ascending order.
-  ///
-  static const Ascending = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#Ascending',
-  );
+/// IRI for ldp:Ascending
+///
+/// Ascending order.
+///
+static const Ascending = IriTerm.prevalidated('http://www.w3.org/ns/ldp#Ascending');
 
-  /// IRI for ldp:Descending
-  ///
-  /// Descending order.
-  ///
-  static const Descending = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#Descending',
-  );
+/// IRI for ldp:Descending
+///
+/// Descending order.
+///
+static const Descending = IriTerm.prevalidated('http://www.w3.org/ns/ldp#Descending');
 
-  /// IRI for ldp:hasMemberRelation
-  ///
-  /// Indicates which predicate is used in membership triples, and that the membership triple pattern is < membership-constant-URI , object-of-hasMemberRelation, member-URI >.
-  ///
-  /// Can be used on: http://www.w3.org/ns/ldp#Container
-  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
-  ///
-  static const hasMemberRelation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#hasMemberRelation',
-  );
+/// IRI for ldp:hasMemberRelation
+///
+/// Indicates which predicate is used in membership triples, and that the membership triple pattern is < membership-constant-URI , object-of-hasMemberRelation, member-URI >.
+///
+/// Can be used on: http://www.w3.org/ns/ldp#Container
+/// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+///
+static const hasMemberRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#hasMemberRelation');
 
-  /// IRI for ldp:isMemberOfRelation
-  ///
-  /// Indicates which predicate is used in membership triples, and that the membership triple pattern is < member-URI , object-of-isMemberOfRelation, membership-constant-URI >.
-  ///
-  /// Can be used on: http://www.w3.org/ns/ldp#Container
-  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
-  ///
-  static const isMemberOfRelation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#isMemberOfRelation',
-  );
+/// IRI for ldp:isMemberOfRelation
+///
+/// Indicates which predicate is used in membership triples, and that the membership triple pattern is < member-URI , object-of-isMemberOfRelation, membership-constant-URI >.
+///
+/// Can be used on: http://www.w3.org/ns/ldp#Container
+/// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+///
+static const isMemberOfRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#isMemberOfRelation');
 
-  /// IRI for ldp:membershipResource
-  ///
-  /// Indicates the membership-constant-URI in a membership triple.  Depending upon the membership triple pattern a container uses, as indicated by the presence of ldp:hasMemberRelation or ldp:isMemberOfRelation, the membership-constant-URI might occupy either the subject or object position in membership triples.
-  ///
-  /// Can be used on: http://www.w3.org/ns/ldp#Container
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const membershipResource = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#membershipResource',
-  );
+/// IRI for ldp:membershipResource
+///
+/// Indicates the membership-constant-URI in a membership triple.  Depending upon the membership triple pattern a container uses, as indicated by the presence of ldp:hasMemberRelation or ldp:isMemberOfRelation, the membership-constant-URI might occupy either the subject or object position in membership triples.
+///
+/// Can be used on: http://www.w3.org/ns/ldp#Container
+/// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+///
+static const membershipResource = IriTerm.prevalidated('http://www.w3.org/ns/ldp#membershipResource');
 
-  /// IRI for ldp:insertedContentRelation
-  ///
-  /// Indicates which triple in a creation request should be used as the member-URI value in the membership triple added when the creation request is successful.
-  ///
-  /// Can be used on: http://www.w3.org/ns/ldp#Container
-  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
-  ///
-  static const insertedContentRelation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#insertedContentRelation',
-  );
+/// IRI for ldp:insertedContentRelation
+///
+/// Indicates which triple in a creation request should be used as the member-URI value in the membership triple added when the creation request is successful.
+///
+/// Can be used on: http://www.w3.org/ns/ldp#Container
+/// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+///
+static const insertedContentRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#insertedContentRelation');
 
-  /// IRI for ldp:member
-  ///
-  /// LDP servers should use this predicate as the membership predicate if there is no obvious predicate from an application vocabulary to use.
-  ///
-  /// Can be used on: http://www.w3.org/ns/ldp#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const member = IriTerm.prevalidated('http://www.w3.org/ns/ldp#member');
+/// IRI for ldp:member
+///
+/// LDP servers should use this predicate as the membership predicate if there is no obvious predicate from an application vocabulary to use.
+///
+/// Can be used on: http://www.w3.org/ns/ldp#Resource
+/// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+///
+static const member = IriTerm.prevalidated('http://www.w3.org/ns/ldp#member');
 
-  /// IRI for ldp:contains
-  ///
-  /// Links a container with resources created through the container.
-  ///
-  /// Can be used on: http://www.w3.org/ns/ldp#Container
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const contains = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#contains',
-  );
+/// IRI for ldp:contains
+///
+/// Links a container with resources created through the container.
+///
+/// Can be used on: http://www.w3.org/ns/ldp#Container
+/// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+///
+static const contains = IriTerm.prevalidated('http://www.w3.org/ns/ldp#contains');
 
-  /// IRI for ldp:constrainedBy
-  ///
-  /// Links a resource with constraints that the server requires requests like creation and update to conform to.
-  ///
-  /// Can be used on: http://www.w3.org/ns/ldp#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const constrainedBy = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#constrainedBy',
-  );
+/// IRI for ldp:constrainedBy
+///
+/// Links a resource with constraints that the server requires requests like creation and update to conform to.
+///
+/// Can be used on: http://www.w3.org/ns/ldp#Resource
+/// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
+///
+static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
-  /// IRI for ldp:pageSortCriteria
-  ///
-  /// Link to the list of sorting criteria used by the server in a representation.  Typically used on Link response headers as an extension link relation URI in the rel= parameter.
-  ///
-  /// Can be used on: http://www.w3.org/ns/ldp#Page
-  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#List
-  ///
-  static const pageSortCriteria = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSortCriteria',
-  );
+/// IRI for ldp:pageSortCriteria
+///
+/// Link to the list of sorting criteria used by the server in a representation.  Typically used on Link response headers as an extension link relation URI in the rel= parameter.
+///
+/// Can be used on: http://www.w3.org/ns/ldp#Page
+/// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#List
+///
+static const pageSortCriteria = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortCriteria');
 
-  /// IRI for ldp:pageSortPredicate
-  ///
-  /// Predicate used to specify the order of the members across a page sequence's in-sequence page resources; it asserts nothing about the order of members in the representation of a single page.
-  ///
-  /// Can be used on: http://www.w3.org/ns/ldp#PageSortCriterion
-  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
-  ///
-  static const pageSortPredicate = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSortPredicate',
-  );
+/// IRI for ldp:pageSortPredicate
+///
+/// Predicate used to specify the order of the members across a page sequence's in-sequence page resources; it asserts nothing about the order of members in the representation of a single page.
+///
+/// Can be used on: http://www.w3.org/ns/ldp#PageSortCriterion
+/// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+///
+static const pageSortPredicate = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortPredicate');
 
-  /// IRI for ldp:pageSortOrder
-  ///
-  /// The ascending/descending/etc order used to order the members across pages in a page sequence.
-  ///
-  /// Can be used on: http://www.w3.org/ns/ldp#PageSortCriterion
-  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource
-  ///
-  static const pageSortOrder = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSortOrder',
-  );
+/// IRI for ldp:pageSortOrder
+///
+/// The ascending/descending/etc order used to order the members across pages in a page sequence.
+///
+/// Can be used on: http://www.w3.org/ns/ldp#PageSortCriterion
+/// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource
+///
+static const pageSortOrder = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortOrder');
 
-  /// IRI for ldp:pageSortCollation
-  ///
-  /// The collation used to order the members across pages in a page sequence when comparing strings.
-  ///
-  /// Can be used on: http://www.w3.org/ns/ldp#PageSortCriterion
-  /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
-  ///
-  static const pageSortCollation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSortCollation',
-  );
+/// IRI for ldp:pageSortCollation
+///
+/// The collation used to order the members across pages in a page sequence when comparing strings.
+///
+/// Can be used on: http://www.w3.org/ns/ldp#PageSortCriterion
+/// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
+///
+static const pageSortCollation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortCollation');
 
-  /// IRI for ldp:pageSequence
-  ///
-  /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
-  ///
-  ///
-  static const pageSequence = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSequence',
-  );
+/// IRI for ldp:pageSequence
+///
+/// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
+///
+/// Can be used on all classes in this vocabulary
+///
+static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
-  /// IRI for ldp:inbox
-  ///
-  /// Links a resource to a container where notifications for the resource can be created and discovered.
-  ///
-  ///
-  static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
+/// IRI for ldp:inbox
+///
+/// Links a resource to a container where notifications for the resource can be created and discovered.
+///
+/// Can be used on all classes in this vocabulary
+///
+static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
+
 }
 
 /// Resource class from Ldp vocabulary
@@ -314,9 +265,7 @@ class LdpResource {
 
   /// IRI term for the Resource class
   /// Use this to specify that a resource is of this type.
-  static const classIri = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#Resource',
-  );
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#Resource');
 
   /// IRI for ldp:member
   ///
@@ -334,23 +283,21 @@ class LdpResource {
   /// Can be used on: http://www.w3.org/ns/ldp#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const constrainedBy = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#constrainedBy',
-  );
+  static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
   /// IRI for ldp:pageSequence
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
-  static const pageSequence = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSequence',
-  );
+  static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -361,9 +308,7 @@ class LdpResource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const rdfType = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-  );
+  static const rdfType = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
 
   /// IRI for ldp:value
   ///
@@ -372,9 +317,7 @@ class LdpResource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfValue = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
-  );
+  static const rdfValue = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
 
   /// IRI for ldp:comment
   ///
@@ -383,9 +326,7 @@ class LdpResource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
+  static const rdfsComment = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
 
   /// IRI for ldp:label
   ///
@@ -394,9 +335,7 @@ class LdpResource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
+  static const rdfsLabel = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
 
   /// IRI for ldp:seeAlso
   ///
@@ -405,9 +344,7 @@ class LdpResource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
+  static const rdfsSeeAlso = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
 
   /// IRI for ldp:isDefinedBy
   ///
@@ -416,9 +353,7 @@ class LdpResource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
+  static const rdfsIsDefinedBy = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
 
   /// IRI for ldp:member
   ///
@@ -427,9 +362,8 @@ class LdpResource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
-  );
+  static const rdfsMember = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+
 }
 
 /// RDFSource class from Ldp vocabulary
@@ -444,9 +378,7 @@ class LdpRDFSource {
 
   /// IRI term for the RDFSource class
   /// Use this to specify that a resource is of this type.
-  static const classIri = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#RDFSource',
-  );
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#RDFSource');
 
   /// IRI for ldp:member
   ///
@@ -464,23 +396,21 @@ class LdpRDFSource {
   /// Can be used on: http://www.w3.org/ns/ldp#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const constrainedBy = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#constrainedBy',
-  );
+  static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
   /// IRI for ldp:pageSequence
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
-  static const pageSequence = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSequence',
-  );
+  static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -491,9 +421,7 @@ class LdpRDFSource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const rdfType = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-  );
+  static const rdfType = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
 
   /// IRI for ldp:value
   ///
@@ -502,9 +430,7 @@ class LdpRDFSource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfValue = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
-  );
+  static const rdfValue = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
 
   /// IRI for ldp:comment
   ///
@@ -513,9 +439,7 @@ class LdpRDFSource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
+  static const rdfsComment = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
 
   /// IRI for ldp:label
   ///
@@ -524,9 +448,7 @@ class LdpRDFSource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
+  static const rdfsLabel = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
 
   /// IRI for ldp:seeAlso
   ///
@@ -535,9 +457,7 @@ class LdpRDFSource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
+  static const rdfsSeeAlso = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
 
   /// IRI for ldp:isDefinedBy
   ///
@@ -546,9 +466,7 @@ class LdpRDFSource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
+  static const rdfsIsDefinedBy = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
 
   /// IRI for ldp:member
   ///
@@ -557,9 +475,8 @@ class LdpRDFSource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
-  );
+  static const rdfsMember = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+
 }
 
 /// NonRDFSource class from Ldp vocabulary
@@ -574,9 +491,7 @@ class LdpNonRDFSource {
 
   /// IRI term for the NonRDFSource class
   /// Use this to specify that a resource is of this type.
-  static const classIri = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#NonRDFSource',
-  );
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#NonRDFSource');
 
   /// IRI for ldp:member
   ///
@@ -594,23 +509,21 @@ class LdpNonRDFSource {
   /// Can be used on: http://www.w3.org/ns/ldp#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const constrainedBy = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#constrainedBy',
-  );
+  static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
   /// IRI for ldp:pageSequence
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
-  static const pageSequence = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSequence',
-  );
+  static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -621,9 +534,7 @@ class LdpNonRDFSource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const rdfType = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-  );
+  static const rdfType = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
 
   /// IRI for ldp:value
   ///
@@ -632,9 +543,7 @@ class LdpNonRDFSource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfValue = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
-  );
+  static const rdfValue = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
 
   /// IRI for ldp:comment
   ///
@@ -643,9 +552,7 @@ class LdpNonRDFSource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
+  static const rdfsComment = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
 
   /// IRI for ldp:label
   ///
@@ -654,9 +561,7 @@ class LdpNonRDFSource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
+  static const rdfsLabel = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
 
   /// IRI for ldp:seeAlso
   ///
@@ -665,9 +570,7 @@ class LdpNonRDFSource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
+  static const rdfsSeeAlso = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
 
   /// IRI for ldp:isDefinedBy
   ///
@@ -676,9 +579,7 @@ class LdpNonRDFSource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
+  static const rdfsIsDefinedBy = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
 
   /// IRI for ldp:member
   ///
@@ -687,9 +588,8 @@ class LdpNonRDFSource {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
-  );
+  static const rdfsMember = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+
 }
 
 /// Container class from Ldp vocabulary
@@ -704,9 +604,7 @@ class LdpContainer {
 
   /// IRI term for the Container class
   /// Use this to specify that a resource is of this type.
-  static const classIri = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#Container',
-  );
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#Container');
 
   /// IRI for ldp:hasMemberRelation
   ///
@@ -715,9 +613,7 @@ class LdpContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
-  static const hasMemberRelation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#hasMemberRelation',
-  );
+  static const hasMemberRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#hasMemberRelation');
 
   /// IRI for ldp:isMemberOfRelation
   ///
@@ -726,9 +622,7 @@ class LdpContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
-  static const isMemberOfRelation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#isMemberOfRelation',
-  );
+  static const isMemberOfRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#isMemberOfRelation');
 
   /// IRI for ldp:membershipResource
   ///
@@ -737,9 +631,7 @@ class LdpContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const membershipResource = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#membershipResource',
-  );
+  static const membershipResource = IriTerm.prevalidated('http://www.w3.org/ns/ldp#membershipResource');
 
   /// IRI for ldp:insertedContentRelation
   ///
@@ -748,9 +640,7 @@ class LdpContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
-  static const insertedContentRelation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#insertedContentRelation',
-  );
+  static const insertedContentRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#insertedContentRelation');
 
   /// IRI for ldp:member
   ///
@@ -768,9 +658,7 @@ class LdpContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const contains = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#contains',
-  );
+  static const contains = IriTerm.prevalidated('http://www.w3.org/ns/ldp#contains');
 
   /// IRI for ldp:constrainedBy
   ///
@@ -779,23 +667,21 @@ class LdpContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const constrainedBy = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#constrainedBy',
-  );
+  static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
   /// IRI for ldp:pageSequence
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
-  static const pageSequence = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSequence',
-  );
+  static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -806,9 +692,7 @@ class LdpContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const rdfType = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-  );
+  static const rdfType = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
 
   /// IRI for ldp:value
   ///
@@ -817,9 +701,7 @@ class LdpContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfValue = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
-  );
+  static const rdfValue = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
 
   /// IRI for ldp:comment
   ///
@@ -828,9 +710,7 @@ class LdpContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
+  static const rdfsComment = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
 
   /// IRI for ldp:label
   ///
@@ -839,9 +719,7 @@ class LdpContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
+  static const rdfsLabel = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
 
   /// IRI for ldp:seeAlso
   ///
@@ -850,9 +728,7 @@ class LdpContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
+  static const rdfsSeeAlso = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
 
   /// IRI for ldp:isDefinedBy
   ///
@@ -861,9 +737,7 @@ class LdpContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
+  static const rdfsIsDefinedBy = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
 
   /// IRI for ldp:member
   ///
@@ -872,9 +746,8 @@ class LdpContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
-  );
+  static const rdfsMember = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+
 }
 
 /// BasicContainer class from Ldp vocabulary
@@ -889,9 +762,7 @@ class LdpBasicContainer {
 
   /// IRI term for the BasicContainer class
   /// Use this to specify that a resource is of this type.
-  static const classIri = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#BasicContainer',
-  );
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#BasicContainer');
 
   /// IRI for ldp:hasMemberRelation
   ///
@@ -900,9 +771,7 @@ class LdpBasicContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
-  static const hasMemberRelation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#hasMemberRelation',
-  );
+  static const hasMemberRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#hasMemberRelation');
 
   /// IRI for ldp:isMemberOfRelation
   ///
@@ -911,9 +780,7 @@ class LdpBasicContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
-  static const isMemberOfRelation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#isMemberOfRelation',
-  );
+  static const isMemberOfRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#isMemberOfRelation');
 
   /// IRI for ldp:membershipResource
   ///
@@ -922,9 +789,7 @@ class LdpBasicContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const membershipResource = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#membershipResource',
-  );
+  static const membershipResource = IriTerm.prevalidated('http://www.w3.org/ns/ldp#membershipResource');
 
   /// IRI for ldp:insertedContentRelation
   ///
@@ -933,9 +798,7 @@ class LdpBasicContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
-  static const insertedContentRelation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#insertedContentRelation',
-  );
+  static const insertedContentRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#insertedContentRelation');
 
   /// IRI for ldp:member
   ///
@@ -953,9 +816,7 @@ class LdpBasicContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const contains = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#contains',
-  );
+  static const contains = IriTerm.prevalidated('http://www.w3.org/ns/ldp#contains');
 
   /// IRI for ldp:constrainedBy
   ///
@@ -964,23 +825,21 @@ class LdpBasicContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const constrainedBy = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#constrainedBy',
-  );
+  static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
   /// IRI for ldp:pageSequence
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
-  static const pageSequence = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSequence',
-  );
+  static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -991,9 +850,7 @@ class LdpBasicContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const rdfType = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-  );
+  static const rdfType = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
 
   /// IRI for ldp:value
   ///
@@ -1002,9 +859,7 @@ class LdpBasicContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfValue = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
-  );
+  static const rdfValue = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
 
   /// IRI for ldp:comment
   ///
@@ -1013,9 +868,7 @@ class LdpBasicContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
+  static const rdfsComment = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
 
   /// IRI for ldp:label
   ///
@@ -1024,9 +877,7 @@ class LdpBasicContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
+  static const rdfsLabel = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
 
   /// IRI for ldp:seeAlso
   ///
@@ -1035,9 +886,7 @@ class LdpBasicContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
+  static const rdfsSeeAlso = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
 
   /// IRI for ldp:isDefinedBy
   ///
@@ -1046,9 +895,7 @@ class LdpBasicContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
+  static const rdfsIsDefinedBy = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
 
   /// IRI for ldp:member
   ///
@@ -1057,9 +904,8 @@ class LdpBasicContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
-  );
+  static const rdfsMember = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+
 }
 
 /// DirectContainer class from Ldp vocabulary
@@ -1074,9 +920,7 @@ class LdpDirectContainer {
 
   /// IRI term for the DirectContainer class
   /// Use this to specify that a resource is of this type.
-  static const classIri = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#DirectContainer',
-  );
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#DirectContainer');
 
   /// IRI for ldp:hasMemberRelation
   ///
@@ -1085,9 +929,7 @@ class LdpDirectContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
-  static const hasMemberRelation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#hasMemberRelation',
-  );
+  static const hasMemberRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#hasMemberRelation');
 
   /// IRI for ldp:isMemberOfRelation
   ///
@@ -1096,9 +938,7 @@ class LdpDirectContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
-  static const isMemberOfRelation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#isMemberOfRelation',
-  );
+  static const isMemberOfRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#isMemberOfRelation');
 
   /// IRI for ldp:membershipResource
   ///
@@ -1107,9 +947,7 @@ class LdpDirectContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const membershipResource = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#membershipResource',
-  );
+  static const membershipResource = IriTerm.prevalidated('http://www.w3.org/ns/ldp#membershipResource');
 
   /// IRI for ldp:insertedContentRelation
   ///
@@ -1118,9 +956,7 @@ class LdpDirectContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
-  static const insertedContentRelation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#insertedContentRelation',
-  );
+  static const insertedContentRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#insertedContentRelation');
 
   /// IRI for ldp:member
   ///
@@ -1138,9 +974,7 @@ class LdpDirectContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const contains = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#contains',
-  );
+  static const contains = IriTerm.prevalidated('http://www.w3.org/ns/ldp#contains');
 
   /// IRI for ldp:constrainedBy
   ///
@@ -1149,23 +983,21 @@ class LdpDirectContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const constrainedBy = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#constrainedBy',
-  );
+  static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
   /// IRI for ldp:pageSequence
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
-  static const pageSequence = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSequence',
-  );
+  static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -1176,9 +1008,7 @@ class LdpDirectContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const rdfType = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-  );
+  static const rdfType = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
 
   /// IRI for ldp:value
   ///
@@ -1187,9 +1017,7 @@ class LdpDirectContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfValue = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
-  );
+  static const rdfValue = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
 
   /// IRI for ldp:comment
   ///
@@ -1198,9 +1026,7 @@ class LdpDirectContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
+  static const rdfsComment = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
 
   /// IRI for ldp:label
   ///
@@ -1209,9 +1035,7 @@ class LdpDirectContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
+  static const rdfsLabel = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
 
   /// IRI for ldp:seeAlso
   ///
@@ -1220,9 +1044,7 @@ class LdpDirectContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
+  static const rdfsSeeAlso = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
 
   /// IRI for ldp:isDefinedBy
   ///
@@ -1231,9 +1053,7 @@ class LdpDirectContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
+  static const rdfsIsDefinedBy = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
 
   /// IRI for ldp:member
   ///
@@ -1242,9 +1062,8 @@ class LdpDirectContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
-  );
+  static const rdfsMember = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+
 }
 
 /// IndirectContainer class from Ldp vocabulary
@@ -1259,9 +1078,7 @@ class LdpIndirectContainer {
 
   /// IRI term for the IndirectContainer class
   /// Use this to specify that a resource is of this type.
-  static const classIri = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#IndirectContainer',
-  );
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#IndirectContainer');
 
   /// IRI for ldp:hasMemberRelation
   ///
@@ -1270,9 +1087,7 @@ class LdpIndirectContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
-  static const hasMemberRelation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#hasMemberRelation',
-  );
+  static const hasMemberRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#hasMemberRelation');
 
   /// IRI for ldp:isMemberOfRelation
   ///
@@ -1281,9 +1096,7 @@ class LdpIndirectContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
-  static const isMemberOfRelation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#isMemberOfRelation',
-  );
+  static const isMemberOfRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#isMemberOfRelation');
 
   /// IRI for ldp:membershipResource
   ///
@@ -1292,9 +1105,7 @@ class LdpIndirectContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const membershipResource = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#membershipResource',
-  );
+  static const membershipResource = IriTerm.prevalidated('http://www.w3.org/ns/ldp#membershipResource');
 
   /// IRI for ldp:insertedContentRelation
   ///
@@ -1303,9 +1114,7 @@ class LdpIndirectContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
-  static const insertedContentRelation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#insertedContentRelation',
-  );
+  static const insertedContentRelation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#insertedContentRelation');
 
   /// IRI for ldp:member
   ///
@@ -1323,9 +1132,7 @@ class LdpIndirectContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Container
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const contains = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#contains',
-  );
+  static const contains = IriTerm.prevalidated('http://www.w3.org/ns/ldp#contains');
 
   /// IRI for ldp:constrainedBy
   ///
@@ -1334,23 +1141,21 @@ class LdpIndirectContainer {
   /// Can be used on: http://www.w3.org/ns/ldp#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const constrainedBy = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#constrainedBy',
-  );
+  static const constrainedBy = IriTerm.prevalidated('http://www.w3.org/ns/ldp#constrainedBy');
 
   /// IRI for ldp:pageSequence
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
-  static const pageSequence = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSequence',
-  );
+  static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -1361,9 +1166,7 @@ class LdpIndirectContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const rdfType = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-  );
+  static const rdfType = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
 
   /// IRI for ldp:value
   ///
@@ -1372,9 +1175,7 @@ class LdpIndirectContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfValue = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
-  );
+  static const rdfValue = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
 
   /// IRI for ldp:comment
   ///
@@ -1383,9 +1184,7 @@ class LdpIndirectContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
+  static const rdfsComment = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
 
   /// IRI for ldp:label
   ///
@@ -1394,9 +1193,7 @@ class LdpIndirectContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
+  static const rdfsLabel = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
 
   /// IRI for ldp:seeAlso
   ///
@@ -1405,9 +1202,7 @@ class LdpIndirectContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
+  static const rdfsSeeAlso = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
 
   /// IRI for ldp:isDefinedBy
   ///
@@ -1416,9 +1211,7 @@ class LdpIndirectContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
+  static const rdfsIsDefinedBy = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
 
   /// IRI for ldp:member
   ///
@@ -1427,9 +1220,8 @@ class LdpIndirectContainer {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
-  );
+  static const rdfsMember = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+
 }
 
 /// PageSortCriterion class from Ldp vocabulary
@@ -1444,9 +1236,7 @@ class LdpPageSortCriterion {
 
   /// IRI term for the PageSortCriterion class
   /// Use this to specify that a resource is of this type.
-  static const classIri = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#PageSortCriterion',
-  );
+  static const classIri = IriTerm.prevalidated('http://www.w3.org/ns/ldp#PageSortCriterion');
 
   /// IRI for ldp:pageSortPredicate
   ///
@@ -1455,9 +1245,7 @@ class LdpPageSortCriterion {
   /// Can be used on: http://www.w3.org/ns/ldp#PageSortCriterion
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
-  static const pageSortPredicate = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSortPredicate',
-  );
+  static const pageSortPredicate = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortPredicate');
 
   /// IRI for ldp:pageSortOrder
   ///
@@ -1466,9 +1254,7 @@ class LdpPageSortCriterion {
   /// Can be used on: http://www.w3.org/ns/ldp#PageSortCriterion
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource
   ///
-  static const pageSortOrder = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSortOrder',
-  );
+  static const pageSortOrder = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortOrder');
 
   /// IRI for ldp:pageSortCollation
   ///
@@ -1477,23 +1263,21 @@ class LdpPageSortCriterion {
   /// Can be used on: http://www.w3.org/ns/ldp#PageSortCriterion
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
-  static const pageSortCollation = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSortCollation',
-  );
+  static const pageSortCollation = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortCollation');
 
   /// IRI for ldp:pageSequence
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
-  static const pageSequence = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSequence',
-  );
+  static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -1504,9 +1288,7 @@ class LdpPageSortCriterion {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const rdfType = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-  );
+  static const rdfType = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
 
   /// IRI for ldp:value
   ///
@@ -1515,9 +1297,7 @@ class LdpPageSortCriterion {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfValue = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
-  );
+  static const rdfValue = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
 
   /// IRI for ldp:comment
   ///
@@ -1526,9 +1306,7 @@ class LdpPageSortCriterion {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
+  static const rdfsComment = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
 
   /// IRI for ldp:label
   ///
@@ -1537,9 +1315,7 @@ class LdpPageSortCriterion {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
+  static const rdfsLabel = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
 
   /// IRI for ldp:seeAlso
   ///
@@ -1548,9 +1324,7 @@ class LdpPageSortCriterion {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
+  static const rdfsSeeAlso = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
 
   /// IRI for ldp:isDefinedBy
   ///
@@ -1559,9 +1333,7 @@ class LdpPageSortCriterion {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
+  static const rdfsIsDefinedBy = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
 
   /// IRI for ldp:member
   ///
@@ -1570,9 +1342,8 @@ class LdpPageSortCriterion {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
-  );
+  static const rdfsMember = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+
 }
 
 /// Page class from Ldp vocabulary
@@ -1596,23 +1367,21 @@ class LdpPage {
   /// Can be used on: http://www.w3.org/ns/ldp#Page
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#List
   ///
-  static const pageSortCriteria = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSortCriteria',
-  );
+  static const pageSortCriteria = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSortCriteria');
 
   /// IRI for ldp:pageSequence
   ///
   /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
-  static const pageSequence = IriTerm.prevalidated(
-    'http://www.w3.org/ns/ldp#pageSequence',
-  );
+  static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
 
   /// IRI for ldp:inbox
   ///
   /// Links a resource to a container where notifications for the resource can be created and discovered.
   ///
+  /// Can be used on all classes in this vocabulary
   ///
   static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
@@ -1623,9 +1392,7 @@ class LdpPage {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const rdfType = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-  );
+  static const rdfType = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
 
   /// IRI for ldp:value
   ///
@@ -1634,9 +1401,7 @@ class LdpPage {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfValue = IriTerm.prevalidated(
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
-  );
+  static const rdfValue = IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
 
   /// IRI for ldp:comment
   ///
@@ -1645,9 +1410,7 @@ class LdpPage {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
+  static const rdfsComment = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
 
   /// IRI for ldp:label
   ///
@@ -1656,9 +1419,7 @@ class LdpPage {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
+  static const rdfsLabel = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
 
   /// IRI for ldp:seeAlso
   ///
@@ -1667,9 +1428,7 @@ class LdpPage {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
+  static const rdfsSeeAlso = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
 
   /// IRI for ldp:isDefinedBy
   ///
@@ -1678,9 +1437,7 @@ class LdpPage {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
+  static const rdfsIsDefinedBy = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
 
   /// IRI for ldp:member
   ///
@@ -1689,7 +1446,7 @@ class LdpPage {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
-  );
+  static const rdfsMember = IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+
 }
+

@@ -51,6 +51,7 @@ class VocabularyBuilder implements Builder {
     'solid',
   ];
 
+  // FIXME: This is a temporary solution to handle standard vocabularies
   // Map of standard vocabulary namespaces to their source URLs
   static const Map<String, String> _standardVocabularies = {
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#':

@@ -46,6 +46,7 @@ class CrossVocabularyResolver {
     'http://www.w3.org/2002/07/owl#Thing',
   };
 
+  // FIXME: better just grep for @prefix in the turtle vocabularies
   /// Map of known namespaces to vocabulary names
   static const _knownNamespaceToVocab = {
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#': 'rdf',
@@ -128,8 +129,14 @@ class CrossVocabularyResolver {
           }
         }
       } else {
-        // Properties with no explicit domain can apply to any resource
-        _propertyDomains[property.iri] = Set.from(_globalResourceTypes);
+        // For properties without explicit domains, don't automatically assign to global resources
+        // This ensures that namespace-specific predicates stay within their namespace
+        _propertyDomains[property.iri] = <String>{};
+
+        _log.fine(
+          'Property ${property.iri} has no explicit domain, ' +
+              'will only be available within ${model.name} vocabulary',
+        );
       }
     }
 
@@ -349,13 +356,10 @@ class CrossVocabularyResolver {
 
       final properties = entry.value;
       for (final property in properties) {
-        // Properties with no domain can be used with any class
+        // Only include properties with explicit domains that match this class
+        // Properties without explicit domains are kept within their own vocabulary
         if (_propertyDomains[property.iri] == null ||
             _propertyDomains[property.iri]!.isEmpty) {
-          result.add(property);
-          _log.fine(
-            'Added external property ${property.iri} (no domain restriction)',
-          );
           continue;
         }
 
@@ -376,52 +380,6 @@ class CrossVocabularyResolver {
     // Cache the result
     _externalPropertyCache[cacheKey] = result.toList();
     return result;
-  }
-
-  /// Gets all applicable properties for a class from all registered vocabularies.
-  ///
-  /// This method is similar to [getPropertiesForClass] but returns properties
-  /// from all vocabularies, not just the specified one.
-  ///
-  /// [classIri] The IRI of the class to get properties for
-  List<VocabularyProperty> getAllPropertiesForClass(String classIri) {
-    final result = <VocabularyProperty>{};
-
-    // Get the full set of classes (this class and all its superclasses)
-    final allClassTypes = {
-      classIri,
-      ...(_allSuperClasses[classIri] ?? {}),
-      ..._globalResourceTypes,
-    };
-
-    _log.fine('Getting all properties for $classIri');
-    _log.fine('Class hierarchy: ${allClassTypes.join(', ')}');
-
-    // Iterate through all vocabularies and collect applicable properties
-    for (final entry in _vocabularyProperties.entries) {
-      final properties = entry.value;
-
-      for (final property in properties) {
-        // Properties with no domain can be used with any class
-        if (_propertyDomains[property.iri] == null ||
-            _propertyDomains[property.iri]!.isEmpty) {
-          result.add(property);
-          continue;
-        }
-
-        // Check if any domain of the property is compatible with this class or its superclasses
-        final domains = _propertyDomains[property.iri] ?? {};
-        for (final domain in domains) {
-          if (allClassTypes.contains(domain)) {
-            result.add(property);
-            _log.fine('Added property ${property.iri} due to domain $domain');
-            break;
-          }
-        }
-      }
-    }
-
-    return result.toList();
   }
 
   /// Gets all applicable cross-vocabulary properties for a class.
