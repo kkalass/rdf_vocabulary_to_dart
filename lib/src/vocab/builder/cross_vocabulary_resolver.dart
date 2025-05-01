@@ -40,19 +40,13 @@ class CrossVocabularyResolver {
   /// Cache of resolved external properties by class IRI
   final Map<String, List<VocabularyProperty>> _externalPropertyCache = {};
 
+  /// Map of namespace IRIs to vocabulary names extracted from Turtle documents
+  final Map<String, String> _extractedNamespaceToVocab = {};
+
   /// Well-known global resource types that all other types implicitly inherit from
   static const _globalResourceTypes = {
     'http://www.w3.org/2000/01/rdf-schema#Resource',
     'http://www.w3.org/2002/07/owl#Thing',
-  };
-
-  // FIXME: better just grep for @prefix in the turtle vocabularies
-  /// Map of known namespaces to vocabulary names
-  static const _knownNamespaceToVocab = {
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#': 'rdf',
-    'http://www.w3.org/2000/01/rdf-schema#': 'rdfs',
-    'http://www.w3.org/2001/XMLSchema#': 'xsd',
-    'http://www.w3.org/2002/07/owl#': 'owl',
   };
 
   /// Function to load an implied vocabulary model if available
@@ -66,6 +60,84 @@ class CrossVocabularyResolver {
     required Future<VocabularyModel?> Function(String namespace, String name)
     vocabularyLoader,
   }) : _vocabularyLoader = vocabularyLoader;
+
+  /// Extracts prefixes from a Turtle document
+  ///
+  /// This method parses a Turtle document to extract prefix declarations
+  /// and adds them to the internal namespace-to-vocabulary name mapping.
+  /// It only extracts the prefixes, not the full RDF content.
+  ///
+  /// [turtleContent] The Turtle document content as a string
+  void extractPrefixesFromTurtle(String turtleContent) {
+    final List<String> lines = turtleContent.split('\n');
+
+    // Regular expression to match prefix declarations
+    // Matches both @prefix and PREFIX forms (case-insensitive)
+    final prefixRegex = RegExp(
+      r'(?:@prefix|PREFIX)\s+([a-zA-Z0-9_-]*):\s*<([^>]+)>',
+      caseSensitive: false,
+    );
+
+    for (final line in lines) {
+      final match = prefixRegex.firstMatch(line);
+      if (match != null) {
+        final prefix = match.group(1) ?? '';
+        final namespace = match.group(2)!;
+
+        // Add to our namespace to vocab mapping
+        if (prefix.isNotEmpty) {
+          _extractedNamespaceToVocab[namespace] = prefix;
+          _log.fine('Extracted prefix mapping: "$prefix" -> "$namespace"');
+        }
+      }
+    }
+  }
+
+  /// Determines a name for a vocabulary namespace
+  ///
+  /// This method tries to determine a name for a vocabulary namespace using these strategies:
+  /// 1. Look in extracted prefix mappings from Turtle documents
+  /// 2. Extract a name from the namespace URI as fallback
+  ///
+  /// [namespace] The namespace URI to get a name for
+  String _determineVocabularyName(String namespace) {
+    // First check if we've extracted this prefix from a Turtle document
+    if (_extractedNamespaceToVocab.containsKey(namespace)) {
+      return _extractedNamespaceToVocab[namespace]!;
+    }
+
+    // Extract a name from the namespace as fallback
+    final uri = Uri.parse(namespace);
+
+    // Try to get a meaningful name from the path segments
+    if (uri.pathSegments.isNotEmpty) {
+      final lastSegment = uri.pathSegments.last;
+      // If the last segment is empty (due to trailing slash), take the previous one
+      final segment =
+          lastSegment.isEmpty && uri.pathSegments.length > 1
+              ? uri.pathSegments[uri.pathSegments.length - 2]
+              : lastSegment;
+
+      // Clean up the segment to make a valid identifier
+      if (segment.isNotEmpty) {
+        return segment.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
+      }
+    }
+
+    // If there's a fragment, use it
+    if (uri.hasFragment && uri.fragment.isNotEmpty) {
+      return uri.fragment.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '');
+    }
+
+    // If the host has a subdomain that might be meaningful, use it
+    final hostParts = uri.host.split('.');
+    if (hostParts.length > 2 && hostParts[0] != 'www') {
+      return hostParts[0];
+    }
+
+    // Last resort fallback
+    return 'vocabulary';
+  }
 
   /// Registers a vocabulary model with the resolver.
   ///
@@ -153,13 +225,6 @@ class CrossVocabularyResolver {
 
   /// Extracts the namespace from an IRI
   String? _extractNamespace(String iri) {
-    // Check known namespaces first
-    for (final entry in _knownNamespaceToVocab.entries) {
-      if (iri.startsWith(entry.key)) {
-        return entry.key;
-      }
-    }
-
     // Try to extract namespace by finding the last # or / character
     final hashIndex = iri.lastIndexOf('#');
     if (hashIndex != -1) {
@@ -193,16 +258,8 @@ class CrossVocabularyResolver {
         continue; // Already registered while processing this loop
       }
 
-      // Try to determine the vocabulary name
-      String? name = _knownNamespaceToVocab[namespace];
-      if (name == null) {
-        // Extract a name from the namespace as fallback
-        final uri = Uri.parse(namespace);
-        name =
-            uri.pathSegments.isNotEmpty
-                ? uri.pathSegments.last.replaceAll(RegExp(r'[^a-zA-Z0-9]'), '')
-                : 'vocabulary';
-      }
+      // Determine the vocabulary name
+      final name = _determineVocabularyName(namespace);
 
       _log.info(
         'Attempting to load vocabulary "$name" from namespace $namespace',
