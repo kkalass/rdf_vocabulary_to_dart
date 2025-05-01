@@ -10,6 +10,7 @@ import 'package:build/build.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
+import 'package:pub_semver/pub_semver.dart';
 import 'package:rdf_core/rdf_core.dart';
 
 import 'class_generator.dart';
@@ -41,8 +42,10 @@ class VocabularyBuilder implements Builder {
   /// Cached vocabulary names from manifest
   List<String>? _cachedVocabularyNames;
 
-  /// Dart code formatter instance
-  final DartFormatter _dartFormatter = DartFormatter();
+  /// Dart code formatter instance with same settings as `dart format` command line tool
+  final DartFormatter _dartFormatter = DartFormatter(
+    languageVersion: Version(3, 7, 0),
+  );
 
   /// Creates a new vocabulary builder.
   ///
