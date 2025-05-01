@@ -73,7 +73,7 @@ class VocabularyBuilder implements Builder {
 
       // Load the vocabulary content
       final content = await source.loadContent();
-      if (content == null || content.isEmpty) {
+      if (content.isEmpty) {
         log.warning('Empty content for implied vocabulary $name');
         return null;
       }
@@ -95,10 +95,9 @@ class VocabularyBuilder implements Builder {
           final contentType = _getContentTypeForFormat(format);
           log.info('Trying to parse $name with format $contentType');
           graph = rdfCore.parse(content, contentType: contentType);
-          if (graph != null) {
-            log.info('Successfully parsed $name with format $contentType');
-            break;
-          }
+
+          log.info('Successfully parsed $name with format $contentType');
+          break;
         } catch (e) {
           log.warning('Failed to parse $name with format $format: $e');
         }
@@ -404,7 +403,7 @@ class VocabularyBuilder implements Builder {
           continue;
         }
 
-        if (content == null || content.isEmpty) {
+        if (content.isEmpty) {
           log.warning('Empty content for vocabulary $name');
           continue;
         }
@@ -427,10 +426,8 @@ class VocabularyBuilder implements Builder {
             final contentType = _getContentTypeForFormat(format);
             log.info('Trying to parse $name with format $contentType');
             graph = rdfCore.parse(content, contentType: contentType);
-            if (graph != null) {
-              log.info('Successfully parsed $name with format $contentType');
-              break;
-            }
+            log.info('Successfully parsed $name with format $contentType');
+            break;
           } catch (e) {
             log.warning('Failed to parse $name with format $format: $e');
             // Continue to the next format

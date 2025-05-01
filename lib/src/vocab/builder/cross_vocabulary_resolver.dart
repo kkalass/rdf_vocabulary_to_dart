@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import 'package:logging/logging.dart';
-import '../../../rdf_core.dart';
+
 import 'model/vocabulary_model.dart';
 
 /// Logger for cross-vocabulary operations
@@ -56,14 +56,14 @@ class CrossVocabularyResolver {
   };
 
   /// Function to load an implied vocabulary model if available
-  final Future<VocabularyModel?> Function(String namespace, String name)?
+  final Future<VocabularyModel?> Function(String namespace, String name)
   _vocabularyLoader;
 
   /// Creates a new cross-vocabulary resolver.
   ///
   /// [vocabularyLoader] Optional function to load implied vocabulary models
   CrossVocabularyResolver({
-    Future<VocabularyModel?> Function(String namespace, String name)?
+    required Future<VocabularyModel?> Function(String namespace, String name)
     vocabularyLoader,
   }) : _vocabularyLoader = vocabularyLoader;
 
@@ -176,7 +176,7 @@ class CrossVocabularyResolver {
 
   /// Attempts to load any pending vocabularies that were referenced but not registered
   Future<void> loadPendingVocabularies() async {
-    if (_vocabularyLoader == null || _pendingNamespaces.isEmpty) {
+    if (_pendingNamespaces.isEmpty) {
       return;
     }
 
@@ -209,7 +209,7 @@ class CrossVocabularyResolver {
       );
 
       // Try to load the vocabulary
-      final model = await _vocabularyLoader!(namespace, name);
+      final model = await _vocabularyLoader(namespace, name);
       if (model != null) {
         registerVocabulary(model);
       } else {
