@@ -1,234 +1,272 @@
-<div align="center">
-  <img src="https://kkalass.github.io/rdf_vocabulary_to_dart/logo.svg" alt="rdf_vocabulary_to_dart logo" width="96" height="96"/>
-</div>
-
-# rdf_vocabulary_to_dart
+# RDF Vocabulary to Dart - Type-safe RDF for Dart
 
 [![pub package](https://img.shields.io/pub/v/rdf_vocabulary_to_dart.svg)](https://pub.dev/packages/rdf_vocabulary_to_dart)
 [![build](https://github.com/kkalass/rdf_vocabulary_to_dart/actions/workflows/ci.yml/badge.svg)](https://github.com/kkalass/rdf_vocabulary_to_dart/actions)
 [![codecov](https://codecov.io/gh/kkalass/rdf_vocabulary_to_dart/branch/main/graph/badge.svg)](https://codecov.io/gh/kkalass/rdf_vocabulary_to_dart)
 [![license](https://img.shields.io/github/license/kkalass/rdf_vocabulary_to_dart.svg)](https://github.com/kkalass/rdf_vocabulary_to_dart/blob/main/LICENSE)
 
----
-
-A build_runner for generating type-safe Dart classes from RDF vocabulary namespace IRIs to simplify working with RDF data in Dart.
+## Overview
 
 [🌐 **Official Homepage**](https://kkalass.github.io/rdf_vocabulary_to_dart/)
 
----
+`rdf_vocabulary_to_dart` is a Dart build tool that transforms RDF vocabularies into type-safe Dart code. Built on top of [rdf_core](https://pub.dev/packages/rdf_core), it enables Dart developers to work with RDF data using familiar, strongly-typed patterns.
 
-## ✨ Features
+The tool generates two complementary sets of classes:
 
-- **Automatic RDF Vocabulary Generation:** Generates Dart classes from RDF vocabulary namespace IRIs
-- **Type-safe Vocabulary Access:** Creates strongly-typed constants for all vocabulary terms
-- **IDE Auto-completion:** Discoverable vocabulary terms with inline documentation
-- **Cross-vocabulary References:** Automatically resolves references between vocabularies
-- **Smart Format Detection:** Supports multiple RDF formats (Turtle, RDF/XML, JSON-LD, N-Triples)
-- **Build Integration:** Seamlessly integrates with your build process via build_runner
+1. **Vocabulary Classes** - Each vocabulary (like Schema.org, FOAF, etc.) gets a dedicated class containing constants for all terms within that vocabulary, ideal for developers already familiar with RDF.
 
-## 🚀 Quick Start
+2. **RDF Class-Specific Classes** - For each RDF class within a vocabulary (like schema:Person, foaf:Agent), a dedicated Dart class is generated containing properties from that class and all its superclasses.
 
-### 1. Add Dependencies
+This dual approach makes RDF concepts accessible to both RDF experts and Dart developers new to the semantic web.
+
+## Features
+
+- **Type-Safe RDF Terms**: Access vocabulary terms as constants with proper typing
+- **Intelligent Code Generation**: Automatic handling of namespaces, prefixes, and term resolution
+- **Cross-Vocabulary Integration**: Properties from related vocabularies are properly prefixed and included
+- **IDE Completion**: Discover available terms through IDE autocompletion
+- **Inheritance Support**: Class-specific objects include properties from parent classes
+- **Comprehensive Vocabulary Coverage**: Works with any RDF vocabulary accessible via URL or local file
+
+## Getting Started
+
+### Installation
+
+Add these dependencies to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  rdf_core: ^0.5.1  # Core RDF library for using the generated classes
+  rdf_core: ^0.6.2  # Core library for working with RDF data
 
 dev_dependencies:
-  build_runner: ^2.4.0
-  rdf_vocabulary_to_dart: ^0.1.0
+  build_runner: ^2.4.0  # Runs the code generator
+  rdf_vocabulary_to_dart: ^0.1.0  # The code generator
 ```
 
-### 2. Create a Manifest File
+### Configuration
 
-Create a JSON manifest file (e.g., `lib/src/vocab/manifest.json`) to define your vocabularies:
+1. Create a configuration file in your project (e.g., `lib/src/vocab/vocabulary_sources.vocab.json`):
 
 ```json
 {
   "vocabularies": {
-    "rdf": {
+    "schema": {
       "type": "url",
-      "namespace": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-      "source": "https://www.w3.org/1999/02/22-rdf-syntax-ns.ttl"
-    },
-    "rdfs": {
-      "type": "url",
-      "namespace": "http://www.w3.org/2000/01/rdf-schema#"
+      "namespace": "https://schema.org/"
     },
     "foaf": {
       "type": "url",
       "namespace": "http://xmlns.com/foaf/0.1/"
     },
-    "customVocab": {
+    "custom": {
       "type": "file",
-      "namespace": "http://example.org/custom#",
+      "namespace": "http://example.org/myvocab#",
       "filePath": "lib/src/vocab/custom_vocab.ttl"
     }
   }
 }
 ```
 
-### 3. Configure Build
-
-Create or update your `build.yaml` file in your project root:
+2. Configure `build.yaml` in your project root:
 
 ```yaml
 targets:
   $default:
     builders:
-      rdf_vocabulary_to_dart|vocabulary_builder:
+      rdf_vocabulary_to_dart|rdf_to_dart_generator:
         enabled: true
         options:
-          vocabulary_config_path: "lib/src/vocab/manifest.json"
+          vocabulary_config_path: "lib/src/vocab/vocabulary_sources.vocab.json"
           output_dir: "lib/src/vocab/generated"
 ```
 
-### 4. Generate Vocabulary Classes
-
-Run the build_runner to generate vocabulary classes:
+3. Run the code generator:
 
 ```bash
 dart run build_runner build
 ```
 
-### 5. Use Generated Classes
+### Usage Examples
+
+#### Using Vocabulary Classes
 
 ```dart
-import 'package:your_package/src/vocab/generated/_index.dart';
-// Alternatively, import individual vocabularies:
-// import 'package:your_package/src/vocab/generated/rdf.dart';
-// import 'package:your_package/src/vocab/generated/rdfs.dart';
 import 'package:rdf_core/rdf_core.dart';
+import 'package:your_package/src/vocab/generated/schema.dart';
+import 'package:your_package/src/vocab/generated/foaf.dart';
 
-void main() {
-  // Use generated vocabulary constants
-  final typeTriple = Triple(
-    IriTerm('http://example.org/resource'),
-    RDF.type,  // Generated constant for rdf:type
-    RDFS.Class // Generated constant for rdfs:Class
-  );
-  
-  print(typeTriple);
+// Create a triple using vocabulary constants
+final triple = Triple(
+  IriTerm('http://example.org/john'),
+  Schema.name,  // https://schema.org/name
+  LiteralTerm('John Doe')
+);
+
+// Use vocabulary terms in queries or graph operations
+final graph = RdfGraph(triples: [triple]);
+
+final nameQuery = graph.find(
+  subject: null,
+  predicate: Schema.name,
+  object: null
+);
+```
+
+#### Using Class-Specific Classes
+
+```dart
+import 'package:rdf_core/rdf_core.dart';
+import 'package:your_package/src/vocab/generated/schema_person.dart';
+
+void createPersonTriples(IriTerm person) {
+  // SchemaPerson contains all properties related to the schema:Person class
+  // including inherited properties from parent classes
+  final graph = RdfGraph(triples: [
+    // Properties from other vocabularies are properly prefixed, like e.g. type from rdf which you need to declare this to be a schema:Person.
+    Triple(person, SchemaPerson.rdfType, SchemaPerson.classIri),
+    Triple(person, SchemaPerson.name, LiteralTerm('Jane Doe')),
+    Triple(person, SchemaPerson.email, LiteralTerm('jane@example.com')),
+  ]);
 }
 ```
 
-## 🧑‍💻 Configuration Details
+## Understanding the Generated Code
 
-### Manifest File Format
+For a vocabulary like Schema.org, the generator produces:
 
-The manifest file is a JSON document that defines the vocabularies to generate:
+1. **Schema.dart** - Contains all terms from the Schema.org vocabulary:
+
+```dart
+/// Schema.org Vocabulary 
+class Schema {
+  Schema._();
+  
+  /// Base namespace for Schema.org
+  static const namespace = 'https://schema.org/';
+  
+  /// A person (alive, dead, undead, or fictional).
+  static const Person = IriTerm('https://schema.org/Person');
+  
+  /// The name of the item.
+  static const name = IriTerm('https://schema.org/name');
+  
+  // ... many more terms
+}
+```
+
+2. **SchemaPerson.dart** - Contains properties specific to the schema:Person class:
+
+```dart
+/// Properties for the Schema.org Person class
+class SchemaPerson {
+  SchemaPerson._();
+  
+  /// The RDF class IRI
+  static const classIri = Schema.Person;
+  
+  /// The name of the person.
+  static const name = Schema.name;
+  
+  /// Email address.
+  static const email = Schema.email;
+  
+  /// A person known by this person (from FOAF vocabulary, if Schema.Person properly inherits from Foaf.Person).
+  static const foafKnows = FOAF.knows;
+  
+  // ... including inherited properties from parent classes
+}
+```
+
+## Configuration Options
+
+### Vocabulary Source Configuration
+
+Each vocabulary in your configuration file can have these properties:
+
+| Property | Description | Required |
+|----------|-------------|----------|
+| `type` | Either "url" for remote vocabularies or "file" for local files | Yes |
+| `namespace` | The base IRI namespace of the vocabulary | Yes |
+| `source` | Specific URL to fetch the vocabulary (for "url" type) | No (defaults to namespace) |
+| `filePath` | Path to local vocabulary file (for "file" type) | Yes (for "file" type) |
+
+### Build Configuration
+
+The `build.yaml` file supports these options:
+
+| Option | Description | Default |
+|--------|-------------|---------|
+| `vocabulary_config_path` | Path to vocabulary configuration JSON | `"lib/src/vocab/vocabulary_sources.vocab.json"` |
+| `output_dir` | Directory where generated files are placed | `"lib/src/vocab/generated"` |
+
+## How It Works
+
+1. **Loading Configuration**: The builder reads your vocabulary configuration
+2. **Fetching Vocabularies**: For each vocabulary, retrieves content from URL or file
+3. **Parsing RDF**: Processes the vocabulary data using rdf_core parsers
+4. **Cross-Vocabulary Resolution**: Identifies relationships between vocabularies
+5. **Code Generation**: Produces Dart classes for each vocabulary and RDF class
+6. **Indexing**: Creates an index file for easy importing
+
+## Advanced Use Cases
+
+### Working with Multiple Vocabularies
+
+You can define multiple vocabularies in your configuration file, and they will be automatically cross-referenced when generating class-specific modules.
+
+### Custom RDF Vocabularies
+
+For domain-specific RDF vocabularies, use the "file" type and provide a local Turtle file:
 
 ```json
 {
   "vocabularies": {
-    "rdf": {
-      "type": "url",
-      "namespace": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-      "source": "https://www.w3.org/1999/02/22-rdf-syntax-ns.ttl"
-    },
-    "ldp": {
-      "type": "url",
-      "namespace": "http://www.w3.org/ns/ldp#"
+    "myapp": {
+      "type": "file",
+      "namespace": "http://example.org/myapp#",
+      "filePath": "lib/src/vocab/myapp.ttl"
     }
   }
 }
 ```
 
-Each vocabulary entry in the manifest consists of:
+### Integration with RDF Data Sources
 
-- **Key**: The name of the vocabulary to generate (also used as the class name in PascalCase)
-- **type**: Either "url" (remote vocabulary) or "file" (local vocabulary file)
-- **namespace**: The base IRI namespace of the vocabulary
-- **source** (optional): For "url" type, a specific source URL to fetch the vocabulary from (defaults to namespace)
-- **filePath** (required for "file" type): For local files, the path to the vocabulary file
-
-### Builder Configuration
-
-In your `build.yaml`, you can configure the builder with these options:
-
-```yaml
-targets:
-  $default:
-    builders:
-      rdf_vocabulary_to_dart|vocabulary_builder:
-        enabled: true
-        options:
-          # Path to the manifest file (default: "lib/src/vocab/manifest.json")
-          vocabulary_config_path: "path/to/your/manifest.json"
-          # Output directory for generated files (default: "lib/src/vocab/generated")
-          output_dir: "path/to/output/dir"
-```
-
-### Understanding the Build Configuration
-
-The `build.yaml` file defines two main sections:
-
-1. **targets**: Configures how the builder is applied to your package
-   - The builder is enabled with specific options for manifest path and output directory
-   - These options control where the builder looks for input files and where it generates output
-
-2. **builders**: Defines the builder itself
-   - Specifies the location and factory method for creating the builder
-   - Defines the build extensions and build behavior
-   - The `auto_apply: dependents` setting means this builder will automatically run in any package that depends on yours
-
-The combination of these settings ensures that:
-1. In your own package, the builder runs with the configured paths to generate vocabularies
-2. In dependent packages, the builder can be configured with their own paths to generate custom vocabularies
-
-This setup follows the dependency inversion principle, allowing consumers of your package to control their vocabulary definitions while reusing your builder's implementation.
-
-## 🔧 How It Works
-
-The RDF Vocabulary Builder operates in several stages:
-
-1. **Loading**: Parses the manifest file to determine which vocabularies to generate
-2. **Fetching**: Retrieves vocabulary content from either URLs or local files
-3. **Parsing**: Processes vocabularies in their native format (Turtle, RDF/XML, etc.)
-4. **Resolution**: Identifies and resolves cross-vocabulary references
-5. **Generation**: Creates Dart classes with constants for each term in the vocabulary
-6. **Indexing**: Produces an index file for easy importing of all vocabularies
-
-For remote vocabularies, the builder intelligently attempts to locate the vocabulary content if the exact URL isn't provided, trying several common patterns for vocabulary publication.
-
-### Generated Code Structure
-
-For each vocabulary, the builder generates a Dart class with the following structure:
+The generated code works seamlessly with rdf_core's parsers and serializers, making it easy to process RDF data from various sources:
 
 ```dart
-/// Documentation for the vocabulary
-class VocabularyName {
-  /// Private constructor to prevent instantiation
-  VocabularyName._();
+import 'package:rdf_core/rdf_core.dart';
+import 'package:your_package/src/vocab/generated/schema.dart';
+
+final parser = TurtleParser();
+final graph = await parser.parseFile('data.ttl');
+
+// Query using vocabulary terms
+final people = graph.find(
+  subject: null,
+  predicate: Rdf.type,
+  object: Schema.Person
+);
+
+for (final person in people) {
+  final names = graph.find(
+    subject: person.subject,
+    predicate: Schema.name,
+    object: null
+  );
   
-  /// Base namespace for this vocabulary
-  static const namespace = 'http://example.org/vocabulary#';
-  
-  /// Documentation for term1
-  static const term1 = IriTerm('http://example.org/vocabulary#term1');
-  
-  /// Documentation for term2
-  static const term2 = IriTerm('http://example.org/vocabulary#term2');
-  
-  // ... more terms
+  // Process results...
 }
 ```
 
-An index file is also generated to provide easy access to all vocabularies:
 
-```dart
-// _index.dart
-export 'rdf.dart';
-export 'rdfs.dart';
-// ... more exports
-```
+## 🛣️ Roadmap / Next Steps
 
-## 🛣️ Roadmap
+- Create extra package for common, well-known vocabularies so you do not have to convert them yourself
+- Further improve generated documentation
+- Ensure compatibility with all well known RDF vocabularies
+- Implement unit tests, aim for a proper test coverage!
 
-- Additional metadata extraction from vocabularies
-- Support for vocabulary versioning
-- Incremental builds for faster generation
-- Custom template support for generated code
 
 ## 🤝 Contributing
 
@@ -236,12 +274,11 @@ Contributions, bug reports, and feature requests are welcome!
 
 - Fork the repo and submit a PR
 - See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
-- Join the discussion in [GitHub Issues](https://github.com/kkalass/rdf_vocabulary_to_dart/issues)
+- Join the discussion in [GitHub Issues](https://github.com/kkalass/rdf_mapper/issues)
 
-## 🔍 Related Projects
+## 🤖 AI Policy
 
-- [rdf_core](https://github.com/kkalass/rdf_core) - Core RDF library for Dart
-- [rdf_vocabularies](https://github.com/kkalass/rdf_vocabularies) - Pre-generated standard RDF vocabularies
+This project is proudly human-led and human-controlled, with all key decisions, design, and code reviews made by people. At the same time, it stands on the shoulders of LLM giants: generative AI tools are used throughout the development process to accelerate iteration, inspire new ideas, and improve documentation quality. We believe that combining human expertise with the best of AI leads to higher-quality, more innovative open source software.
 
 ---
 
