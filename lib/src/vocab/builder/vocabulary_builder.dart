@@ -5,9 +5,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:build/build.dart';
+import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
-import 'package:path/path.dart' as path;
+
 import '../../../rdf_core.dart';
 import 'class_generator.dart';
 import 'cross_vocabulary_resolver.dart';
@@ -34,34 +36,8 @@ class VocabularyBuilder implements Builder {
   /// Map of vocabulary models by name
   final Map<String, VocabularyModel> _vocabularyModels = {};
 
-  // Known vocabulary names for build_extensions
-  static const _knownVocabularies = [
-    'rdf',
-    'rdfs',
-    'xsd',
-    'owl',
-    'dc',
-    'dcterms',
-    'foaf',
-    'skos',
-    'vcard',
-    'acl',
-    'ldp',
-    'schema',
-    'solid',
-  ];
-
-  // FIXME: This is a temporary solution to handle standard vocabularies
-  // Map of standard vocabulary namespaces to their source URLs
-  static const Map<String, String> _standardVocabularies = {
-    'http://www.w3.org/1999/02/22-rdf-syntax-ns#':
-        'https://www.w3.org/1999/02/22-rdf-syntax-ns.ttl',
-    'http://www.w3.org/2000/01/rdf-schema#':
-        'https://www.w3.org/2000/01/rdf-schema.ttl',
-    'http://www.w3.org/2001/XMLSchema#':
-        'https://www.w3.org/2001/XMLSchema.ttl',
-    'http://www.w3.org/2002/07/owl#': 'https://www.w3.org/2002/07/owl.ttl',
-  };
+  /// Cached vocabulary names from manifest
+  List<String>? _cachedVocabularyNames;
 
   /// Creates a new vocabulary builder.
   ///
@@ -80,13 +56,18 @@ class VocabularyBuilder implements Builder {
   ) async {
     log.info('Loading implied vocabulary "$name" from namespace $namespace');
 
-    String? sourceUrl = _standardVocabularies[namespace];
-    if (sourceUrl == null) {
-      log.warning('No known source for vocabulary namespace: $namespace');
-      return null;
-    }
-
     try {
+      // Try to derive a turtle URL from the namespace
+      final sourceUrl = await _findVocabularyUrl(namespace);
+      if (sourceUrl == null) {
+        log.warning(
+          'Could not derive a valid URL for vocabulary namespace: $namespace',
+        );
+        return null;
+      }
+
+      log.info('Using derived URL for vocabulary $name: $sourceUrl');
+
       // Create a source for the vocabulary
       final source = UrlVocabularySource(namespace, sourceUrl: sourceUrl);
 
@@ -145,6 +126,65 @@ class VocabularyBuilder implements Builder {
     }
   }
 
+  /// Algorithmically tries to find a valid turtle URL for a vocabulary namespace
+  static Future<String?> _findVocabularyUrl(String namespace) async {
+    // List of URL patterns to try, in order of preference
+    final urlCandidates = <String>[];
+
+    // Case 0: Try the namespace URL directly as is
+    urlCandidates.add(namespace);
+
+    // Case 1: Remove trailing hash and add .ttl extension
+    if (namespace.endsWith('#')) {
+      urlCandidates.add('${namespace.substring(0, namespace.length - 1)}.ttl');
+    }
+
+    // Case 2: Remove trailing slash and add .ttl extension
+    if (namespace.endsWith('/')) {
+      urlCandidates.add('${namespace.substring(0, namespace.length - 1)}.ttl');
+    }
+
+    // Case 3: As-is with .ttl appended (works for some vocabularies)
+    urlCandidates.add('$namespace.ttl');
+
+    // Case 4: Try with -ns.ttl suffix (common for W3C)
+    if (namespace.endsWith('#') || namespace.endsWith('/')) {
+      final base = namespace.substring(0, namespace.length - 1);
+      urlCandidates.add('$base-ns.ttl');
+    } else {
+      urlCandidates.add('$namespace-ns.ttl');
+    }
+
+    // Case 5: Known W3C pattern where the schema is in a specific file without the hash
+    final hashIndex = namespace.lastIndexOf('#');
+    if (hashIndex > 0) {
+      urlCandidates.add(namespace.substring(0, hashIndex));
+    }
+
+    // Try each URL candidate until we find one that works
+    for (final url in urlCandidates) {
+      log.info('Trying vocabulary URL: $url');
+
+      try {
+        final response = await http.head(
+          Uri.parse(url),
+          headers: {'Accept': 'text/turtle, application/ld+json'},
+        );
+
+        if (response.statusCode == 200) {
+          log.info('Found valid vocabulary URL: $url');
+          return url;
+        }
+      } catch (e) {
+        log.fine('Error checking URL $url: $e');
+        // Continue to the next URL candidate
+      }
+    }
+
+    // If all attempts fail, return null
+    return null;
+  }
+
   /// Maps format names to content types
   static String _getContentTypeForFormat(String format) {
     switch (format.toLowerCase()) {
@@ -162,16 +202,66 @@ class VocabularyBuilder implements Builder {
     }
   }
 
+  /// Loads vocabulary names from the manifest file.
+  /// This is used to determine the build extensions.
+  List<String> _getVocabularyNamesFromManifest() {
+    // Return cached names if available
+    if (_cachedVocabularyNames != null) {
+      return _cachedVocabularyNames!;
+    }
+
+    // Try to read the manifest file directly
+    final File manifestFile = File(manifestAssetPath);
+    if (!manifestFile.existsSync()) {
+      log.warning(
+        'Manifest file not found at $manifestAssetPath for build extensions',
+      );
+      // Return an empty list by default
+      _cachedVocabularyNames = [];
+      return [];
+    }
+
+    try {
+      final String content = manifestFile.readAsStringSync();
+      final Map<String, dynamic> json =
+          jsonDecode(content) as Map<String, dynamic>;
+
+      final Map<String, dynamic>? vocabulariesJson =
+          json['vocabularies'] as Map<String, dynamic>?;
+
+      if (vocabulariesJson == null) {
+        log.warning('No vocabularies found in manifest');
+        _cachedVocabularyNames = [];
+        return [];
+      }
+
+      // Extract vocabulary names from the manifest
+      final List<String> vocabularyNames = vocabulariesJson.keys.toList();
+      _cachedVocabularyNames = vocabularyNames;
+
+      log.info('Found ${vocabularyNames.length} vocabularies in manifest');
+      return vocabularyNames;
+    } catch (e, stackTrace) {
+      log.severe(
+        'Error reading manifest file for build extensions: $e\n$stackTrace',
+      );
+      // Return an empty list in case of error
+      _cachedVocabularyNames = [];
+      return [];
+    }
+  }
+
   @override
   Map<String, List<String>> get buildExtensions {
     final outputs = <String>[];
 
-    // Add the index file as required output
+    // Always add the index file as required output
     outputs.add(_getFullOutputPath('_index.dart'));
 
-    // Add known vocabulary files as potential outputs
-    for (final vocab in _knownVocabularies) {
-      outputs.add(_getFullOutputPath('$vocab.dart'));
+    // Add vocabulary files from manifest as potential outputs
+    final vocabularyNames = _getVocabularyNamesFromManifest();
+    for (final name in vocabularyNames) {
+      outputs.add(_getFullOutputPath('$name.dart'));
     }
 
     return {manifestAssetPath: outputs};
