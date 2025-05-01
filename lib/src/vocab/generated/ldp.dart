@@ -12,7 +12,7 @@
 ///
 /// Example usage:
 /// ```dart
-/// import 'package:rdf_vocab_builder/vocab.dart';
+/// import 'package:rdf_vocabulary_builder/vocab.dart';
 /// final property = Ldp.hasMemberRelation; // Access property directly from main class
 /// final classIri = LdpResource.classIri; // Access class IRI
 /// final property = LdpResource.hasMemberRelation; // Access property from class
@@ -418,61 +418,6 @@ class LdpResource {
   static const rdfValue = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
   );
-
-  /// IRI for ldp:comment
-  ///
-  /// A description of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
-
-  /// IRI for ldp:label
-  ///
-  /// A human-readable name for the subject.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
-
-  /// IRI for ldp:seeAlso
-  ///
-  /// Further information about the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
-
-  /// IRI for ldp:isDefinedBy
-  ///
-  /// The definition of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
-
-  /// IRI for ldp:member
-  ///
-  /// A member of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
-  );
 }
 
 /// RDFSource class from Ldp vocabulary
@@ -550,61 +495,6 @@ class LdpRDFSource {
   static const rdfValue = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
   );
-
-  /// IRI for ldp:comment
-  ///
-  /// A description of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
-
-  /// IRI for ldp:label
-  ///
-  /// A human-readable name for the subject.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
-
-  /// IRI for ldp:seeAlso
-  ///
-  /// Further information about the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
-
-  /// IRI for ldp:isDefinedBy
-  ///
-  /// The definition of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
-
-  /// IRI for ldp:member
-  ///
-  /// A member of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
-  );
 }
 
 /// NonRDFSource class from Ldp vocabulary
@@ -681,61 +571,6 @@ class LdpNonRDFSource {
   ///
   static const rdfValue = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
-  );
-
-  /// IRI for ldp:comment
-  ///
-  /// A description of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
-
-  /// IRI for ldp:label
-  ///
-  /// A human-readable name for the subject.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
-
-  /// IRI for ldp:seeAlso
-  ///
-  /// Further information about the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
-
-  /// IRI for ldp:isDefinedBy
-  ///
-  /// The definition of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
-
-  /// IRI for ldp:member
-  ///
-  /// A member of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
   );
 }
 
@@ -869,61 +704,6 @@ class LdpContainer {
   static const rdfValue = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
   );
-
-  /// IRI for ldp:comment
-  ///
-  /// A description of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
-
-  /// IRI for ldp:label
-  ///
-  /// A human-readable name for the subject.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
-
-  /// IRI for ldp:seeAlso
-  ///
-  /// Further information about the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
-
-  /// IRI for ldp:isDefinedBy
-  ///
-  /// The definition of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
-
-  /// IRI for ldp:member
-  ///
-  /// A member of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
-  );
 }
 
 /// BasicContainer class from Ldp vocabulary
@@ -1055,61 +835,6 @@ class LdpBasicContainer {
   ///
   static const rdfValue = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
-  );
-
-  /// IRI for ldp:comment
-  ///
-  /// A description of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
-
-  /// IRI for ldp:label
-  ///
-  /// A human-readable name for the subject.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
-
-  /// IRI for ldp:seeAlso
-  ///
-  /// Further information about the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
-
-  /// IRI for ldp:isDefinedBy
-  ///
-  /// The definition of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
-
-  /// IRI for ldp:member
-  ///
-  /// A member of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
   );
 }
 
@@ -1243,61 +968,6 @@ class LdpDirectContainer {
   static const rdfValue = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
   );
-
-  /// IRI for ldp:comment
-  ///
-  /// A description of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
-
-  /// IRI for ldp:label
-  ///
-  /// A human-readable name for the subject.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
-
-  /// IRI for ldp:seeAlso
-  ///
-  /// Further information about the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
-
-  /// IRI for ldp:isDefinedBy
-  ///
-  /// The definition of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
-
-  /// IRI for ldp:member
-  ///
-  /// A member of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
-  );
 }
 
 /// IndirectContainer class from Ldp vocabulary
@@ -1430,61 +1100,6 @@ class LdpIndirectContainer {
   static const rdfValue = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
   );
-
-  /// IRI for ldp:comment
-  ///
-  /// A description of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
-
-  /// IRI for ldp:label
-  ///
-  /// A human-readable name for the subject.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
-
-  /// IRI for ldp:seeAlso
-  ///
-  /// Further information about the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
-
-  /// IRI for ldp:isDefinedBy
-  ///
-  /// The definition of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
-
-  /// IRI for ldp:member
-  ///
-  /// A member of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
-  );
 }
 
 /// PageSortCriterion class from Ldp vocabulary
@@ -1575,61 +1190,6 @@ class LdpPageSortCriterion {
   static const rdfValue = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
   );
-
-  /// IRI for ldp:comment
-  ///
-  /// A description of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
-
-  /// IRI for ldp:label
-  ///
-  /// A human-readable name for the subject.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
-
-  /// IRI for ldp:seeAlso
-  ///
-  /// Further information about the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
-
-  /// IRI for ldp:isDefinedBy
-  ///
-  /// The definition of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
-
-  /// IRI for ldp:member
-  ///
-  /// A member of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
-  );
 }
 
 /// Page class from Ldp vocabulary
@@ -1695,60 +1255,5 @@ class LdpPage {
   ///
   static const rdfValue = IriTerm.prevalidated(
     'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
-  );
-
-  /// IRI for ldp:comment
-  ///
-  /// A description of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsComment = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#comment',
-  );
-
-  /// IRI for ldp:label
-  ///
-  /// A human-readable name for the subject.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
-  ///
-  static const rdfsLabel = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#label',
-  );
-
-  /// IRI for ldp:seeAlso
-  ///
-  /// Further information about the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsSeeAlso = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
-  );
-
-  /// IRI for ldp:isDefinedBy
-  ///
-  /// The definition of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsIsDefinedBy = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
-  );
-
-  /// IRI for ldp:member
-  ///
-  /// A member of the subject resource.
-  ///
-  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
-  /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
-  ///
-  static const rdfsMember = IriTerm.prevalidated(
-    'http://www.w3.org/2000/01/rdf-schema#member',
   );
 }

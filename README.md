@@ -1,163 +1,183 @@
 <div align="center">
-  <img src="https://kkalass.github.io/rdf_vocab_builder/logo.svg" alt="rdf_vocab_builder logo" width="96" height="96"/>
+  <img src="https://kkalass.github.io/rdf_vocabulary_builder/logo.svg" alt="rdf_vocabulary_builder logo" width="96" height="96"/>
 </div>
 
-# rdf_vocab_builder
+# rdf_vocabulary_builder
 
-[![pub package](https://img.shields.io/pub/v/rdf_vocab_builder.svg)](https://pub.dev/packages/rdf_vocab_builder)
-[![build](https://github.com/kkalass/rdf_vocab_builder/actions/workflows/ci.yml/badge.svg)](https://github.com/kkalass/rdf_vocab_builder/actions)
-[![codecov](https://codecov.io/gh/kkalass/rdf_vocab_builder/branch/main/graph/badge.svg)](https://codecov.io/gh/kkalass/rdf_vocab_builder)
-[![license](https://img.shields.io/github/license/kkalass/rdf_vocab_builder.svg)](https://github.com/kkalass/rdf_vocab_builder/blob/main/LICENSE)
-
----
-
-# RDF Core
-
-[🌐 **Official Homepage**](https://kkalass.github.io/rdf_vocab_builder/)
-
-A type-safe, and extensible Dart library for representing and manipulating RDF data without any further dependencies.
+[![pub package](https://img.shields.io/pub/v/rdf_vocabulary_builder.svg)](https://pub.dev/packages/rdf_vocabulary_builder)
+[![build](https://github.com/kkalass/rdf_vocabulary_builder/actions/workflows/ci.yml/badge.svg)](https://github.com/kkalass/rdf_vocabulary_builder/actions)
+[![codecov](https://codecov.io/gh/kkalass/rdf_vocabulary_builder/branch/main/graph/badge.svg)](https://codecov.io/gh/kkalass/rdf_vocabulary_builder)
+[![license](https://img.shields.io/github/license/kkalass/rdf_vocabulary_builder.svg)](https://github.com/kkalass/rdf_vocabulary_builder/blob/main/LICENSE)
 
 ---
 
-## Looking for mapping Dart Objects ↔️ RDF?
+A build_runner for generating type-safe Dart classes from RDF vocabulary namespace IRIs to simplify working with RDF data in Dart.
 
-=> Discover our companion project [rdf_mapper](https://github.com/kkalass/rdf_mapper) now on GitHub!
+[🌐 **Official Homepage**](https://kkalass.github.io/rdf_vocabulary_builder/)
 
 ---
 
 ## ✨ Features
 
-- **Type-safe RDF model:** IRIs, Literals, Triples, Graphs, and more
-- **Serialization-agnostic:** Clean separation from Turtle/JSON-LD
-- **Extensible & modular:** Build your own adapters, plugins, and integrations
-- **Spec-compliant:** Follows [W3C RDF 1.1](https://www.w3.org/TR/rdf11-concepts/) and related standards
-
-
+- **Automatic RDF Vocabulary Generation:** Generates Dart classes from RDF vocabulary namespace IRIs
+- **Type-safe Vocabulary Access:** Creates strongly-typed constants for all vocabulary terms
+- **IDE Auto-completion:** Discoverable vocabulary terms with inline documentation
+- **Minimal Dependencies:** Focused solely on the build generation process
+- **Build Integration:** Seamlessly integrates with your build process via build_runner
 
 ## 🚀 Quick Start
 
-### Manual Graph Creation
+### 1. Add Dependencies
+
+```yaml
+dependencies:
+  rdf_core: ^0.5.1  # Core RDF library for using the generated classes
+
+dev_dependencies:
+  build_runner: ^2.4.0
+  rdf_vocabulary_builder: ^0.1.0
+```
+
+### 2. Configure Build
+
+Create a `build.yaml` file in your project root:
+
+```yaml
+targets:
+  $default:
+    builders:
+      rdf_vocabulary_builder:vocabularyBuilder:
+        options:
+          vocabularies:
+            # Example vocabularies
+            - uri: http://www.w3.org/1999/02/22-rdf-syntax-ns#
+              prefix: rdf
+            - uri: http://www.w3.org/2000/01/rdf-schema#
+              prefix: rdfs
+            # Add your custom vocabularies
+            - uri: http://example.org/my-vocabulary#
+              prefix: myVocab
+```
+
+### 3. Generate Vocabulary Classes
+
+Run the build_runner to generate vocabulary classes:
+
+```bash
+dart run build_runner build
+```
+
+### 4. Use Generated Classes
 
 ```dart
-import 'package:rdf_vocab_builder/rdf_vocab_builder.dart';
+import 'package:your_package/generated/rdf.dart';
+import 'package:your_package/generated/rdfs.dart';
+import 'package:rdf_core/rdf_core.dart';
 
 void main() {
-  final subject = IriTerm('http://example.org/alice');
-  final predicate = IriTerm('http://xmlns.com/foaf/0.1/name');
-  final object = LiteralTerm.withLanguage('Alice', 'en');
-  final triple = Triple(subject, predicate, object);
-  final graph = RdfGraph(triples: [triple]);
-
-  print(graph);
+  // Use generated vocabulary constants
+  final typeTriple = Triple(
+    IriTerm('http://example.org/resource'),
+    RDF.type,  // Generated constant for rdf:type
+    RDFS.Class // Generated constant for rdfs:Class
+  );
+  
+  print(typeTriple);
 }
 ```
 
-### Parsing and Serializing Turtle
+## 🧑‍💻 Advanced Configuration
+
+The `build.yaml` file offers flexible configuration options:
+
+```yaml
+targets:
+  $default:
+    builders:
+      rdf_vocabulary_builder:vocabularyBuilder:
+        options:
+          # Base directory for generated files (optional, defaults to 'lib/generated')
+          outputDir: lib/src/vocabularies
+          # Whether to generate an index file (optional, defaults to true)
+          generateIndex: true
+          # Individual vocabulary configurations
+          vocabularies:
+            - uri: http://xmlns.com/foaf/0.1/
+              prefix: foaf
+              # Override default output path
+              outputPath: lib/src/vocabularies/foaf.dart
+              # Override class name (default would be FOAF)
+              className: FoafVocabulary
+              # Custom documentation for the vocabulary
+              documentation: "Friend of a Friend vocabulary"
+            
+            - uri: http://example.org/custom#
+              prefix: custom
+              # You can provide a local file path instead of a URI
+              filePath: path/to/local/vocabulary.ttl
+              # Format of the local file (turtle, rdf/xml, json-ld)
+              format: turtle
+```
+
+### Working with Generated Classes
+
+Each generated vocabulary class contains:
+
+- Constants for all terms defined in the vocabulary
+- Type information (Class, Property, Datatype)
+- Documentation from the original vocabulary
 
 ```dart
-import 'package:rdf_vocab_builder/rdf_vocab_builder.dart';
+// Example of using a generated FOAF vocabulary
+import 'package:your_package/src/vocabularies/foaf.dart';
 
-void main() {
-  // Example: Parse a simple Turtle document
-  final turtle = '''
-    @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-    <http://example.org/alice> foaf:name "Alice"@en .
-  ''';
+// FOAF.name is an IriTerm for http://xmlns.com/foaf/0.1/name
+final nameProperty = FOAF.name;
+```
 
-  final rdf = RdfCore.withStandardFormats();
-  final graph = rdf.parse(turtle, contentType: 'text/turtle');
+### Refreshing Vocabularies
 
-  // Print parsed triples
-  for (final triple in graph.triples) {
-    print('${triple.subject} ${triple.predicate} ${triple.object}');
-  }
+To update your vocabulary classes with the latest definitions:
 
-  // Serialize the graph back to Turtle
-  final serialized = rdf.serialize(graph, contentType: 'text/turtle');
-  print('\nSerialized Turtle:\n$serialized');
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+
+## 🔧 Technical Details
+
+### How It Works
+
+1. The builder fetches RDF vocabularies from the provided URIs or local files
+2. It parses the RDF data to extract terms, their types, and documentation
+3. It generates Dart classes with constants for each term in the vocabulary
+4. The generated code is optimized for IDE auto-completion and type safety
+
+### Generated Code Structure
+
+For each vocabulary, the builder generates:
+
+```dart
+/// Documentation for the vocabulary
+class VocabularyName {
+  /// Private constructor to prevent instantiation
+  VocabularyName._();
+  
+  /// Documentation for term1
+  static const term1 = IriTerm('http://example.org/vocabulary#term1');
+  
+  /// Documentation for term2
+  static const term2 = IriTerm('http://example.org/vocabulary#term2');
+  
+  // ... more terms
 }
 ```
 
-## 🧑‍💻 Advanced Usage
+## 🛣️ Roadmap
 
-### Graph Merging
-
-```dart
-final merged = graph1.merge(graph2);
-```
-
-### Pattern Queries
-
-```dart
-final results = graph.findTriples(subject: subject);
-```
-
-### Blank Node Handling
-
-```dart
-final bnode = BlankNodeTerm();
-final newGraph = graph.withTriple(Triple(bnode, predicate, object));
-```
-
-### Serialization/Parsing
-
-```dart
-final turtleSerializer = TurtleSerializer();
-final turtle = turtleSerializer.write(graph);
-
-final jsonLdParser = JsonLdParser(jsonLdSource);
-final parsedGraph = jsonLdParser.parse();
-```
-
----
-
-## ⚠️ Error Handling
-
-- All core methods throw Dart exceptions (e.g., `ArgumentError`, `RdfValidationException`) for invalid input or constraint violations.
-- Catch and handle exceptions for robust RDF processing.
-
----
-
-## 🚦 Performance
-
-- Triple, Term, and IRI equality/hashCode are O(1)
-- Graph queries (`findTriples`) are O(n) in the number of triples
-- Designed for large-scale, high-performance RDF workloads
-
----
-
-## 🗺️ API Overview
-
-| Type           | Description                                   |
-|----------------|-----------------------------------------------|
-| `IriTerm`      | Represents an IRI (Internationalized Resource Identifier) |
-| `LiteralTerm`  | Represents an RDF literal value               |
-| `BlankNodeTerm`| Represents a blank node                       |
-| `Triple`       | Atomic RDF statement (subject, predicate, object) |
-| `RdfGraph`     | Collection of RDF triples                     |
-| `RdfParser`    | Interface for parsing RDF from various formats |
-| `RdfSerializer`| Interface for serializing RDF                 |
-
----
-
-## 📚 Standards & References
-
-- [RDF 1.1 Concepts](https://www.w3.org/TR/rdf11-concepts/)
-- [Turtle: Terse RDF Triple Language](https://www.w3.org/TR/turtle/)
-- [JSON-LD 1.1](https://www.w3.org/TR/json-ld11/)
-- [SHACL: Shapes Constraint Language](https://www.w3.org/TR/shacl/)
-
----
-
-## 🛣️ Roadmap / Next Steps
-
-- Remove vocab directory and replace it with a much cleaner and more discoverable generated alternative, maybe in a separate project. This should also support generating discoverable vocab classes for arbitrary Vocabularies.
-- Support base uri in jsonld and turtle serialization
-- More serialization formats (N-Triples, RDF/XML)
-- SHACL and schema validation
-- Performance optimizations for large graphs
-
----
+- Additional metadata extraction from vocabularies
+- Support for vocabulary versioning
+- Incremental builds for faster generation
+- Custom template support for generated code
 
 ## 🤝 Contributing
 
@@ -165,13 +185,12 @@ Contributions, bug reports, and feature requests are welcome!
 
 - Fork the repo and submit a PR
 - See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
-- Join the discussion in [GitHub Issues](https://github.com/kkalass/rdf_vocab_builder/issues)
+- Join the discussion in [GitHub Issues](https://github.com/kkalass/rdf_vocabulary_builder/issues)
 
----
+## 🔍 Related Projects
 
-## 🤖 AI Policy
-
-This project is proudly human-led and human-controlled, with all key decisions, design, and code reviews made by people. At the same time, it stands on the shoulders of LLM giants: generative AI tools are used throughout the development process to accelerate iteration, inspire new ideas, and improve documentation quality. We believe that combining human expertise with the best of AI leads to higher-quality, more innovative open source software.
+- [rdf_core](https://github.com/kkalass/rdf_core) - Core RDF library for Dart
+- [rdf_vocabularies](https://github.com/kkalass/rdf_vocabularies) - Pre-generated standard RDF vocabularies
 
 ---
 

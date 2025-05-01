@@ -1,6 +1,6 @@
-# Contributing to rdf_vocab_builder
+# Contributing to rdf_vocabulary_builder
 
-Thank you for your interest in contributing to `rdf_vocab_builder`! We welcome contributions of all kinds—bug reports, feature requests, documentation improvements, and code.
+Thank you for your interest in contributing to `rdf_vocabulary_builder`! We welcome contributions of all kinds—bug reports, feature requests, documentation improvements, and code.
 
 ## How to Contribute
 
