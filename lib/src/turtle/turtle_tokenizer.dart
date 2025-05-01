@@ -178,7 +178,7 @@ class TurtleTokenizer {
     }
 
     final char = _input[_position];
-    _log.info('Current char: "$char" at $_line:$_column');
+    // _log.finest('Current char: "$char" at $_line:$_column');
 
     // Handle single character tokens
     switch (char) {
@@ -252,7 +252,7 @@ class TurtleTokenizer {
 
     // Handle prefixed names
     if (_isNameStartChar(char)) {
-      _log.info('Starting prefixed name with char: "$char"');
+      // _log.finest('Starting prefixed name with char: "$char"');
       return _parsePrefixedName();
     }
 
@@ -527,7 +527,7 @@ class TurtleTokenizer {
         // Handle prefixed name datatype (e.g., xsd:integer)
         else if (_position < _input.length &&
             _isNameStartChar(_input[_position])) {
-          _log.info('Parsing prefixed name datatype');
+          // _log.finest('Parsing prefixed name datatype');
 
           // Parse prefix and local name
           while (_position < _input.length) {
@@ -573,14 +573,14 @@ class TurtleTokenizer {
     final startLine = _line;
     final startColumn = _column;
     final buffer = StringBuffer();
-    _log.info('Starting prefixed name at $startLine:$startColumn');
+    // _log.finest('Starting prefixed name at $startLine:$startColumn');
 
     // Handle empty prefix case (just a colon)
     if (_position < _input.length && _input[_position] == ':') {
       buffer.write(':');
       _position++;
       _column++;
-      _log.info('Found empty prefix');
+      // _log.finest('Found empty prefix');
       // If there's a local name after the colon, parse it
       if (_position < _input.length && _isNameStartChar(_input[_position])) {
         while (_position < _input.length && _isNameChar(_input[_position])) {
@@ -603,7 +603,7 @@ class TurtleTokenizer {
 
     while (_position < _input.length) {
       final char = _input[_position];
-      _log.info('Processing char in prefixed name: "$char"');
+      // _log.finest('Processing char in prefixed name: "$char"');
 
       if (_isNameChar(char)) {
         buffer.write(char);
@@ -622,7 +622,7 @@ class TurtleTokenizer {
             _column++;
           }
         }
-        _log.info('Found prefixed name: ${buffer.toString()}');
+        // _log.finest('Found prefixed name: ${buffer.toString()}');
         return Token(
           TokenType.prefixedName,
           buffer.toString(),
@@ -658,7 +658,7 @@ class TurtleTokenizer {
       }
     }
 
-    _log.info('Found incomplete prefixed name: ${buffer.toString()}');
+    // _log.finest('Found incomplete prefixed name: ${buffer.toString()}');
     return Token(
       TokenType.prefixedName,
       buffer.toString(),
