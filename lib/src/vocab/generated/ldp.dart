@@ -16,10 +16,16 @@
 /// final property = Ldp.hasMemberRelation; // Access property directly from main class
 /// final classIri = LdpResource.classIri; // Access class IRI
 /// final property = LdpResource.hasMemberRelation; // Access property from class
+/// final universalProp = LdpUniversalProperties.pageSequence; // Access universal property
 /// ```
 ///
 /// All constants are pre-constructed as IriTerm objects to enable direct use in
 /// constructing RDF graphs without repeated string concatenation or term creation.
+///
+/// Universal Properties:
+/// This vocabulary provides a `LdpUniversalProperties` class for properties
+/// that have no explicitly defined domain restrictions and can be applied
+/// to any resource in this vocabulary's context.
 ///
 /// [Vocabulary Reference](http://www.w3.org/ns/ldp#)
 library ldp_vocab;
@@ -250,6 +256,38 @@ static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageS
 /// Can be used on all classes in this vocabulary
 ///
 static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
+
+}
+
+/// Universal Properties for the Ldp vocabulary
+///
+/// Universal properties are RDF properties that have no explicitly defined domain
+/// and can therefore be applied to any resource within this vocabulary's context.
+/// In RDF, when a property has no rdfs:domain constraint, it can theoretically be
+/// used with any subject, but best practice is to use them only within
+/// the intended vocabulary context.
+///
+/// This class collects all such properties from the Ldp vocabulary to make them
+/// easily accessible without cluttering the class-specific property interfaces.
+class LdpUniversalProperties {
+  // Private constructor prevents instantiation
+  const LdpUniversalProperties._();
+
+  /// IRI for ldp:pageSequence
+  ///
+  /// Link to a page sequence resource, as defined by LDP Paging.  Typically used to communicate the sorting criteria used to allocate LDPC members to pages.
+  ///
+  /// Can be used on all classes in this vocabulary
+  ///
+  static const pageSequence = IriTerm.prevalidated('http://www.w3.org/ns/ldp#pageSequence');
+
+  /// IRI for ldp:inbox
+  ///
+  /// Links a resource to a container where notifications for the resource can be created and discovered.
+  ///
+  /// Can be used on all classes in this vocabulary
+  ///
+  static const inbox = IriTerm.prevalidated('http://www.w3.org/ns/ldp#inbox');
 
 }
 

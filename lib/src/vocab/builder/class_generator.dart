@@ -89,6 +89,12 @@ class VocabularyClassGenerator {
   void _writeLibraryDoc(StringBuffer buffer, VocabularyModel model) {
     final name = _capitalize(model.name);
 
+    // Check if we'll have universal properties
+    final hasUniversalProperties = model.properties.any(
+      (p) => p.domains.isEmpty,
+    );
+    final universalClassName = '${name}UniversalProperties';
+
     buffer.writeln('/// $name Vocabulary');
     buffer.writeln('///');
     buffer.writeln(
@@ -121,6 +127,16 @@ class VocabularyClassGenerator {
       }
     }
 
+    // Add example for universal properties if applicable
+    if (hasUniversalProperties) {
+      final universalProp = _dartIdentifier(
+        model.properties.firstWhere((p) => p.domains.isEmpty).localName,
+      );
+      buffer.writeln(
+        '/// final universalProp = $universalClassName.$universalProp; // Access universal property',
+      );
+    }
+
     buffer.writeln('/// ```');
     buffer.writeln('///');
     buffer.writeln(
@@ -129,6 +145,20 @@ class VocabularyClassGenerator {
     buffer.writeln(
       '/// constructing RDF graphs without repeated string concatenation or term creation.',
     );
+
+    // Add documentation about universal properties if applicable
+    if (hasUniversalProperties) {
+      buffer.writeln('///');
+      buffer.writeln('/// Universal Properties:');
+      buffer.writeln(
+        '/// This vocabulary provides a `$universalClassName` class for properties',
+      );
+      buffer.writeln(
+        '/// that have no explicitly defined domain restrictions and can be applied',
+      );
+      buffer.writeln('/// to any resource in this vocabulary\'s context.');
+    }
+
     buffer.writeln('///');
     buffer.writeln('/// [Vocabulary Reference](${model.namespace})');
     buffer.writeln('library ${model.prefix}_vocab;');
@@ -168,6 +198,62 @@ class VocabularyClassGenerator {
     // Add predicates
     for (final property in model.properties) {
       _writeTerm(buffer, property, className);
+    }
+
+    buffer.writeln('}');
+    buffer.writeln();
+
+    // Generate UniversalProperties class if the vocabulary has properties without explicit domains
+    _writeUniversalPropertiesClass(buffer, model);
+  }
+
+  /// Writes a class for universal properties (properties without explicit domains)
+  void _writeUniversalPropertiesClass(
+    StringBuffer buffer,
+    VocabularyModel model,
+  ) {
+    // Filter properties without explicit domains
+    final universalProperties =
+        model.properties.where((p) => p.domains.isEmpty).toList();
+
+    // Only generate the class if there are universal properties
+    if (universalProperties.isEmpty) {
+      return;
+    }
+
+    final className = _capitalize(model.name);
+    final universalClassName = '${className}UniversalProperties';
+
+    buffer.writeln('/// Universal Properties for the ${className} vocabulary');
+    buffer.writeln('///');
+    buffer.writeln(
+      '/// Universal properties are RDF properties that have no explicitly defined domain',
+    );
+    buffer.writeln(
+      '/// and can therefore be applied to any resource within this vocabulary\'s context.',
+    );
+    buffer.writeln(
+      '/// In RDF, when a property has no rdfs:domain constraint, it can theoretically be',
+    );
+    buffer.writeln(
+      '/// used with any subject, but best practice is to use them only within',
+    );
+    buffer.writeln('/// the intended vocabulary context.');
+    buffer.writeln('///');
+    buffer.writeln(
+      '/// This class collects all such properties from the ${className} vocabulary to make them',
+    );
+    buffer.writeln(
+      '/// easily accessible without cluttering the class-specific property interfaces.',
+    );
+    buffer.writeln('class $universalClassName {');
+    buffer.writeln('  // Private constructor prevents instantiation');
+    buffer.writeln('  const ${universalClassName}._();');
+    buffer.writeln();
+
+    // Write all universal properties
+    for (final property in universalProperties) {
+      _writeTerm(buffer, property, className, prefix: '  ');
     }
 
     buffer.writeln('}');

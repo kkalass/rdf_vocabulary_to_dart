@@ -297,10 +297,13 @@ class CrossVocabularyResolver {
     // First add properties from this vocabulary namespace
     final vocabProperties = _vocabularyProperties[vocabNamespace] ?? {};
     for (final property in vocabProperties) {
-      // If property has no domains, it can be used with any class
+      // Properties from the same namespace with no domains are considered "universal" to that namespace
       if (_propertyDomains[property.iri] == null ||
           _propertyDomains[property.iri]!.isEmpty) {
         result.add(property);
+        _log.fine(
+          'Added universal property ${property.iri} from same namespace',
+        );
         continue;
       }
 
