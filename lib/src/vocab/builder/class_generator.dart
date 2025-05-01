@@ -81,7 +81,7 @@ class VocabularyClassGenerator {
 
   /// Writes the required imports for the generated file.
   void _writeImports(StringBuffer buffer) {
-    buffer.writeln("import 'package:rdf_core/src/graph/rdf_term.dart';");
+    buffer.writeln("import 'package:rdf_core/rdf_core.dart';");
     buffer.writeln();
   }
 
@@ -104,7 +104,7 @@ class VocabularyClassGenerator {
     buffer.writeln('///');
     buffer.writeln('/// Example usage:');
     buffer.writeln('/// ```dart');
-    buffer.writeln('/// import \'package:rdf_core/vocab.dart\';');
+    buffer.writeln('/// import \'package:rdf_vocab_builder/vocab.dart\';');
 
     if (model.properties.isNotEmpty) {
       final exampleProp = _dartIdentifier(model.properties.first.localName);

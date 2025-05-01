@@ -1,19 +1,19 @@
 <div align="center">
-  <img src="https://kkalass.github.io/rdf_core/logo.svg" alt="rdf_core logo" width="96" height="96"/>
+  <img src="https://kkalass.github.io/rdf_vocab_builder/logo.svg" alt="rdf_vocab_builder logo" width="96" height="96"/>
 </div>
 
-# rdf_core
+# rdf_vocab_builder
 
-[![pub package](https://img.shields.io/pub/v/rdf_core.svg)](https://pub.dev/packages/rdf_core)
-[![build](https://github.com/kkalass/rdf_core/actions/workflows/ci.yml/badge.svg)](https://github.com/kkalass/rdf_core/actions)
-[![codecov](https://codecov.io/gh/kkalass/rdf_core/branch/main/graph/badge.svg)](https://codecov.io/gh/kkalass/rdf_core)
-[![license](https://img.shields.io/github/license/kkalass/rdf_core.svg)](https://github.com/kkalass/rdf_core/blob/main/LICENSE)
+[![pub package](https://img.shields.io/pub/v/rdf_vocab_builder.svg)](https://pub.dev/packages/rdf_vocab_builder)
+[![build](https://github.com/kkalass/rdf_vocab_builder/actions/workflows/ci.yml/badge.svg)](https://github.com/kkalass/rdf_vocab_builder/actions)
+[![codecov](https://codecov.io/gh/kkalass/rdf_vocab_builder/branch/main/graph/badge.svg)](https://codecov.io/gh/kkalass/rdf_vocab_builder)
+[![license](https://img.shields.io/github/license/kkalass/rdf_vocab_builder.svg)](https://github.com/kkalass/rdf_vocab_builder/blob/main/LICENSE)
 
 ---
 
 # RDF Core
 
-[🌐 **Official Homepage**](https://kkalass.github.io/rdf_core/)
+[🌐 **Official Homepage**](https://kkalass.github.io/rdf_vocab_builder/)
 
 A type-safe, and extensible Dart library for representing and manipulating RDF data without any further dependencies.
 
@@ -39,7 +39,7 @@ A type-safe, and extensible Dart library for representing and manipulating RDF d
 ### Manual Graph Creation
 
 ```dart
-import 'package:rdf_core/rdf_core.dart';
+import 'package:rdf_vocab_builder/rdf_vocab_builder.dart';
 
 void main() {
   final subject = IriTerm('http://example.org/alice');
@@ -55,7 +55,7 @@ void main() {
 ### Parsing and Serializing Turtle
 
 ```dart
-import 'package:rdf_core/rdf_core.dart';
+import 'package:rdf_vocab_builder/rdf_vocab_builder.dart';
 
 void main() {
   // Example: Parse a simple Turtle document
@@ -165,7 +165,7 @@ Contributions, bug reports, and feature requests are welcome!
 
 - Fork the repo and submit a PR
 - See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
-- Join the discussion in [GitHub Issues](https://github.com/kkalass/rdf_core/issues)
+- Join the discussion in [GitHub Issues](https://github.com/kkalass/rdf_vocab_builder/issues)
 
 ---
 

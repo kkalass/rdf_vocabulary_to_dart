@@ -12,7 +12,7 @@
 ///
 /// Example usage:
 /// ```dart
-/// import 'package:rdf_core/vocab.dart';
+/// import 'package:rdf_vocab_builder/vocab.dart';
 /// final property = Rdf.type; // Access property directly from main class
 /// final classIri = RdfProperty.classIri; // Access class IRI
 /// final property = RdfProperty.type; // Access property from class
@@ -24,7 +24,7 @@
 /// [Vocabulary Reference](http://www.w3.org/1999/02/22-rdf-syntax-ns#)
 library rdf_vocab;
 
-import 'package:rdf_core/src/graph/rdf_term.dart';
+import 'package:rdf_core/rdf_core.dart';
 
 /// Main Rdf vocabulary class containing all terms
 ///
@@ -43,42 +43,48 @@ class Rdf {
   /// The class of RDF properties.
   ///
   static const Property = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property',
+  );
 
   /// IRI for rdf:Statement
   ///
   /// The class of RDF statements.
   ///
   static const Statement = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement',
+  );
 
   /// IRI for rdf:Bag
   ///
   /// The class of unordered containers.
   ///
-  static const Bag =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag');
+  static const Bag = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag',
+  );
 
   /// IRI for rdf:Seq
   ///
   /// The class of ordered containers.
   ///
-  static const Seq =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq');
+  static const Seq = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq',
+  );
 
   /// IRI for rdf:Alt
   ///
   /// The class of containers of alternatives.
   ///
-  static const Alt =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt');
+  static const Alt = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt',
+  );
 
   /// IRI for rdf:List
   ///
   /// The class of RDF Lists.
   ///
-  static const List =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#List');
+  static const List = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#List',
+  );
 
   /// IRI for rdf:CompoundLiteral
   ///
@@ -87,7 +93,8 @@ class Rdf {
   /// [See also](https://www.w3.org/TR/json-ld11/#the-rdf-compoundliteral-class-and-the-rdf-language-and-rdf-direction-properties)
   ///
   static const CompoundLiteral = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#CompoundLiteral');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#CompoundLiteral',
+  );
 
   /// IRI for rdf:HTML
   ///
@@ -95,8 +102,9 @@ class Rdf {
   ///
   /// [See also](http://www.w3.org/TR/rdf11-concepts/#section-html)
   ///
-  static const HTML =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML');
+  static const HTML = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#HTML',
+  );
 
   /// IRI for rdf:langString
   ///
@@ -105,7 +113,8 @@ class Rdf {
   /// [See also](http://www.w3.org/TR/rdf11-concepts/#section-Graph-Literal)
   ///
   static const langString = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#langString',
+  );
 
   /// IRI for rdf:PlainLiteral
   ///
@@ -114,14 +123,16 @@ class Rdf {
   /// [See also](http://www.w3.org/TR/rdf-plain-literal/)
   ///
   static const PlainLiteral = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral',
+  );
 
   /// IRI for rdf:XMLLiteral
   ///
   /// The datatype of XML literal values.
   ///
   static const XMLLiteral = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#XMLLiteral',
+  );
 
   /// IRI for rdf:JSON
   ///
@@ -129,15 +140,17 @@ class Rdf {
   ///
   /// [See also](https://www.w3.org/TR/json-ld11/#the-rdf-json-datatype)
   ///
-  static const JSON =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON');
+  static const JSON = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#JSON',
+  );
 
   /// IRI for rdf:nil
   ///
   /// The empty list, with no items in it. If the rest of a list is nil then the list has no more items in it.
   ///
-  static const nil =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#nil');
+  static const nil = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#nil',
+  );
 
   /// IRI for rdf:type
   ///
@@ -146,8 +159,9 @@ class Rdf {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const type =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
+  static const type = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+  );
 
   /// IRI for rdf:subject
   ///
@@ -157,7 +171,8 @@ class Rdf {
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const subject = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#subject');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#subject',
+  );
 
   /// IRI for rdf:predicate
   ///
@@ -167,7 +182,8 @@ class Rdf {
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const predicate = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate',
+  );
 
   /// IRI for rdf:object
   ///
@@ -176,8 +192,9 @@ class Rdf {
   /// Can be used on: http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const object =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#object');
+  static const object = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#object',
+  );
 
   /// IRI for rdf:value
   ///
@@ -186,8 +203,9 @@ class Rdf {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const value =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
+  static const value = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
+  );
 
   /// IRI for rdf:first
   ///
@@ -196,8 +214,9 @@ class Rdf {
   /// Can be used on: http://www.w3.org/1999/02/22-rdf-syntax-ns#List
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const first =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#first');
+  static const first = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#first',
+  );
 
   /// IRI for rdf:rest
   ///
@@ -206,8 +225,9 @@ class Rdf {
   /// Can be used on: http://www.w3.org/1999/02/22-rdf-syntax-ns#List
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#List
   ///
-  static const rest =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest');
+  static const rest = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
+  );
 
   /// IRI for rdf:language
   ///
@@ -218,7 +238,8 @@ class Rdf {
   /// [See also](https://www.w3.org/TR/json-ld11/#the-rdf-compoundliteral-class-and-the-rdf-language-and-rdf-direction-properties)
   ///
   static const language = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#language');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#language',
+  );
 
   /// IRI for rdf:direction
   ///
@@ -229,7 +250,8 @@ class Rdf {
   /// [See also](https://www.w3.org/TR/json-ld11/#the-rdf-compoundliteral-class-and-the-rdf-language-and-rdf-direction-properties)
   ///
   static const direction = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#direction');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#direction',
+  );
 }
 
 /// Property class from Rdf vocabulary
@@ -245,7 +267,8 @@ class RdfProperty {
   /// IRI term for the Property class
   /// Use this to specify that a resource is of this type.
   static const classIri = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property',
+  );
 
   /// IRI for rdf:type
   ///
@@ -254,8 +277,9 @@ class RdfProperty {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const type =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
+  static const type = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+  );
 
   /// IRI for rdf:value
   ///
@@ -264,8 +288,9 @@ class RdfProperty {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const value =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
+  static const value = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
+  );
 
   /// IRI for rdf:subPropertyOf
   ///
@@ -275,7 +300,8 @@ class RdfProperty {
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   ///
   static const rdfsSubPropertyOf = IriTerm.prevalidated(
-      'http://www.w3.org/2000/01/rdf-schema#subPropertyOf');
+    'http://www.w3.org/2000/01/rdf-schema#subPropertyOf',
+  );
 
   /// IRI for rdf:comment
   ///
@@ -284,8 +310,9 @@ class RdfProperty {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
+  static const rdfsComment = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#comment',
+  );
 
   /// IRI for rdf:label
   ///
@@ -294,8 +321,9 @@ class RdfProperty {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
+  static const rdfsLabel = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#label',
+  );
 
   /// IRI for rdf:domain
   ///
@@ -304,8 +332,9 @@ class RdfProperty {
   /// Can be used on: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const rdfsDomain =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#domain');
+  static const rdfsDomain = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#domain',
+  );
 
   /// IRI for rdf:range
   ///
@@ -314,8 +343,9 @@ class RdfProperty {
   /// Can be used on: http://www.w3.org/1999/02/22-rdf-syntax-ns#Property
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const rdfsRange =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#range');
+  static const rdfsRange = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#range',
+  );
 
   /// IRI for rdf:seeAlso
   ///
@@ -324,8 +354,9 @@ class RdfProperty {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
+  static const rdfsSeeAlso = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
+  );
 
   /// IRI for rdf:isDefinedBy
   ///
@@ -334,8 +365,9 @@ class RdfProperty {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
+  static const rdfsIsDefinedBy = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
+  );
 
   /// IRI for rdf:member
   ///
@@ -344,8 +376,9 @@ class RdfProperty {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+  static const rdfsMember = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#member',
+  );
 }
 
 /// Statement class from Rdf vocabulary
@@ -361,7 +394,8 @@ class RdfStatement {
   /// IRI term for the Statement class
   /// Use this to specify that a resource is of this type.
   static const classIri = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement',
+  );
 
   /// IRI for rdf:type
   ///
@@ -370,8 +404,9 @@ class RdfStatement {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const type =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
+  static const type = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+  );
 
   /// IRI for rdf:subject
   ///
@@ -381,7 +416,8 @@ class RdfStatement {
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const subject = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#subject');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#subject',
+  );
 
   /// IRI for rdf:predicate
   ///
@@ -391,7 +427,8 @@ class RdfStatement {
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
   static const predicate = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate',
+  );
 
   /// IRI for rdf:object
   ///
@@ -400,8 +437,9 @@ class RdfStatement {
   /// Can be used on: http://www.w3.org/1999/02/22-rdf-syntax-ns#Statement
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const object =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#object');
+  static const object = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#object',
+  );
 
   /// IRI for rdf:value
   ///
@@ -410,8 +448,9 @@ class RdfStatement {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const value =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
+  static const value = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
+  );
 
   /// IRI for rdf:comment
   ///
@@ -420,8 +459,9 @@ class RdfStatement {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
+  static const rdfsComment = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#comment',
+  );
 
   /// IRI for rdf:label
   ///
@@ -430,8 +470,9 @@ class RdfStatement {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
+  static const rdfsLabel = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#label',
+  );
 
   /// IRI for rdf:seeAlso
   ///
@@ -440,8 +481,9 @@ class RdfStatement {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
+  static const rdfsSeeAlso = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
+  );
 
   /// IRI for rdf:isDefinedBy
   ///
@@ -450,8 +492,9 @@ class RdfStatement {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
+  static const rdfsIsDefinedBy = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
+  );
 
   /// IRI for rdf:member
   ///
@@ -460,8 +503,9 @@ class RdfStatement {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+  static const rdfsMember = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#member',
+  );
 }
 
 /// Bag class from Rdf vocabulary
@@ -476,8 +520,9 @@ class RdfBag {
 
   /// IRI term for the Bag class
   /// Use this to specify that a resource is of this type.
-  static const classIri =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag');
+  static const classIri = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#Bag',
+  );
 
   /// IRI for rdf:type
   ///
@@ -486,8 +531,9 @@ class RdfBag {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const type =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
+  static const type = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+  );
 
   /// IRI for rdf:value
   ///
@@ -496,8 +542,9 @@ class RdfBag {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const value =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
+  static const value = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
+  );
 
   /// IRI for rdf:comment
   ///
@@ -506,8 +553,9 @@ class RdfBag {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
+  static const rdfsComment = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#comment',
+  );
 
   /// IRI for rdf:label
   ///
@@ -516,8 +564,9 @@ class RdfBag {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
+  static const rdfsLabel = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#label',
+  );
 
   /// IRI for rdf:seeAlso
   ///
@@ -526,8 +575,9 @@ class RdfBag {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
+  static const rdfsSeeAlso = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
+  );
 
   /// IRI for rdf:isDefinedBy
   ///
@@ -536,8 +586,9 @@ class RdfBag {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
+  static const rdfsIsDefinedBy = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
+  );
 
   /// IRI for rdf:member
   ///
@@ -546,8 +597,9 @@ class RdfBag {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+  static const rdfsMember = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#member',
+  );
 }
 
 /// Seq class from Rdf vocabulary
@@ -562,8 +614,9 @@ class RdfSeq {
 
   /// IRI term for the Seq class
   /// Use this to specify that a resource is of this type.
-  static const classIri =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq');
+  static const classIri = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#Seq',
+  );
 
   /// IRI for rdf:type
   ///
@@ -572,8 +625,9 @@ class RdfSeq {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const type =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
+  static const type = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+  );
 
   /// IRI for rdf:value
   ///
@@ -582,8 +636,9 @@ class RdfSeq {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const value =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
+  static const value = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
+  );
 
   /// IRI for rdf:comment
   ///
@@ -592,8 +647,9 @@ class RdfSeq {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
+  static const rdfsComment = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#comment',
+  );
 
   /// IRI for rdf:label
   ///
@@ -602,8 +658,9 @@ class RdfSeq {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
+  static const rdfsLabel = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#label',
+  );
 
   /// IRI for rdf:seeAlso
   ///
@@ -612,8 +669,9 @@ class RdfSeq {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
+  static const rdfsSeeAlso = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
+  );
 
   /// IRI for rdf:isDefinedBy
   ///
@@ -622,8 +680,9 @@ class RdfSeq {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
+  static const rdfsIsDefinedBy = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
+  );
 
   /// IRI for rdf:member
   ///
@@ -632,8 +691,9 @@ class RdfSeq {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+  static const rdfsMember = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#member',
+  );
 }
 
 /// Alt class from Rdf vocabulary
@@ -648,8 +708,9 @@ class RdfAlt {
 
   /// IRI term for the Alt class
   /// Use this to specify that a resource is of this type.
-  static const classIri =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt');
+  static const classIri = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#Alt',
+  );
 
   /// IRI for rdf:type
   ///
@@ -658,8 +719,9 @@ class RdfAlt {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const type =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
+  static const type = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+  );
 
   /// IRI for rdf:value
   ///
@@ -668,8 +730,9 @@ class RdfAlt {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const value =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
+  static const value = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
+  );
 
   /// IRI for rdf:comment
   ///
@@ -678,8 +741,9 @@ class RdfAlt {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
+  static const rdfsComment = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#comment',
+  );
 
   /// IRI for rdf:label
   ///
@@ -688,8 +752,9 @@ class RdfAlt {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
+  static const rdfsLabel = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#label',
+  );
 
   /// IRI for rdf:seeAlso
   ///
@@ -698,8 +763,9 @@ class RdfAlt {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
+  static const rdfsSeeAlso = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
+  );
 
   /// IRI for rdf:isDefinedBy
   ///
@@ -708,8 +774,9 @@ class RdfAlt {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
+  static const rdfsIsDefinedBy = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
+  );
 
   /// IRI for rdf:member
   ///
@@ -718,8 +785,9 @@ class RdfAlt {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+  static const rdfsMember = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#member',
+  );
 }
 
 /// List class from Rdf vocabulary
@@ -734,8 +802,9 @@ class RdfList {
 
   /// IRI term for the List class
   /// Use this to specify that a resource is of this type.
-  static const classIri =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#List');
+  static const classIri = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#List',
+  );
 
   /// IRI for rdf:type
   ///
@@ -744,8 +813,9 @@ class RdfList {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const type =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
+  static const type = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+  );
 
   /// IRI for rdf:value
   ///
@@ -754,8 +824,9 @@ class RdfList {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const value =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
+  static const value = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
+  );
 
   /// IRI for rdf:first
   ///
@@ -764,8 +835,9 @@ class RdfList {
   /// Can be used on: http://www.w3.org/1999/02/22-rdf-syntax-ns#List
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const first =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#first');
+  static const first = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#first',
+  );
 
   /// IRI for rdf:rest
   ///
@@ -774,8 +846,9 @@ class RdfList {
   /// Can be used on: http://www.w3.org/1999/02/22-rdf-syntax-ns#List
   /// Expects values of type: http://www.w3.org/1999/02/22-rdf-syntax-ns#List
   ///
-  static const rest =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#rest');
+  static const rest = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#rest',
+  );
 
   /// IRI for rdf:comment
   ///
@@ -784,8 +857,9 @@ class RdfList {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
+  static const rdfsComment = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#comment',
+  );
 
   /// IRI for rdf:label
   ///
@@ -794,8 +868,9 @@ class RdfList {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
+  static const rdfsLabel = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#label',
+  );
 
   /// IRI for rdf:seeAlso
   ///
@@ -804,8 +879,9 @@ class RdfList {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
+  static const rdfsSeeAlso = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
+  );
 
   /// IRI for rdf:isDefinedBy
   ///
@@ -814,8 +890,9 @@ class RdfList {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
+  static const rdfsIsDefinedBy = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
+  );
 
   /// IRI for rdf:member
   ///
@@ -824,8 +901,9 @@ class RdfList {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+  static const rdfsMember = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#member',
+  );
 }
 
 /// CompoundLiteral class from Rdf vocabulary
@@ -842,7 +920,8 @@ class RdfCompoundLiteral {
   /// IRI term for the CompoundLiteral class
   /// Use this to specify that a resource is of this type.
   static const classIri = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#CompoundLiteral');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#CompoundLiteral',
+  );
 
   /// IRI for rdf:type
   ///
@@ -851,8 +930,9 @@ class RdfCompoundLiteral {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Class
   ///
-  static const type =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
+  static const type = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+  );
 
   /// IRI for rdf:value
   ///
@@ -861,8 +941,9 @@ class RdfCompoundLiteral {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const value =
-      IriTerm.prevalidated('http://www.w3.org/1999/02/22-rdf-syntax-ns#value');
+  static const value = IriTerm.prevalidated(
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#value',
+  );
 
   /// IRI for rdf:language
   ///
@@ -873,7 +954,8 @@ class RdfCompoundLiteral {
   /// [See also](https://www.w3.org/TR/json-ld11/#the-rdf-compoundliteral-class-and-the-rdf-language-and-rdf-direction-properties)
   ///
   static const language = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#language');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#language',
+  );
 
   /// IRI for rdf:direction
   ///
@@ -884,7 +966,8 @@ class RdfCompoundLiteral {
   /// [See also](https://www.w3.org/TR/json-ld11/#the-rdf-compoundliteral-class-and-the-rdf-language-and-rdf-direction-properties)
   ///
   static const direction = IriTerm.prevalidated(
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#direction');
+    'http://www.w3.org/1999/02/22-rdf-syntax-ns#direction',
+  );
 
   /// IRI for rdf:comment
   ///
@@ -893,8 +976,9 @@ class RdfCompoundLiteral {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsComment =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#comment');
+  static const rdfsComment = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#comment',
+  );
 
   /// IRI for rdf:label
   ///
@@ -903,8 +987,9 @@ class RdfCompoundLiteral {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Literal
   ///
-  static const rdfsLabel =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#label');
+  static const rdfsLabel = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#label',
+  );
 
   /// IRI for rdf:seeAlso
   ///
@@ -913,8 +998,9 @@ class RdfCompoundLiteral {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsSeeAlso =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#seeAlso');
+  static const rdfsSeeAlso = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#seeAlso',
+  );
 
   /// IRI for rdf:isDefinedBy
   ///
@@ -923,8 +1009,9 @@ class RdfCompoundLiteral {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsIsDefinedBy =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#isDefinedBy');
+  static const rdfsIsDefinedBy = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#isDefinedBy',
+  );
 
   /// IRI for rdf:member
   ///
@@ -933,6 +1020,7 @@ class RdfCompoundLiteral {
   /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
   /// Expects values of type: http://www.w3.org/2000/01/rdf-schema#Resource
   ///
-  static const rdfsMember =
-      IriTerm.prevalidated('http://www.w3.org/2000/01/rdf-schema#member');
+  static const rdfsMember = IriTerm.prevalidated(
+    'http://www.w3.org/2000/01/rdf-schema#member',
+  );
 }

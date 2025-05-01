@@ -1,16 +1,14 @@
-name: rdf_core
+name: rdf_vocab_builder
 description: A type-safe, modular Dart library for modeling, parsing, and serializing RDF data.
-version: 0.5.2-dev
-homepage: https://kkalass.github.io/rdf_core/
-repository: https://github.com/kkalass/rdf_core
-issue_tracker: https://github.com/kkalass/rdf_core/issues
-documentation: https://kkalass.github.io/rdf_core/
+version: 0.1.0-dev
+homepage: https://kkalass.github.io/rdf_vocab_builder/
+repository: https://github.com/kkalass/rdf_vocab_builder
+issue_tracker: https://github.com/kkalass/rdf_vocab_builder/issues
+documentation: https://kkalass.github.io/rdf_vocab_builder/
 topics:
   - rdf
   - linked-data
   - semantic-web
-  - graph
-  - serialization
 readme: README.md
 changelog: CHANGELOG.md
 license: LICENSE
@@ -21,8 +19,7 @@ environment:
 dependencies:
   logging: ^1.2.0
   http: ^1.1.0
-dev_dependencies:
-  test: ^1.21.0
+  rdf_core: ^0.5.1
   yaml: ^3.1.2
   path: ^1.8.0
   build: ^2.4.1
@@ -30,3 +27,7 @@ dev_dependencies:
   build_runner: ^2.4.6
   source_gen: ^1.4.0
   dart_style: ^2.3.4
+  
+dev_dependencies:
+  test: ^1.21.0
+  

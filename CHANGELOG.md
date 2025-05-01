@@ -53,7 +53,7 @@ All notable changes to this project will be documented in this file.
 
 ## 0.1.2
 
-- Cleaned up all library names for consistency (removed rdf_core. prefix, now use simple names like `exceptions.base`).
+- Cleaned up all library names for consistency (removed rdf_vocab_builder. prefix, now use simple names like `exceptions.base`).
 - Minor formatting and style improvements in core files.
 - No breaking changes; all public APIs remain backward compatible.
 
@@ -67,7 +67,7 @@ All notable changes to this project will be documented in this file.
 
 ## 0.1.0
 
-- Initial release of rdf_core: type-safe, extensible Dart library for RDF data manipulation.
+- Initial release of rdf_vocab_builder: type-safe, extensible Dart library for RDF data manipulation.
 - Implements RDF graph, triple, term, and serialization/parsing for Turtle and JSON-LD.
 - Plugin architecture for formats and adapters.
 - Comprehensive test coverage.

@@ -4,7 +4,7 @@
 
 /// This library exposes the builder factory for generating RDF vocabulary classes
 /// from a JSON vocabulary manifest.
-library rdf_core.vocab_builder;
+library rdf_vocab_builder.vocab_builder;
 
 import 'package:build/build.dart';
 export 'src/vocab/builder/vocabulary_source.dart';

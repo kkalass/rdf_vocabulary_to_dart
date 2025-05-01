@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
 
-/// Automated release script for rdf_core
+/// Automated release script for rdf_vocab_builder
 ///
 /// This script automates the entire release process:
 /// 1. Ensures the working directory is clean (in non-interactive mode)
@@ -30,7 +30,7 @@ void main(List<String> args) async {
   final skipPublish = args.contains('--no-publish') || dryRun;
   final nonInteractive = args.contains('--non-interactive');
 
-  print('rdf_core release script');
+  print('rdf_vocab_builder release script');
   print('------------------------');
   if (dryRun) {
     print('DRY RUN: No changes will be made');
@@ -441,7 +441,7 @@ void main(List<String> args) async {
 void _printUsage() {
   print('Release Script');
   print('-------------');
-  print('Automates the release process for the rdf_core package.');
+  print('Automates the release process for the rdf_vocab_builder package.');
   print('');
   print('Usage:');
   print('  dart run tool/release.dart [options]');
@@ -733,7 +733,9 @@ Future<void> _ensureNoDevVersionStrings(String releaseVersion) async {
 
     var content = file.readAsStringSync();
     final devPattern = RegExp(r'\^[0-9]+\.[0-9]+\.[0-9]+\-dev');
-    final wrongPubAddPattern = RegExp(r'dart pub add rdf_core:[^\s"]+');
+    final wrongPubAddPattern = RegExp(
+      r'dart pub add rdf_vocab_builder:[^\s"]+',
+    );
 
     // Check for any remaining -dev version strings
     if (devPattern.hasMatch(content) || wrongPubAddPattern.hasMatch(content)) {
@@ -745,7 +747,10 @@ Future<void> _ensureNoDevVersionStrings(String releaseVersion) async {
       content = content.replaceAll(devPattern, '^$releaseVersion');
 
       // Ensure dart pub add command is simplified
-      content = content.replaceAll(wrongPubAddPattern, 'dart pub add rdf_core');
+      content = content.replaceAll(
+        wrongPubAddPattern,
+        'dart pub add rdf_vocab_builder',
+      );
 
       // Write updated content
       file.writeAsStringSync(content);

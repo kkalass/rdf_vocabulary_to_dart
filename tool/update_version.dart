@@ -180,20 +180,21 @@ String _updateReadme(String content, String version) {
 
   // Update pubspec.yaml example with a more robust pattern
   final pubspecPattern = RegExp(
-    r'```yaml\s*\n\s*dependencies:\s*\n\s*rdf_core:\s*\^[0-9]+\.[0-9]+\.[0-9]+(?:[-+].+)?',
+    r'```yaml\s*\n\s*dependencies:\s*\n\s*rdf_vocab_builder:\s*\^[0-9]+\.[0-9]+\.[0-9]+(?:[-+].+)?',
     multiLine: true,
   );
-  final updatedPubspec = '```yaml\ndependencies:\n  rdf_core: ^$cleanVersion';
+  final updatedPubspec =
+      '```yaml\ndependencies:\n  rdf_vocab_builder: ^$cleanVersion';
   if (pubspecPattern.hasMatch(result)) {
     result = result.replaceAll(pubspecPattern, updatedPubspec);
   }
 
   // Replace any complex dart pub add command with the simplified version
   final dartPubAddPattern = RegExp(
-    r'```bash\s*\n\s*dart pub add rdf_core(?::.*)?',
+    r'```bash\s*\n\s*dart pub add rdf_vocab_builder(?::.*)?',
     multiLine: true,
   );
-  const updatedDartPubAdd = '```bash\ndart pub add rdf_core';
+  const updatedDartPubAdd = '```bash\ndart pub add rdf_vocab_builder';
   if (dartPubAddPattern.hasMatch(result)) {
     result = result.replaceAll(dartPubAddPattern, updatedDartPubAdd);
   }
@@ -209,21 +210,22 @@ String _updateDocIndex(String content, String version) {
 
   // Update installation code block in Quick Start section - more robust pattern
   final dependencyPattern = RegExp(
-    r'<code class="language-yaml">dependencies:\s*\n\s*rdf_core:\s*\^[0-9]+\.[0-9]+\.[0-9]+(?:[-+].+)?',
+    r'<code class="language-yaml">dependencies:\s*\n\s*rdf_vocab_builder:\s*\^[0-9]+\.[0-9]+\.[0-9]+(?:[-+].+)?',
     multiLine: true,
   );
   final updatedDependency =
-      '<code class="language-yaml">dependencies:\n  rdf_core: ^$cleanVersion';
+      '<code class="language-yaml">dependencies:\n  rdf_vocab_builder: ^$cleanVersion';
   if (dependencyPattern.hasMatch(result)) {
     result = result.replaceAll(dependencyPattern, updatedDependency);
   }
 
   // Always simplify the dart pub add command
   final dartPubAddPattern = RegExp(
-    r'<code class="language-bash">dart pub add rdf_core(?::[^\s<]+)?',
+    r'<code class="language-bash">dart pub add rdf_vocab_builder(?::[^\s<]+)?',
     multiLine: true,
   );
-  const updatedDartPubAdd = '<code class="language-bash">dart pub add rdf_core';
+  const updatedDartPubAdd =
+      '<code class="language-bash">dart pub add rdf_vocab_builder';
   if (dartPubAddPattern.hasMatch(result)) {
     result = result.replaceAll(dartPubAddPattern, updatedDartPubAdd);
   }

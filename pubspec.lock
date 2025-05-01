@@ -47,7 +47,7 @@ packages:
     source: hosted
     version: "2.1.2"
   build:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: build
       sha256: cef23f1eda9b57566c81e2133d196f8e3df48f244b317368d65c5943d91148f0
@@ -55,7 +55,7 @@ packages:
     source: hosted
     version: "2.4.2"
   build_config:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: build_config
       sha256: "4ae2de3e1e67ea270081eaee972e1bd8f027d459f249e0f1186730784c2e7e33"
@@ -79,7 +79,7 @@ packages:
     source: hosted
     version: "2.4.4"
   build_runner:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: build_runner
       sha256: "058fe9dce1de7d69c4b84fada934df3e0153dd000758c4d65964d0166779aa99"
@@ -167,7 +167,7 @@ packages:
     source: hosted
     version: "3.0.6"
   dart_style:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: dart_style
       sha256: "7306ab8a2359a48d22310ad823521d723acfed60ee1f7e37388e8986853b6820"
@@ -319,7 +319,7 @@ packages:
     source: hosted
     version: "2.2.0"
   path:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: path
       sha256: "75cca69d1490965be98c73ceaea117e8a04dd21217b37b292c9ddbec0d955bc5"
@@ -350,6 +350,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.0"
+  rdf_core:
+    dependency: "direct main"
+    description:
+      name: rdf_core
+      sha256: "47e1f47e1a588fb9754a314f0b0ec4a753820028116fd51c7fa7c10112bc6ebc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.1"
   shelf:
     dependency: transitive
     description:
@@ -383,7 +391,7 @@ packages:
     source: hosted
     version: "3.0.0"
   source_gen:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: source_gen
       sha256: "14658ba5f669685cd3d63701d01b31ea748310f7ab854e471962670abcf57832"
@@ -543,7 +551,7 @@ packages:
     source: hosted
     version: "1.2.1"
   yaml:
-    dependency: "direct dev"
+    dependency: "direct main"
     description:
       name: yaml
       sha256: b9da305ac7c39faa3f030eccd175340f968459dae4af175130b3fc47e40d76ce

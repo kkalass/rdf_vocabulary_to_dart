@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import 'package:logging/logging.dart';
-import '../../../../rdf_core.dart';
+import 'package:rdf_core/rdf_core.dart';
 
 /// Logger for vocabulary model operations
 final _log = Logger('VocabularyModel');

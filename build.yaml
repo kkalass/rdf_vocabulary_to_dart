@@ -1,7 +1,7 @@
 targets:
   $default:
     builders:
-      rdf_core|vocabulary_builder:
+      rdf_vocab_builder|vocabulary_builder:
         enabled: true
         options:
           manifest_asset_path: "lib/src/vocab/manifest.json"
@@ -9,7 +9,7 @@ targets:
 
 builders:
   vocabulary_builder:
-    import: "package:rdf_core/vocab_builder.dart"
+    import: "package:rdf_vocab_builder/vocab_builder.dart"
     builder_factories: ["vocabularyBuilder"]
     build_extensions: {
       "lib/src/vocab/manifest.json": [

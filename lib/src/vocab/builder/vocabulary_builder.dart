@@ -10,9 +10,8 @@ import 'package:build/build.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
-import 'package:path/path.dart' as path;
+import 'package:rdf_core/rdf_core.dart';
 
-import '../../../rdf_core.dart';
 import 'class_generator.dart';
 import 'cross_vocabulary_resolver.dart';
 import 'model/vocabulary_model.dart';
@@ -41,7 +40,7 @@ class VocabularyBuilder implements Builder {
 
   /// Cached vocabulary names from manifest
   List<String>? _cachedVocabularyNames;
-  
+
   /// Dart code formatter instance
   final DartFormatter _dartFormatter = DartFormatter();
 
@@ -282,7 +281,7 @@ class VocabularyBuilder implements Builder {
   }
 
   /// Formats a Dart source code string according to Dart style guidelines
-  /// 
+  ///
   /// Returns the formatted code string, or the original string if formatting fails
   String _formatDartCode(String dartCode) {
     try {
@@ -502,7 +501,7 @@ class VocabularyBuilder implements Builder {
         // Generate the Dart class with cross-vocabulary awareness
         final generator = VocabularyClassGenerator(resolver: _resolver);
         final dartCode = generator.generate(model);
-        
+
         // Format the generated code
         final formattedCode = _formatDartCode(dartCode);
 
@@ -545,7 +544,7 @@ class VocabularyBuilder implements Builder {
     for (final name in sortedNames) {
       buffer.writeln("export '$name.dart';");
     }
-    
+
     // Format the index file code
     final indexCode = buffer.toString();
     final formattedIndexCode = _formatDartCode(indexCode);
