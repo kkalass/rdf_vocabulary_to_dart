@@ -1,10 +1,10 @@
-name: rdf_vocabulary_builder
+name: rdf_vocabulary_to_dart
 description: A build_runner for generating type-safe Dart classes from RDF vocabulary namespace IRIs to simplify working with RDF data in Dart.
 version: 0.1.0-dev
-homepage: https://kkalass.github.io/rdf_vocabulary_builder/
-repository: https://github.com/kkalass/rdf_vocabulary_builder
-issue_tracker: https://github.com/kkalass/rdf_vocabulary_builder/issues
-documentation: https://kkalass.github.io/rdf_vocabulary_builder/
+homepage: https://kkalass.github.io/rdf_vocabulary_to_dart/
+repository: https://github.com/kkalass/rdf_vocabulary_to_dart
+issue_tracker: https://github.com/kkalass/rdf_vocabulary_to_dart/issues
+documentation: https://kkalass.github.io/rdf_vocabulary_to_dart/
 topics:
   - rdf
   - linked-data

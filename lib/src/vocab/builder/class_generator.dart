@@ -104,7 +104,7 @@ class VocabularyClassGenerator {
     buffer.writeln('///');
     buffer.writeln('/// Example usage:');
     buffer.writeln('/// ```dart');
-    buffer.writeln('/// import \'package:rdf_vocabulary_builder/vocab.dart\';');
+    buffer.writeln('/// import \'package:rdf_vocabulary_to_dart/vocab.dart\';');
 
     if (model.properties.isNotEmpty) {
       final exampleProp = _dartIdentifier(model.properties.first.localName);

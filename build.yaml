@@ -1,18 +1,33 @@
+# RDF Vocabulary Mapper Configuration
+# This file configures the build_runner for generating Dart classes from RDF vocabularies.
+
 targets:
   $default:
     builders:
-      rdf_vocabulary_builder|vocabulary_builder:
+      # Builder identifier in the format <package_name>|<builder_name>
+      # Used to reference this builder in dependencies
+      rdf_vocabulary_to_dart|vocabulary_generator:
         enabled: true
         options:
-          manifest_asset_path: "lib/src/vocab/common.vocab_manifest.json"
+          # Path to the JSON file containing the vocabulary IRIs to be processed
+          # This file should contain a list of IRIs pointing to RDF vocabularies
+          vocabulary_config_path: "lib/src/vocab/vocabulary_sources.vocab.json"
+          # Directory where generated Dart files will be output
           output_dir: "lib/src/vocab/generated"
 
 builders:
-  vocabulary_builder:
-    import: "package:rdf_vocabulary_builder/vocab_builder.dart"
-    builder_factories: ["vocabularyBuilder"]
+  # Builder name, referenced in the targets section above
+  vocabulary_generator:
+    # Entry point for the builder implementation
+    import: "package:rdf_vocabulary_to_dart/rdf_vocabulary_to_dart.dart"
+    # Factory function that creates the builder instance
+    builder_factories: ["rdfVocabularyBuilder"]
+    # Mapping of input file extensions to output file patterns
+    # "{{}}" is a placeholder for the input file's directory
     build_extensions: {
-      ".vocab_manifest.json": ["{{}}/generated/_index.dart", "{{}}/generated/*.dart"],
+      ".vocab.json": ["{{}}/generated/_index.dart", "{{}}/generated/*.dart"],
     }
+    # Specifies that output goes to the source tree (not to .dart_tool)
     build_to: source
+    # Automatically applies this builder to packages that depend on rdf_vocabulary_to_dart
     auto_apply: dependents

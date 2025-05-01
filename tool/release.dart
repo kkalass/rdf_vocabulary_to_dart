@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:yaml/yaml.dart';
 
-/// Automated release script for rdf_vocabulary_builder
+/// Automated release script for rdf_vocabulary_to_dart
 ///
 /// This script automates the entire release process:
 /// 1. Ensures the working directory is clean (in non-interactive mode)
@@ -30,7 +30,7 @@ void main(List<String> args) async {
   final skipPublish = args.contains('--no-publish') || dryRun;
   final nonInteractive = args.contains('--non-interactive');
 
-  print('rdf_vocabulary_builder release script');
+  print('rdf_vocabulary_to_dart release script');
   print('------------------------');
   if (dryRun) {
     print('DRY RUN: No changes will be made');
@@ -442,7 +442,7 @@ void _printUsage() {
   print('Release Script');
   print('-------------');
   print(
-    'Automates the release process for the rdf_vocabulary_builder package.',
+    'Automates the release process for the rdf_vocabulary_to_dart package.',
   );
   print('');
   print('Usage:');
@@ -736,7 +736,7 @@ Future<void> _ensureNoDevVersionStrings(String releaseVersion) async {
     var content = file.readAsStringSync();
     final devPattern = RegExp(r'\^[0-9]+\.[0-9]+\.[0-9]+\-dev');
     final wrongPubAddPattern = RegExp(
-      r'dart pub add rdf_vocabulary_builder:[^\s"]+',
+      r'dart pub add rdf_vocabulary_to_dart:[^\s"]+',
     );
 
     // Check for any remaining -dev version strings
@@ -751,7 +751,7 @@ Future<void> _ensureNoDevVersionStrings(String releaseVersion) async {
       // Ensure dart pub add command is simplified
       content = content.replaceAll(
         wrongPubAddPattern,
-        'dart pub add rdf_vocabulary_builder',
+        'dart pub add rdf_vocabulary_to_dart',
       );
 
       // Write updated content

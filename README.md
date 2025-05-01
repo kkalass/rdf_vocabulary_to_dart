@@ -1,19 +1,19 @@
 <div align="center">
-  <img src="https://kkalass.github.io/rdf_vocabulary_builder/logo.svg" alt="rdf_vocabulary_builder logo" width="96" height="96"/>
+  <img src="https://kkalass.github.io/rdf_vocabulary_to_dart/logo.svg" alt="rdf_vocabulary_to_dart logo" width="96" height="96"/>
 </div>
 
-# rdf_vocabulary_builder
+# rdf_vocabulary_to_dart
 
-[![pub package](https://img.shields.io/pub/v/rdf_vocabulary_builder.svg)](https://pub.dev/packages/rdf_vocabulary_builder)
-[![build](https://github.com/kkalass/rdf_vocabulary_builder/actions/workflows/ci.yml/badge.svg)](https://github.com/kkalass/rdf_vocabulary_builder/actions)
-[![codecov](https://codecov.io/gh/kkalass/rdf_vocabulary_builder/branch/main/graph/badge.svg)](https://codecov.io/gh/kkalass/rdf_vocabulary_builder)
-[![license](https://img.shields.io/github/license/kkalass/rdf_vocabulary_builder.svg)](https://github.com/kkalass/rdf_vocabulary_builder/blob/main/LICENSE)
+[![pub package](https://img.shields.io/pub/v/rdf_vocabulary_to_dart.svg)](https://pub.dev/packages/rdf_vocabulary_to_dart)
+[![build](https://github.com/kkalass/rdf_vocabulary_to_dart/actions/workflows/ci.yml/badge.svg)](https://github.com/kkalass/rdf_vocabulary_to_dart/actions)
+[![codecov](https://codecov.io/gh/kkalass/rdf_vocabulary_to_dart/branch/main/graph/badge.svg)](https://codecov.io/gh/kkalass/rdf_vocabulary_to_dart)
+[![license](https://img.shields.io/github/license/kkalass/rdf_vocabulary_to_dart.svg)](https://github.com/kkalass/rdf_vocabulary_to_dart/blob/main/LICENSE)
 
 ---
 
 A build_runner for generating type-safe Dart classes from RDF vocabulary namespace IRIs to simplify working with RDF data in Dart.
 
-[🌐 **Official Homepage**](https://kkalass.github.io/rdf_vocabulary_builder/)
+[🌐 **Official Homepage**](https://kkalass.github.io/rdf_vocabulary_to_dart/)
 
 ---
 
@@ -36,7 +36,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.4.0
-  rdf_vocabulary_builder: ^0.1.0
+  rdf_vocabulary_to_dart: ^0.1.0
 ```
 
 ### 2. Create a Manifest File
@@ -76,10 +76,10 @@ Create or update your `build.yaml` file in your project root:
 targets:
   $default:
     builders:
-      rdf_vocabulary_builder|vocabulary_builder:
+      rdf_vocabulary_to_dart|vocabulary_builder:
         enabled: true
         options:
-          manifest_asset_path: "lib/src/vocab/manifest.json"
+          vocabulary_config_path: "lib/src/vocab/manifest.json"
           output_dir: "lib/src/vocab/generated"
 ```
 
@@ -150,11 +150,11 @@ In your `build.yaml`, you can configure the builder with these options:
 targets:
   $default:
     builders:
-      rdf_vocabulary_builder|vocabulary_builder:
+      rdf_vocabulary_to_dart|vocabulary_builder:
         enabled: true
         options:
           # Path to the manifest file (default: "lib/src/vocab/manifest.json")
-          manifest_asset_path: "path/to/your/manifest.json"
+          vocabulary_config_path: "path/to/your/manifest.json"
           # Output directory for generated files (default: "lib/src/vocab/generated")
           output_dir: "path/to/output/dir"
 ```
@@ -236,7 +236,7 @@ Contributions, bug reports, and feature requests are welcome!
 
 - Fork the repo and submit a PR
 - See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
-- Join the discussion in [GitHub Issues](https://github.com/kkalass/rdf_vocabulary_builder/issues)
+- Join the discussion in [GitHub Issues](https://github.com/kkalass/rdf_vocabulary_to_dart/issues)
 
 ## 🔍 Related Projects
 

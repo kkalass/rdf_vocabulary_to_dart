@@ -12,7 +12,7 @@
 ///
 /// Example usage:
 /// ```dart
-/// import 'package:rdf_vocabulary_builder/vocab.dart';
+/// import 'package:rdf_vocabulary_to_dart/vocab.dart';
 /// final property = Rdf.type; // Access property directly from main class
 /// final classIri = RdfProperty.classIri; // Access class IRI
 /// final property = RdfProperty.type; // Access property from class

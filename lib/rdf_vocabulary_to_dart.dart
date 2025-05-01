@@ -4,24 +4,27 @@
 
 /// This library exposes the builder factory for generating RDF vocabulary classes
 /// from a JSON vocabulary manifest.
-library rdf_vocabulary_builder.vocab_builder;
+library rdf_vocabulary_to_dart;
 
 import 'package:build/build.dart';
 export 'src/vocab/builder/vocabulary_source.dart';
 import 'src/vocab/builder/vocabulary_builder.dart';
 
+const fallbackVocabJsonPath = 'lib/src/vocab/vocabulary_sources.vocab.json';
+const fallbackOutputDir = 'lib/src/vocab/generated';
+
 /// Creates a vocabulary builder with the given options.
 ///
 /// Configuration options:
-/// - manifest_asset_path: Path to the JSON manifest file (default: 'lib/src/vocab/manifest.json')
+/// - vocabulary_config_path: Path to the JSON manifest file (default: 'lib/src/vocab/vocabulary_sources.vocab.json')
 /// - output_dir: Output directory for generated files (default: 'lib/src/vocab/generated')
-Builder vocabularyBuilder(BuilderOptions options) {
+Builder rdfVocabularyToDart(BuilderOptions options) {
   // Read configuration from BuilderOptions
   final manifestPath =
-      options.config['manifest_asset_path'] as String? ??
-      'lib/src/vocab/manifest.json';
+      options.config['vocabulary_config_path'] as String? ??
+      fallbackVocabJsonPath;
   final outputDir =
-      options.config['output_dir'] as String? ?? 'lib/src/vocab/generated';
+      options.config['output_dir'] as String? ?? fallbackOutputDir;
 
   return VocabularyBuilder(
     manifestAssetPath: manifestPath,
@@ -33,9 +36,8 @@ Builder vocabularyBuilder(BuilderOptions options) {
 /// This is used for dynamic configuration in the builder's build.yaml.
 Map<String, List<String>> getBuildExtensions(Map<String, dynamic> config) {
   final manifestPath =
-      config['manifest_asset_path'] as String? ?? 'lib/src/vocab/manifest.json';
-  final outputDir =
-      config['output_dir'] as String? ?? 'lib/src/vocab/generated';
+      config['vocabulary_config_path'] as String? ?? fallbackVocabJsonPath;
+  final outputDir = config['output_dir'] as String? ?? fallbackOutputDir;
 
   // Create a temporary builder instance just to get the build extensions
   // This ensures that the build extensions in build.yaml match those in the actual builder
