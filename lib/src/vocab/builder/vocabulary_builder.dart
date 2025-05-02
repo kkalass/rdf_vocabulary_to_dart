@@ -76,7 +76,7 @@ class VocabularyBuilder implements Builder {
 
       log.info('Using derived URL for vocabulary $name: $sourceUrl');
 
-      // Create a source for the vocabulary
+      // Create a source for the vocabulary - ohne spezifische Parsing-Flags für abgeleitete Vokabulare
       final source = UrlVocabularySource(namespace, sourceUrl: sourceUrl);
 
       // Load the vocabulary content
@@ -86,8 +86,19 @@ class VocabularyBuilder implements Builder {
         return null;
       }
 
+      // Für implizierte Vokabulare verwenden wir standardmäßig ein leeres Set von Parsing-Flags
+      final parsingFlags = _convertParsingFlagsToSet(source.parsingFlags);
+
       // Parse the vocabulary
-      final rdfCore = RdfCore.withStandardFormats();
+      final rdfCore = RdfCore.withFormats(
+        formats: [
+          TurtleFormat(parsingFlags: parsingFlags),
+          JsonLdFormat(),
+          //RdfXmlFormat(),
+          //NTriplesFormat(),
+        ],
+      );
+
       RdfGraph? graph;
 
       final formats = [
@@ -102,7 +113,12 @@ class VocabularyBuilder implements Builder {
         try {
           final contentType = _getContentTypeForFormat(format);
           log.info('Trying to parse $name with format $contentType');
-          graph = rdfCore.parse(content, contentType: contentType);
+
+          graph = rdfCore.parse(
+            content,
+            contentType: contentType,
+            documentUrl: source.namespace,
+          );
 
           log.info('Successfully parsed $name with format $contentType');
           break;
@@ -207,6 +223,19 @@ class VocabularyBuilder implements Builder {
       default:
         return 'text/turtle'; // Default to Turtle
     }
+  }
+
+  /// Konvertiert die String-Liste der Parsing-Flags in ein Set von TurtleParsingFlag-Werten
+  static Set<TurtleParsingFlag> _convertParsingFlagsToSet(
+    List<String>? flagsList,
+  ) {
+    final Set<TurtleParsingFlag> flagsSet = {};
+    if (flagsList != null) {
+      for (final flag in flagsList) {
+        flagsSet.add(TurtleParsingFlag.values.byName(flag));
+      }
+    }
+    return flagsSet;
   }
 
   /// Loads vocabulary names from the manifest file.
@@ -369,17 +398,39 @@ class VocabularyBuilder implements Builder {
         final type = vocabConfig['type'] as String;
         final namespace = vocabConfig['namespace'] as String;
 
+        // Extract turtle parsing flags if they exist
+        List<String>? parsingFlags;
+        if (vocabConfig.containsKey('parsingFlags')) {
+          final flagsJson = vocabConfig['parsingFlags'];
+          if (flagsJson is List) {
+            parsingFlags = flagsJson.map((flag) => flag.toString()).toList();
+            log.info('Found parsing flags for $name: $parsingFlags');
+          } else {
+            log.warning(
+              'Invalid parsingFlags format for $name, expected a list',
+            );
+          }
+        }
+
         VocabularySource source;
         try {
           switch (type) {
             case 'url':
               // Use 'source' field if available, otherwise fall back to namespace
               final sourceUrl = vocabConfig['source'] as String? ?? namespace;
-              source = UrlVocabularySource(namespace, sourceUrl: sourceUrl);
+              source = UrlVocabularySource(
+                namespace,
+                sourceUrl: sourceUrl,
+                parsingFlags: parsingFlags,
+              );
               break;
             case 'file':
               final filePath = vocabConfig['filePath'] as String;
-              source = FileVocabularySource(filePath, namespace);
+              source = FileVocabularySource(
+                filePath,
+                namespace,
+                parsingFlags: parsingFlags,
+              );
               break;
             default:
               log.warning('Unknown vocabulary source type: $type for $name');
@@ -429,12 +480,21 @@ class VocabularyBuilder implements Builder {
           continue;
         }
 
-        // Create RDF core instance with standard formats
-        final rdfCore = RdfCore.withStandardFormats();
+        // Konvertiere Parsing-Flags in ein Set
+        final parsingFlags = _convertParsingFlagsToSet(source.parsingFlags);
+
+        // Erstelle RDF-Core-Instanz mit den Formaten und den Parsing-Flags
+        final formats = [
+          TurtleFormat(parsingFlags: parsingFlags),
+          JsonLdFormat(),
+          //RdfXmlFormat(),
+          //NTriplesFormat(),
+        ];
+        final rdfCore = RdfCore.withFormats(formats: formats);
 
         // Try multiple formats if the first one fails
         RdfGraph? graph;
-        final formats = [
+        final formatNames = [
           source.getFormat(), // Try the source's preferred format first
           'turtle',
           'rdf/xml',
@@ -442,11 +502,22 @@ class VocabularyBuilder implements Builder {
           'n-triples',
         ];
 
-        for (final format in formats) {
+        for (final format in formatNames) {
           try {
             final contentType = _getContentTypeForFormat(format);
             log.info('Trying to parse $name with format $contentType');
-            graph = rdfCore.parse(content, contentType: contentType);
+            if (source.parsingFlags != null &&
+                source.parsingFlags!.isNotEmpty) {
+              log.info(
+                'Using parsing flags: ${source.parsingFlags!.join(", ")}',
+              );
+            }
+
+            graph = rdfCore.parse(
+              content,
+              contentType: contentType,
+              documentUrl: source.namespace,
+            );
             log.info('Successfully parsed $name with format $contentType');
             break;
           } catch (e) {

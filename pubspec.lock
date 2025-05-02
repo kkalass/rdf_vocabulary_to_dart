@@ -345,6 +345,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  petitparser:
+    dependency: transitive
+    description:
+      name: petitparser
+      sha256: "07c8f0b1913bcde1ff0d26e57ace2f3012ccbf2b204e070290dad3bb22797646"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.0"
   pool:
     dependency: transitive
     description:
@@ -373,10 +381,10 @@ packages:
     dependency: "direct main"
     description:
       name: rdf_core
-      sha256: cafa5207cd995f973ef001d2caef06ca721ad9cf38df267c76032c3bfd54bd76
+      sha256: "575f95e224034d273d167760df3a6b5111be83d40e6728f55c71323faeed6761"
       url: "https://pub.dev"
     source: hosted
-    version: "0.6.2"
+    version: "0.6.5"
   shelf:
     dependency: transitive
     description:
@@ -569,6 +577,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+  xml:
+    dependency: transitive
+    description:
+      name: xml
+      sha256: b015a8ad1c488f66851d762d3090a21c600e479dc75e68328c52774040cf9226
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.5.0"
   yaml:
     dependency: "direct main"
     description:

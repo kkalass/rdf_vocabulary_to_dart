@@ -17,9 +17,15 @@ final _log = Logger('rdf.vocab.source');
 /// such as URLs or local files.
 abstract class VocabularySource {
   /// The URI namespace of this vocabulary.
-  String get namespace;
+  final String namespace;
 
-  const VocabularySource();
+  /// Optional set of Turtle parsing flags.
+  ///
+  /// These flags are passed to the TurtleFormat when parsing Turtle files.
+  /// They correspond to the TurtleParsingFlag values from rdf_core.
+  final List<String>? parsingFlags;
+
+  const VocabularySource(this.namespace, {this.parsingFlags});
 
   /// Loads the vocabulary content.
   ///
@@ -36,7 +42,9 @@ abstract class VocabularySource {
     // Infer format from namespace or content
     if (namespace.endsWith('.ttl')) {
       return 'turtle';
-    } else if (namespace.endsWith('.rdf') || namespace.endsWith('.xml')) {
+    } else if (namespace.endsWith('.rdf') ||
+        namespace.endsWith('.xml') ||
+        namespace.endsWith('.owl')) {
       return 'rdf/xml';
     } else if (namespace.endsWith('.jsonld') || namespace.endsWith('.json')) {
       return 'json-ld';
@@ -49,9 +57,6 @@ abstract class VocabularySource {
 
 /// Vocabulary source that loads from a URL.
 class UrlVocabularySource extends VocabularySource {
-  @override
-  final String namespace;
-
   /// The actual URL to load the vocabulary content from
   final String sourceUrl;
 
@@ -62,11 +67,12 @@ class UrlVocabularySource extends VocabularySource {
   final int timeoutSeconds;
 
   const UrlVocabularySource(
-    this.namespace, {
-    String? sourceUrl,
+    String namespace, {
+    required this.sourceUrl,
     this.maxRedirects = 5,
     this.timeoutSeconds = 30,
-  }) : sourceUrl = sourceUrl ?? namespace;
+    List<String>? parsingFlags,
+  }) : super(namespace, parsingFlags: parsingFlags);
 
   @override
   Future<String> loadContent() async {
@@ -102,6 +108,7 @@ class UrlVocabularySource extends VocabularySource {
             sourceUrl: redirectUrl,
             maxRedirects: maxRedirects - 1,
             timeoutSeconds: timeoutSeconds,
+            parsingFlags: parsingFlags,
           ).loadContent();
         }
       }
@@ -193,10 +200,11 @@ class UrlVocabularySource extends VocabularySource {
 class FileVocabularySource extends VocabularySource {
   final String filePath;
 
-  @override
-  final String namespace;
-
-  const FileVocabularySource(this.filePath, this.namespace);
+  const FileVocabularySource(
+    this.filePath,
+    String namespace, {
+    List<String>? parsingFlags,
+  }) : super(namespace, parsingFlags: parsingFlags);
 
   @override
   Future<String> loadContent() async {

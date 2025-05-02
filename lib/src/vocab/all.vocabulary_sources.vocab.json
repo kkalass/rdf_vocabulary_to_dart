@@ -2,11 +2,13 @@
   "vocabularies": {
     "rdf": {
       "type": "url",
-      "namespace": "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+      "namespace": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+      "source": "https://www.w3.org/1999/02/22-rdf-syntax-ns.ttl"
     },
     "rdfs": {
       "type": "url",
-      "namespace": "http://www.w3.org/2000/01/rdf-schema#"
+      "namespace": "http://www.w3.org/2000/01/rdf-schema#",
+      "source": "https://www.w3.org/2000/01/rdf-schema.ttl"
     },
     "xsd": {
       "type": "url",
@@ -14,43 +16,60 @@
     },
     "owl": {
       "type": "url",
-      "namespace": "http://www.w3.org/2002/07/owl#"
+      "namespace": "http://www.w3.org/2002/07/owl#",
+      "source": "https://www.w3.org/2002/07/owl.ttl"
     },
     "dc": {
       "type": "url",
-      "namespace": "http://purl.org/dc/elements/1.1/"
+      "namespace": "http://purl.org/dc/elements/1.1/",
+      "source": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_elements.ttl"
     },
     "dcterms": {
       "type": "url",
-      "namespace": "http://purl.org/dc/terms/"
+      "namespace": "http://purl.org/dc/terms/",
+      "source": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.ttl"
     },
     "foaf": {
       "type": "url",
-      "namespace": "http://xmlns.com/foaf/0.1/"
+      "namespace": "http://xmlns.com/foaf/0.1/",
+      "source": "http://xmlns.com/foaf/spec/index.rdf"
     },
     "skos": {
       "type": "url",
-      "namespace": "http://www.w3.org/2004/02/skos/core#"
+      "namespace": "http://www.w3.org/2004/02/skos/core#",
+      "source": "https://www.w3.org/2009/08/skos-reference/skos.rdf"
     },
     "vcard": {
       "type": "url",
-      "namespace": "http://www.w3.org/2006/vcard/ns#"
+      "namespace": "http://www.w3.org/2006/vcard/ns#",
+      "source": "https://www.w3.org/2006/vcard/ns.ttl"
     },
     "acl": {
       "type": "url",
-      "namespace": "http://www.w3.org/ns/auth/acl#"
+      "namespace": "http://www.w3.org/ns/auth/acl#",
+      "source": "https://www.w3.org/ns/auth/acl.ttl"
     },
     "ldp": {
       "type": "url",
-      "namespace": "http://www.w3.org/ns/ldp#"
+      "namespace": "http://www.w3.org/ns/ldp#",
+      "source": "https://www.w3.org/ns/ldp.ttl"
     },
     "schema": {
       "type": "url",
-      "namespace": "https://schema.org/"
+      "namespace": "https://schema.org/",
+      "source": "https://schema.org/version/latest/schemaorg-current-https.ttl",
+      "parsingFlags": [
+        "allowDigitInLocalName"
+      ]
     },
     "solid": {
       "type": "url",
-      "namespace": "http://www.w3.org/ns/solid/terms#"
+      "namespace": "http://www.w3.org/ns/solid/terms#",
+      "source": "https://www.w3.org/ns/solid/terms.ttl",
+      "parsingFlags": [
+        "allowMissingDotAfterPrefix",
+        "allowPrefixWithoutAtSign"
+      ]
     }
   }
 }
