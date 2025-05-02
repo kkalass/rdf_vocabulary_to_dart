@@ -68,11 +68,12 @@ class UrlVocabularySource extends VocabularySource {
 
   const UrlVocabularySource(
     String namespace, {
-    required this.sourceUrl,
+    String? sourceUrl,
     this.maxRedirects = 5,
     this.timeoutSeconds = 30,
     List<String>? parsingFlags,
-  }) : super(namespace, parsingFlags: parsingFlags);
+  }) : sourceUrl = sourceUrl ?? namespace,
+       super(namespace, parsingFlags: parsingFlags);
 
   @override
   Future<String> loadContent() async {
