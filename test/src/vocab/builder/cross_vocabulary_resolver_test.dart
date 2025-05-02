@@ -203,7 +203,7 @@ test:Person a rdfs:Class ;
           VocabularyProperty(
             localName: 'type',
             iri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
-            domains: [],
+            domains: ['http://www.w3.org/2000/01/rdf-schema#Resource'],
           ),
         ],
         datatypes: [],
@@ -221,6 +221,7 @@ test:Person a rdfs:Class ;
           VocabularyClass(
             localName: 'Person',
             iri: 'http://example.org/test#Person',
+            superClasses: ['http://www.w3.org/2000/01/rdf-schema#Resource'],
           ),
         ],
         properties: [],

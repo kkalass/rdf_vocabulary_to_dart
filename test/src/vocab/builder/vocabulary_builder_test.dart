@@ -15,37 +15,6 @@ import 'package:test/test.dart';
 
 import 'vocabulary_builder_test.mocks.dart';
 
-// Sample test data for vocabularies
-const testTurtleVocab = '''
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix test: <http://example.org/test#> .
-
-test:Person a rdfs:Class ;
-  rdfs:label "Person" ;
-  rdfs:comment "A person class" .
-
-test:name a rdf:Property ;
-  rdfs:label "name" ;
-  rdfs:comment "The name of a person" ;
-  rdfs:domain test:Person ;
-  rdfs:range xsd:string .
-''';
-
-// Sample manifest file
-const testManifest = '''
-{
-  "vocabularies": {
-    "test": {
-      "type": "file",
-      "namespace": "http://example.org/test#",
-      "filePath": "test_vocab.ttl"
-    }
-  }
-}
-''';
-
 @GenerateMocks([BuildStep])
 void main() {
   group('VocabularyBuilder Integration Test', () {
@@ -54,9 +23,9 @@ void main() {
 
     // Using test package ID instead of temporary directory to work with AssetId
     const testPackageId = 'test_package';
-    const testManifestPath = 'test/manifest.vocab.json';
-    const testVocabPath = 'test/test_vocab.ttl';
-    const testOutputDir = 'lib/src/vocab/generated';
+    const testManifestPath = 'test/assets/test_manifest.vocab.json';
+    const testVocabPath = 'test/assets/test_vocab.ttl';
+    const testOutputDir = 'test/_generated_by_test_';
 
     setUp(() async {
       // Setup mock BuildStep
@@ -72,11 +41,9 @@ void main() {
       // Mock reading the manifest file
       when(mockBuildStep.readAsString(any)).thenAnswer((invocation) async {
         final assetId = invocation.positionalArguments[0] as AssetId;
-        if (assetId.path == testManifestPath) {
-          return testManifest;
-        }
-        if (assetId.path == testVocabPath) {
-          return testTurtleVocab;
+        if (assetId.path == testManifestPath || assetId.path == testVocabPath) {
+          final file = File(path.join(Directory.current.path, assetId.path));
+          return await file.readAsString();
         }
         throw Exception('Unknown asset: ${assetId.path}');
       });

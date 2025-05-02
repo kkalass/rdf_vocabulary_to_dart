@@ -1,0 +1,9 @@
+{
+  "vocabularies": {
+    "test": {
+      "type": "file",
+      "namespace": "http://example.org/test#",
+      "filePath": "test/assets/test_vocab.ttl"
+    }
+  }
+}
