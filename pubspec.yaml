@@ -30,4 +30,7 @@ dependencies:
   
 dev_dependencies:
   test: ^1.21.0
+  mockito: ^5.4.6
+  build_test: ^2.2.3
+  coverage: ^1.13.1
 
