@@ -3,10 +3,8 @@
 // license that can be found in the LICENSE file.
 
 import 'dart:io';
-import 'dart:convert';
 
 import 'package:build/build.dart';
-import 'package:build_test/build_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:path/path.dart' as path;
