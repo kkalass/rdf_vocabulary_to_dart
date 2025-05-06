@@ -22,6 +22,16 @@ import 'vocabulary_source.dart';
 /// Logger for the vocabulary builder
 final log = Logger('rdf.vocab.builder');
 
+class MutableVocabularyLoader {
+  Future<VocabularyModel?> Function(String namespace, String name)? _loader;
+  Future<VocabularyModel?> load(String namespace, String name) {
+    if (_loader == null) {
+      throw StateError('Vocabulary loader not set');
+    }
+    return _loader!(namespace, name);
+  }
+}
+
 /// A builder that generates Dart classes for RDF vocabularies.
 ///
 /// This builder reads a provided manifest JSON file and generates vocabulary
@@ -40,6 +50,8 @@ class VocabularyBuilder implements Builder {
   /// Map of vocabulary models by name
   final Map<String, VocabularyModel> _vocabularyModels = {};
 
+  final MutableVocabularyLoader mutableVocabularyLoader;
+
   /// Cached vocabulary names from manifest
   List<String>? _cachedVocabularyNames;
 
@@ -53,40 +65,71 @@ class VocabularyBuilder implements Builder {
   /// [manifestAssetPath] specifies the path to the manifest JSON file that defines
   /// the vocabularies to be generated.
   /// [outputDir] specifies where to generate the vocabulary files, relative to lib/.
-  VocabularyBuilder({required this.manifestAssetPath, required this.outputDir})
-    : _resolver = CrossVocabularyResolver(
-        vocabularyLoader: _loadImpliedVocabulary,
-      );
+
+  /// Public constructor that initializes internal dependencies and delegates to the inner constructor
+  factory VocabularyBuilder({
+    required String manifestAssetPath,
+    required String outputDir,
+  }) {
+    // Create a mutable vocabulary loader that will be configured during build
+    final loader = MutableVocabularyLoader();
+
+    return VocabularyBuilder._inner(
+      manifestAssetPath: manifestAssetPath,
+      outputDir: outputDir,
+      mutableVocabularyLoader: loader,
+    );
+  }
+
+  VocabularyBuilder._inner({
+    required this.manifestAssetPath,
+    required this.outputDir,
+    required this.mutableVocabularyLoader,
+  }) : _resolver = CrossVocabularyResolver(
+         vocabularyLoader: mutableVocabularyLoader.load,
+       );
 
   /// Loads an implied vocabulary that was discovered through references
-  static Future<VocabularyModel?> _loadImpliedVocabulary(
-    String namespace,
-    String name,
-  ) async {
-    log.info('Loading implied vocabulary "$name" from namespace $namespace');
+  static Future<VocabularyModel?> Function(String namespace, String name)
+  createVocabularyLoader(Map<String, VocabularySource> vocabularySources) {
+    // Load the manifest file to get the namespace and name
 
-    try {
-      // Try to derive a turtle URL from the namespace
-      final sourceUrl = await _findVocabularyUrl(namespace);
-      if (sourceUrl == null) {
-        log.warning(
-          'Could not derive a valid URL for vocabulary namespace: $namespace',
+    return (String namespace, String name) async {
+      log.info('Loading implied vocabulary "$name" from namespace $namespace');
+
+      try {
+        var source = vocabularySources[name];
+        if (source == null) {
+          log.warning(
+            'No configured source found for vocabulary $name, trying to guess it',
+          );
+          // Try to derive a turtle URL from the namespace
+          final sourceUrl = await _findVocabularyUrl(namespace);
+          if (sourceUrl == null) {
+            log.warning(
+              'Could not derive a valid URL for vocabulary namespace: $namespace',
+            );
+            return null;
+          }
+
+          log.info('Using derived URL for vocabulary $name: $sourceUrl');
+
+          // Create a source for the vocabulary - ohne spezifische Parsing-Flags für abgeleitete Vokabulare
+          source = UrlVocabularySource(namespace, sourceUrl: sourceUrl);
+        } else {
+          log.info(
+            'Using configured source for vocabulary $name: ${source.namespace}',
+          );
+        }
+
+        return _loadVocabulary(name, source);
+      } catch (e, stackTrace) {
+        log.severe(
+          'Error loading implied vocabulary $name from $namespace: $e\n$stackTrace',
         );
         return null;
       }
-
-      log.info('Using derived URL for vocabulary $name: $sourceUrl');
-
-      // Create a source for the vocabulary - ohne spezifische Parsing-Flags für abgeleitete Vokabulare
-      final source = UrlVocabularySource(namespace, sourceUrl: sourceUrl);
-
-      return _loadVocabulary(name, source);
-    } catch (e, stackTrace) {
-      log.severe(
-        'Error loading implied vocabulary $name from $namespace: $e\n$stackTrace',
-      );
-      return null;
-    }
+    };
   }
 
   static Future<VocabularyModel?> _loadVocabulary(
@@ -210,23 +253,6 @@ class VocabularyBuilder implements Builder {
     return null;
   }
 
-  /// Maps format names to content types
-  static String _getContentTypeForFormat(String format) {
-    switch (format.toLowerCase()) {
-      case 'turtle':
-        return 'text/turtle';
-      case 'rdf/xml':
-      case 'xml':
-        return 'application/rdf+xml';
-      case 'json-ld':
-        return 'application/ld+json';
-      case 'n-triples':
-        return 'application/n-triples';
-      default:
-        return 'text/turtle'; // Default to Turtle
-    }
-  }
-
   /// Konvertiert die String-Liste der Parsing-Flags in ein Set von TurtleParsingFlag-Werten
   static Set<TurtleParsingFlag> _convertParsingFlagsToSet(
     List<String>? flagsList,
@@ -338,6 +364,9 @@ class VocabularyBuilder implements Builder {
       return;
     }
 
+    // Important: make sure that the resolver uses the vocabulary config.
+    mutableVocabularyLoader._loader = createVocabularyLoader(vocabularySources);
+
     // Process all vocabularies in the manifest in two phases:
     // 1. Parse all vocabulary sources and register them with the resolver
     // 2. Generate code for all vocabularies using the resolver
@@ -414,6 +443,9 @@ class VocabularyBuilder implements Builder {
           }
         }
 
+        // Check if the vocabulary is enabled, default to true if not specified
+        final bool enabled = vocabConfig['enabled'] as bool? ?? true;
+
         VocabularySource source;
         try {
           switch (type) {
@@ -424,6 +456,7 @@ class VocabularyBuilder implements Builder {
                 namespace,
                 sourceUrl: sourceUrl,
                 parsingFlags: parsingFlags,
+                enabled: enabled,
               );
               break;
             case 'file':
@@ -432,6 +465,7 @@ class VocabularyBuilder implements Builder {
                 filePath,
                 namespace,
                 parsingFlags: parsingFlags,
+                enabled: enabled,
               );
               break;
             default:
@@ -466,6 +500,13 @@ class VocabularyBuilder implements Builder {
       final source = entry.value;
 
       try {
+        if (!source.enabled) {
+          log.info('Skipping disabled vocabulary: $name');
+          continue;
+        }
+        print(
+          "!!! Processing vocabulary: $name from ${source.namespace}: ${source} !!!",
+        );
         log.info('Processing vocabulary: $name from ${source.namespace}');
         final model = await _loadVocabulary(name, source);
 

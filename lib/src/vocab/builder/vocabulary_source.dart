@@ -25,7 +25,17 @@ abstract class VocabularySource {
   /// They correspond to the TurtleParsingFlag values from rdf_core.
   final List<String>? parsingFlags;
 
-  const VocabularySource(this.namespace, {this.parsingFlags});
+  /// Flag indicating if this vocabulary should be processed during generation.
+  ///
+  /// If set to false, this vocabulary will be skipped during the generation process.
+  /// Defaults to true if not specified.
+  final bool enabled;
+
+  const VocabularySource(
+    this.namespace, {
+    this.parsingFlags,
+    this.enabled = true,
+  });
 
   /// Loads the vocabulary content.
   ///
@@ -72,8 +82,9 @@ class UrlVocabularySource extends VocabularySource {
     this.maxRedirects = 5,
     this.timeoutSeconds = 30,
     List<String>? parsingFlags,
+    bool enabled = true,
   }) : sourceUrl = sourceUrl ?? namespace,
-       super(namespace, parsingFlags: parsingFlags);
+       super(namespace, parsingFlags: parsingFlags, enabled: enabled);
 
   @override
   Future<String> loadContent() async {
@@ -205,7 +216,8 @@ class FileVocabularySource extends VocabularySource {
     this.filePath,
     String namespace, {
     List<String>? parsingFlags,
-  }) : super(namespace, parsingFlags: parsingFlags);
+    bool enabled = true,
+  }) : super(namespace, parsingFlags: parsingFlags, enabled: enabled);
 
   @override
   Future<String> loadContent() async {

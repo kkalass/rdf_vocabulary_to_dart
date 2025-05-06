@@ -3,56 +3,67 @@
     "rdf": {
       "type": "url",
       "namespace": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-      "source": "https://www.w3.org/1999/02/22-rdf-syntax-ns.ttl"
+      "source": "https://www.w3.org/1999/02/22-rdf-syntax-ns.ttl",
+      "enabled": true
     },
     "rdfs": {
       "type": "url",
       "namespace": "http://www.w3.org/2000/01/rdf-schema#",
-      "source": "https://www.w3.org/2000/01/rdf-schema.ttl"
+      "source": "https://www.w3.org/2000/01/rdf-schema.ttl",
+      "enabled": true
     },
     "xsd": {
       "type": "url",
-      "namespace": "http://www.w3.org/2001/XMLSchema#"
+      "namespace": "http://www.w3.org/2001/XMLSchema#",
+      "enabled": false
     },
     "owl": {
       "type": "url",
       "namespace": "http://www.w3.org/2002/07/owl#",
-      "source": "https://www.w3.org/2002/07/owl.ttl"
+      "source": "https://www.w3.org/2002/07/owl.ttl",
+      "enabled": true
     },
     "dc": {
       "type": "url",
       "namespace": "http://purl.org/dc/elements/1.1/",
-      "source": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_elements.ttl"
+      "source": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_elements.ttl",
+      "enabled": true
     },
     "dcterms": {
       "type": "url",
       "namespace": "http://purl.org/dc/terms/",
-      "source": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.ttl"
+      "source": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.ttl",
+      "enabled": true
     },
     "foaf": {
       "type": "url",
       "namespace": "http://xmlns.com/foaf/0.1/",
-      "source": "http://xmlns.com/foaf/spec/index.rdf"
+      "source": "http://xmlns.com/foaf/spec/index.rdf",
+      "enabled": true
     },
     "skos": {
       "type": "url",
       "namespace": "http://www.w3.org/2004/02/skos/core#",
-      "source": "https://www.w3.org/2009/08/skos-reference/skos.rdf"
+      "source": "https://www.w3.org/2009/08/skos-reference/skos.rdf",
+      "enabled": true
     },
     "vcard": {
       "type": "url",
       "namespace": "http://www.w3.org/2006/vcard/ns#",
-      "source": "https://www.w3.org/2006/vcard/ns.ttl"
+      "source": "https://www.w3.org/2006/vcard/ns.ttl",
+      "enabled": true
     },
     "acl": {
       "type": "url",
       "namespace": "http://www.w3.org/ns/auth/acl#",
-      "source": "https://www.w3.org/ns/auth/acl.ttl"
+      "source": "https://www.w3.org/ns/auth/acl.ttl",
+      "enabled": true
     },
     "ldp": {
       "type": "url",
       "namespace": "http://www.w3.org/ns/ldp#",
-      "source": "https://www.w3.org/ns/ldp.ttl"
+      "source": "https://www.w3.org/ns/ldp.ttl",
+      "enabled": true
     },
     "schema": {
       "type": "url",
@@ -60,7 +71,8 @@
       "source": "https://schema.org/version/latest/schemaorg-current-https.ttl",
       "parsingFlags": [
         "allowDigitInLocalName"
-      ]
+      ],
+      "enabled": true
     },
     "solid": {
       "type": "url",
@@ -69,7 +81,8 @@
       "parsingFlags": [
         "allowMissingDotAfterPrefix",
         "allowPrefixWithoutAtSign"
-      ]
+      ],
+      "enabled": true
     }
   }
 }
