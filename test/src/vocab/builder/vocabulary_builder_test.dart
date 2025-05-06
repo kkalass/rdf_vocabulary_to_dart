@@ -11,9 +11,9 @@ import 'package:path/path.dart' as path;
 import 'package:rdf_vocabulary_to_dart/src/vocab/builder/vocabulary_builder.dart';
 import 'package:test/test.dart';
 
+@GenerateMocks([BuildStep])
 import 'vocabulary_builder_test.mocks.dart';
 
-@GenerateMocks([BuildStep])
 void main() {
   group('VocabularyBuilder Integration Test', () {
     late MockBuildStep mockBuildStep;
