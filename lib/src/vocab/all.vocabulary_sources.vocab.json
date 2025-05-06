@@ -4,13 +4,13 @@
       "type": "url",
       "namespace": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
       "source": "https://www.w3.org/1999/02/22-rdf-syntax-ns.ttl",
-      "enabled": true
+      "enabled": false
     },
     "rdfs": {
       "type": "url",
       "namespace": "http://www.w3.org/2000/01/rdf-schema#",
       "source": "https://www.w3.org/2000/01/rdf-schema.ttl",
-      "enabled": true
+      "enabled": false
     },
     "xsd": {
       "type": "url",
@@ -21,49 +21,49 @@
       "type": "url",
       "namespace": "http://www.w3.org/2002/07/owl#",
       "source": "https://www.w3.org/2002/07/owl.ttl",
-      "enabled": true
+      "enabled": false
     },
     "dc": {
       "type": "url",
       "namespace": "http://purl.org/dc/elements/1.1/",
       "source": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_elements.ttl",
-      "enabled": true
+      "enabled": false
     },
     "dcterms": {
       "type": "url",
       "namespace": "http://purl.org/dc/terms/",
       "source": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dublin_core_terms.ttl",
-      "enabled": true
+      "enabled": false
     },
     "foaf": {
       "type": "url",
       "namespace": "http://xmlns.com/foaf/0.1/",
       "source": "http://xmlns.com/foaf/spec/index.rdf",
-      "enabled": true
+      "enabled": false
     },
     "skos": {
       "type": "url",
       "namespace": "http://www.w3.org/2004/02/skos/core#",
       "source": "https://www.w3.org/2009/08/skos-reference/skos.rdf",
-      "enabled": true
+      "enabled": false
     },
     "vcard": {
       "type": "url",
       "namespace": "http://www.w3.org/2006/vcard/ns#",
       "source": "https://www.w3.org/2006/vcard/ns.ttl",
-      "enabled": true
+      "enabled": false
     },
     "acl": {
       "type": "url",
       "namespace": "http://www.w3.org/ns/auth/acl#",
       "source": "https://www.w3.org/ns/auth/acl.ttl",
-      "enabled": true
+      "enabled": false
     },
     "ldp": {
       "type": "url",
       "namespace": "http://www.w3.org/ns/ldp#",
       "source": "https://www.w3.org/ns/ldp.ttl",
-      "enabled": true
+      "enabled": false
     },
     "schema": {
       "type": "url",
@@ -72,7 +72,7 @@
       "parsingFlags": [
         "allowDigitInLocalName"
       ],
-      "enabled": true
+      "enabled": false
     },
     "solid": {
       "type": "url",
@@ -82,7 +82,7 @@
         "allowMissingDotAfterPrefix",
         "allowPrefixWithoutAtSign"
       ],
-      "enabled": true
+      "enabled": false
     }
   }
 }
