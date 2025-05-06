@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
 import 'package:pub_semver/pub_semver.dart';
 import 'package:rdf_core/rdf_core.dart';
+import 'package:rdf_xml/rdf_xml.dart';
 
 import 'class_generator.dart';
 import 'cross_vocabulary_resolver.dart';
@@ -79,6 +80,22 @@ class VocabularyBuilder implements Builder {
       // Create a source for the vocabulary - ohne spezifische Parsing-Flags für abgeleitete Vokabulare
       final source = UrlVocabularySource(namespace, sourceUrl: sourceUrl);
 
+      return _loadVocabulary(name, source);
+    } catch (e, stackTrace) {
+      log.severe(
+        'Error loading implied vocabulary $name from $namespace: $e\n$stackTrace',
+      );
+      return null;
+    }
+  }
+
+  static Future<VocabularyModel?> _loadVocabulary(
+    String name,
+    VocabularySource source,
+  ) async {
+    final namespace = source.namespace;
+
+    try {
       // Load the vocabulary content
       final content = await source.loadContent();
       if (content.isEmpty) {
@@ -86,7 +103,7 @@ class VocabularyBuilder implements Builder {
         return null;
       }
 
-      // Für implizierte Vokabulare verwenden wir standardmäßig ein leeres Set von Parsing-Flags
+      // Convert parsing flags to a set of TurtleParsingFlag values
       final parsingFlags = _convertParsingFlagsToSet(source.parsingFlags);
 
       // Parse the vocabulary
@@ -94,41 +111,26 @@ class VocabularyBuilder implements Builder {
         formats: [
           TurtleFormat(parsingFlags: parsingFlags),
           JsonLdFormat(),
-          //RdfXmlFormat(),
-          //NTriplesFormat(),
+          RdfXmlFormat(),
+          NTriplesFormat(),
         ],
       );
 
       RdfGraph? graph;
 
-      final formats = [
-        source.getFormat(),
-        'turtle',
-        'rdf/xml',
-        'json-ld',
-        'n-triples',
-      ];
-
-      for (final format in formats) {
-        try {
-          final contentType = _getContentTypeForFormat(format);
-          log.info('Trying to parse $name with format $contentType');
-
-          graph = rdfCore.parse(
-            content,
-            contentType: contentType,
-            documentUrl: source.namespace,
-          );
-
-          log.info('Successfully parsed $name with format $contentType');
-          break;
-        } catch (e) {
-          log.warning('Failed to parse $name with format $format: $e');
+      try {
+        log.info('Trying to parse $name ');
+        if (source.parsingFlags != null && source.parsingFlags!.isNotEmpty) {
+          log.info('Using parsing flags: ${source.parsingFlags!.join(", ")}');
         }
-      }
 
-      if (graph == null) {
-        log.severe('Failed to parse implied vocabulary $name with any format');
+        graph = rdfCore.parse(content, documentUrl: source.namespace);
+
+        log.info('Successfully parsed $name');
+      } catch (e) {
+        log.severe(
+          'Failed to parse implied vocabulary $name from $namespace: $e',
+        );
         return null;
       }
 
@@ -143,7 +145,7 @@ class VocabularyBuilder implements Builder {
       return model;
     } catch (e, stackTrace) {
       log.severe(
-        'Error loading implied vocabulary $name from $namespace: $e\n$stackTrace',
+        'Error loading vocabulary $name from $namespace: $e\n$stackTrace',
       );
       return null;
     }
@@ -465,78 +467,12 @@ class VocabularyBuilder implements Builder {
 
       try {
         log.info('Processing vocabulary: $name from ${source.namespace}');
+        final model = await _loadVocabulary(name, source);
 
-        // Load vocabulary content
-        String? content;
-        try {
-          content = await source.loadContent();
-        } catch (e) {
-          log.severe('Error loading vocabulary from ${source.namespace}: $e');
-          continue;
-        }
-
-        if (content.isEmpty) {
-          log.warning('Empty content for vocabulary $name');
-          continue;
-        }
-
-        // Konvertiere Parsing-Flags in ein Set
-        final parsingFlags = _convertParsingFlagsToSet(source.parsingFlags);
-
-        // Erstelle RDF-Core-Instanz mit den Formaten und den Parsing-Flags
-        final formats = [
-          TurtleFormat(parsingFlags: parsingFlags),
-          JsonLdFormat(),
-          //RdfXmlFormat(),
-          //NTriplesFormat(),
-        ];
-        final rdfCore = RdfCore.withFormats(formats: formats);
-
-        // Try multiple formats if the first one fails
-        RdfGraph? graph;
-        final formatNames = [
-          source.getFormat(), // Try the source's preferred format first
-          'turtle',
-          'rdf/xml',
-          'json-ld',
-          'n-triples',
-        ];
-
-        for (final format in formatNames) {
-          try {
-            final contentType = _getContentTypeForFormat(format);
-            log.info('Trying to parse $name with format $contentType');
-            if (source.parsingFlags != null &&
-                source.parsingFlags!.isNotEmpty) {
-              log.info(
-                'Using parsing flags: ${source.parsingFlags!.join(", ")}',
-              );
-            }
-
-            graph = rdfCore.parse(
-              content,
-              contentType: contentType,
-              documentUrl: source.namespace,
-            );
-            log.info('Successfully parsed $name with format $contentType');
-            break;
-          } catch (e) {
-            log.warning('Failed to parse $name with format $format: $e');
-            // Continue to the next format
-          }
-        }
-
-        if (graph == null) {
+        if (model == null) {
           log.severe('Failed to parse vocabulary $name with any format');
           continue;
         }
-
-        // Extract vocabulary model from parsed graph
-        final model = VocabularyModelExtractor.extractFrom(
-          graph,
-          source.namespace,
-          name,
-        );
 
         // Store the model for later use
         _vocabularyModels[name] = model;

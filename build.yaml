@@ -11,7 +11,7 @@ targets:
         options:
           # Path to the JSON file containing the vocabulary IRIs to be processed
           # This file should contain a list of IRIs pointing to RDF vocabularies
-          vocabulary_config_path: "lib/src/vocab/vocabulary_sources.vocab.json"
+          vocabulary_config_path: "lib/src/vocab/all.vocabulary_sources.vocab.json"
           # Directory where generated Dart files will be output
           output_dir: "lib/src/vocab/generated"
 
