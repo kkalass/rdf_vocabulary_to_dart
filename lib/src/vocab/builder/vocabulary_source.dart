@@ -44,24 +44,19 @@ abstract class VocabularySource {
   /// like Turtle, RDF/XML, etc.
   Future<String> loadContent();
 
-  /// Returns the format of the vocabulary content.
-  ///
-  /// This is used to select the appropriate parser for the content.
-  /// Default implementation tries to infer format from namespace.
-  String getFormat() {
-    // Infer format from namespace or content
-    if (namespace.endsWith('.ttl')) {
-      return 'turtle';
-    } else if (namespace.endsWith('.rdf') ||
-        namespace.endsWith('.xml') ||
-        namespace.endsWith('.owl')) {
-      return 'rdf/xml';
-    } else if (namespace.endsWith('.jsonld') || namespace.endsWith('.json')) {
-      return 'json-ld';
-    } else {
-      // Default to Turtle for most vocabularies
-      return 'turtle';
-    }
+  String get extension;
+
+  String? get contentType {
+    return switch (extension) {
+      '.ttl' => 'text/turtle',
+      '.rdf' => 'application/rdf+xml',
+      '.xml' => 'application/rdf+xml',
+      '.jsonld' => 'application/ld+json',
+      '.json' => 'application/json',
+      '.nt' => 'application/n-triples',
+      '.n3' => 'text/n3',
+      _ => null,
+    };
   }
 }
 
@@ -92,8 +87,11 @@ class UrlVocabularySource extends VocabularySource {
     try {
       // Add content negotiation headers for RDF
       final headers = {
-        'Accept':
-            'text/turtle, application/rdf+xml;q=0.9, application/ld+json;q=0.8, text/html;q=0.7',
+        if (contentType == null)
+          'Accept':
+              'text/turtle, application/rdf+xml;q=0.9, application/ld+json;q=0.8, text/html;q=0.7'
+        else
+          'Accept': contentType!,
         'User-Agent': 'RDF Vocabulary Builder (Dart/HTTP Client)',
       };
 
@@ -178,33 +176,11 @@ class UrlVocabularySource extends VocabularySource {
   }
 
   @override
-  String getFormat() {
-    // Try to detect format from URL path or extension first
-    final uri = Uri.tryParse(sourceUrl);
-    if (uri != null && uri.path.isNotEmpty) {
-      final extension = path.extension(uri.path).toLowerCase();
+  String get extension => path.extension(sourceUrl).toLowerCase();
 
-      switch (extension) {
-        case '.ttl':
-          return 'turtle';
-        case '.rdf':
-        case '.xml':
-        case '.owl':
-          return 'rdf/xml';
-        case '.jsonld':
-        case '.json':
-          return 'json-ld';
-        case '.nt':
-          return 'n-triples';
-      }
-    }
-
-    // For schema.org and similar endpoints, prefer JSON-LD
-    if (sourceUrl.contains('schema.org')) {
-      return 'json-ld';
-    }
-
-    return super.getFormat();
+  @override
+  String toString() {
+    return "UrlVocabularySource{sourceUrl: $sourceUrl, namespace: $namespace}";
   }
 }
 
@@ -234,24 +210,10 @@ class FileVocabularySource extends VocabularySource {
   }
 
   @override
-  String getFormat() {
-    // Detect format from file extension
-    final extension = path.extension(filePath).toLowerCase();
+  String get extension => path.extension(filePath).toLowerCase();
 
-    switch (extension) {
-      case '.ttl':
-        return 'turtle';
-      case '.rdf':
-      case '.xml':
-      case '.owl':
-        return 'rdf/xml';
-      case '.jsonld':
-      case '.json':
-        return 'json-ld';
-      case '.nt':
-        return 'n-triples';
-      default:
-        return super.getFormat();
-    }
+  @override
+  String toString() {
+    return "FileVocabularySource{filePath: $filePath, namespace: $namespace}";
   }
 }

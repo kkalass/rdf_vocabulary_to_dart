@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:build/build.dart';
 import 'package:dart_style/dart_style.dart';
@@ -98,7 +99,11 @@ class VocabularyBuilder implements Builder {
       log.info('Loading implied vocabulary "$name" from namespace $namespace');
 
       try {
-        var source = vocabularySources[name];
+        var source =
+            vocabularySources.values
+                .where((source) => source.namespace == namespace)
+                .firstOrNull;
+
         if (source == null) {
           log.warning(
             'No configured source found for vocabulary $name, trying to guess it',
@@ -146,6 +151,9 @@ class VocabularyBuilder implements Builder {
         return null;
       }
 
+      log.info(
+        'Loaded content for vocabulary $name: ${content.substring(0, min(content.length, 500))}',
+      );
       // Convert parsing flags to a set of TurtleParsingFlag values
       final parsingFlags = _convertParsingFlagsToSet(source.parsingFlags);
 
@@ -167,7 +175,11 @@ class VocabularyBuilder implements Builder {
           log.info('Using parsing flags: ${source.parsingFlags!.join(", ")}');
         }
 
-        graph = rdfCore.parse(content, documentUrl: source.namespace);
+        graph = rdfCore.parse(
+          content,
+          documentUrl: source.namespace,
+          contentType: source.contentType,
+        );
 
         log.info('Successfully parsed $name');
       } catch (e) {
@@ -504,9 +516,7 @@ class VocabularyBuilder implements Builder {
           log.info('Skipping disabled vocabulary: $name');
           continue;
         }
-        print(
-          "!!! Processing vocabulary: $name from ${source.namespace}: ${source} !!!",
-        );
+
         log.info('Processing vocabulary: $name from ${source.namespace}');
         final model = await _loadVocabulary(name, source);
 
