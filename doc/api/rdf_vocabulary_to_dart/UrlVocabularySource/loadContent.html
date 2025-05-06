@@ -86,8 +86,11 @@ Future&lt;String&gt; loadContent() async {
   try {
     &#47;&#47; Add content negotiation headers for RDF
     final headers = {
-      &#39;Accept&#39;:
-          &#39;text&#47;turtle, application&#47;rdf+xml;q=0.9, application&#47;ld+json;q=0.8, text&#47;html;q=0.7&#39;,
+      if (contentType == null)
+        &#39;Accept&#39;:
+            &#39;text&#47;turtle, application&#47;rdf+xml;q=0.9, application&#47;ld+json;q=0.8, text&#47;html;q=0.7&#39;
+      else
+        &#39;Accept&#39;: contentType!,
       &#39;User-Agent&#39;: &#39;RDF Vocabulary Builder (Dart&#47;HTTP Client)&#39;,
     };
 
@@ -114,6 +117,7 @@ Future&lt;String&gt; loadContent() async {
           sourceUrl: redirectUrl,
           maxRedirects: maxRedirects - 1,
           timeoutSeconds: timeoutSeconds,
+          parsingFlags: parsingFlags,
         ).loadContent();
       }
     }
@@ -196,7 +200,7 @@ Future&lt;String&gt; loadContent() async {
 <footer>
   <span class="no-break">
     rdf_vocabulary_to_dart
-      0.1.0-dev
+      0.7.0
   </span>
   
 </footer>

@@ -57,7 +57,10 @@
 
     <section class="multi-line-signature">
       const
-      <span class="name ">VocabularySource</span>(<wbr>)
+      <span class="name ">VocabularySource</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="-param-namespace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">namespace</span>, {</span></li>
+<li><span class="parameter" id="-param-parsingFlags"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span> <span class="parameter-name">parsingFlags</span>, </span></li>
+<li><span class="parameter" id="-param-enabled"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">enabled</span> = <span class="default-value">true</span>, </span></li>
+</ol>})
     </section>
     
 
@@ -65,7 +68,11 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">const VocabularySource();</code></pre>
+  <pre class="language-dart"><code class="language-dart">const VocabularySource(
+  this.namespace, {
+  this.parsingFlags,
+  this.enabled = true,
+});</code></pre>
 </section>
 
 
@@ -93,7 +100,7 @@
 <footer>
   <span class="no-break">
     rdf_vocabulary_to_dart
-      0.1.0-dev
+      0.7.0
   </span>
   
 </footer>

@@ -61,6 +61,8 @@
 <li><span class="parameter" id="-param-sourceUrl"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">sourceUrl</span>, </span></li>
 <li><span class="parameter" id="-param-maxRedirects"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">maxRedirects</span> = <span class="default-value">5</span>, </span></li>
 <li><span class="parameter" id="-param-timeoutSeconds"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/int-class.html">int</a></span> <span class="parameter-name">timeoutSeconds</span> = <span class="default-value">30</span>, </span></li>
+<li><span class="parameter" id="-param-parsingFlags"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span> <span class="parameter-name">parsingFlags</span>, </span></li>
+<li><span class="parameter" id="-param-enabled"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">enabled</span> = <span class="default-value">true</span>, </span></li>
 </ol>})
     </section>
     
@@ -70,11 +72,14 @@
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
   <pre class="language-dart"><code class="language-dart">const UrlVocabularySource(
-  this.namespace, {
+  String namespace, {
   String? sourceUrl,
   this.maxRedirects = 5,
   this.timeoutSeconds = 30,
-}) : sourceUrl = sourceUrl ?? namespace;</code></pre>
+  List&lt;String&gt;? parsingFlags,
+  bool enabled = true,
+}) : sourceUrl = sourceUrl ?? namespace,
+     super(namespace, parsingFlags: parsingFlags, enabled: enabled);</code></pre>
 </section>
 
 
@@ -102,7 +107,7 @@
 <footer>
   <span class="no-break">
     rdf_vocabulary_to_dart
-      0.1.0-dev
+      0.7.0
   </span>
   
 </footer>
