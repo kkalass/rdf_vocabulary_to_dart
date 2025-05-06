@@ -40,32 +40,32 @@ void main() {
         UrlVocabularySource(
           'http://example.org/',
           sourceUrl: 'http://example.org/vocab.ttl',
-        ).getFormat(),
-        equals('turtle'),
+        ).contentType,
+        equals('text/turtle'),
       );
 
       expect(
         UrlVocabularySource(
           'http://example.org/',
           sourceUrl: 'http://example.org/vocab.rdf',
-        ).getFormat(),
-        equals('rdf/xml'),
+        ).contentType,
+        equals('application/rdf+xml'),
       );
 
       expect(
         UrlVocabularySource(
           'http://example.org/',
           sourceUrl: 'http://example.org/vocab.jsonld',
-        ).getFormat(),
-        equals('json-ld'),
+        ).contentType,
+        equals('application/ld+json'),
       );
 
       expect(
         UrlVocabularySource(
           'http://example.org/',
           sourceUrl: 'http://example.org/vocab.nt',
-        ).getFormat(),
-        equals('n-triples'),
+        ).contentType,
+        equals('application/n-triples'),
       );
 
       // Special case for schema.org
@@ -73,8 +73,8 @@ void main() {
         UrlVocabularySource(
           'http://schema.org/',
           sourceUrl: 'http://schema.org/',
-        ).getFormat(),
-        equals('json-ld'),
+        ).contentType,
+        isNull,
       );
     });
 
@@ -141,44 +141,44 @@ void main() {
 
     test('detects format correctly from file extension', () {
       expect(
-        FileVocabularySource('vocab.ttl', 'http://example.org/').getFormat(),
-        equals('turtle'),
+        FileVocabularySource('vocab.ttl', 'http://example.org/').contentType,
+        equals('text/turtle'),
       );
 
       expect(
-        FileVocabularySource('vocab.rdf', 'http://example.org/').getFormat(),
-        equals('rdf/xml'),
+        FileVocabularySource('vocab.rdf', 'http://example.org/').contentType,
+        equals('application/rdf+xml'),
       );
 
       expect(
-        FileVocabularySource('vocab.xml', 'http://example.org/').getFormat(),
-        equals('rdf/xml'),
+        FileVocabularySource('vocab.xml', 'http://example.org/').contentType,
+        equals('application/rdf+xml'),
       );
 
       expect(
-        FileVocabularySource('vocab.owl', 'http://example.org/').getFormat(),
-        equals('rdf/xml'),
+        FileVocabularySource('vocab.owl', 'http://example.org/').contentType,
+        isNull,
       );
 
       expect(
-        FileVocabularySource('vocab.jsonld', 'http://example.org/').getFormat(),
-        equals('json-ld'),
+        FileVocabularySource('vocab.jsonld', 'http://example.org/').contentType,
+        equals('application/ld+json'),
       );
 
       expect(
-        FileVocabularySource('vocab.json', 'http://example.org/').getFormat(),
-        equals('json-ld'),
+        FileVocabularySource('vocab.json', 'http://example.org/').contentType,
+        isNull,
       );
 
       expect(
-        FileVocabularySource('vocab.nt', 'http://example.org/').getFormat(),
-        equals('n-triples'),
+        FileVocabularySource('vocab.nt', 'http://example.org/').contentType,
+        equals('application/n-triples'),
       );
 
       // Fallback to default for unknown extensions
       expect(
-        FileVocabularySource('vocab.xyz', 'http://example.org/').getFormat(),
-        equals('turtle'), // Default format
+        FileVocabularySource('vocab.xyz', 'http://example.org/').contentType,
+        isNull, // Default format
       );
     });
   });

@@ -52,9 +52,7 @@ abstract class VocabularySource {
       '.rdf' => 'application/rdf+xml',
       '.xml' => 'application/rdf+xml',
       '.jsonld' => 'application/ld+json',
-      '.json' => 'application/json',
       '.nt' => 'application/n-triples',
-      '.n3' => 'text/n3',
       _ => null,
     };
   }
