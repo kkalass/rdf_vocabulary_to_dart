@@ -381,14 +381,6 @@ class VocabularyBuilder implements Builder {
     return {manifestAssetPath: outputs};
   }
 
-  /// Converts a relative file path to the full output path.
-  /// This ensures consistency between buildExtensions and actual file output.
-  String _getFullOutputPath(String relativePath) {
-    final baseOutputDir =
-        outputDir.startsWith('lib/') ? outputDir : 'lib/$outputDir';
-    return '$baseOutputDir/$relativePath';
-  }
-
   /// Formats a Dart source code string according to Dart style guidelines
   ///
   /// Returns the formatted code string, or the original string if formatting fails
@@ -766,11 +758,17 @@ class VocabularyBuilder implements Builder {
     log.info('Generated vocabulary index file');
   }
 
+  /// Converts a relative file path to the full output path.
+  /// This ensures consistency between buildExtensions and actual file output.
+  String _getFullOutputPath(String relativePath) {
+    final baseOutputDir = outputDir;
+    //outputDir.startsWith('lib/') ? outputDir : 'lib/$outputDir';
+    return '$baseOutputDir/$relativePath';
+  }
+
   /// Gets the path to a vocabulary directory
   String _getVocabularyDirPath(String vocabName) {
-    final baseOutputDir =
-        outputDir.startsWith('lib/') ? outputDir : 'lib/$outputDir';
-    return '$baseOutputDir/$vocabName';
+    return _getFullOutputPath(vocabName);
   }
 
   /// Gets the path to a vocabulary's classes directory

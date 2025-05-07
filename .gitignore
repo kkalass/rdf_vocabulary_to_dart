@@ -3,6 +3,7 @@
 .packages
 .pub/
 build/
+test/_generated_by_test_/
 
 # IDEs and editors
 .idea/
