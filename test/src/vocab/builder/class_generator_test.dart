@@ -86,6 +86,12 @@ void main() {
       ).thenReturn([
         testModel.properties[0], // name property
       ]);
+      when(
+        mockResolver.getAllClassTypes('http://example.org/test#Person'),
+      ).thenReturn({
+        testModel.classes[0].iri,
+        ...testModel.classes[0].superClasses,
+      });
     });
 
     test('generates primary vocabulary class correctly', () {
@@ -220,9 +226,7 @@ void main() {
       // Check for range information
       expect(
         code,
-        contains(
-          'Expects values of type: http://www.w3.org/2001/XMLSchema#string',
-        ),
+        contains('Expects: http://www.w3.org/2001/XMLSchema#string'),
       );
     });
   });
