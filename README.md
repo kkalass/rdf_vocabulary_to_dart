@@ -263,8 +263,7 @@ for (final person in people) {
 
 - Create extra package for common, well-known vocabularies so you do not have to convert them yourself
 - Further improve generated documentation
-- Ensure compatibility with all well known RDF vocabularies
-- Implement unit tests, aim for a proper test coverage!
+- Support owl:equivalentClass, schema:domainIncludes, schema:rangeIncludes
 
 ## 🤝 Contributing
 

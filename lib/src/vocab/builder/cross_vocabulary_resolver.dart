@@ -19,6 +19,9 @@ class CrossVocabularyResolver {
   /// Map of class IRIs to their direct superclass IRIs
   final Map<String, Set<String>> _directSuperClasses = {};
 
+  /// Map of class IRIs to their direct equivalent class IRIs
+  final Map<String, Set<String>> _directEquivalentClasses = {};
+
   /// Map of class IRIs to their full set of superclass IRIs (transitive closure)
   final Map<String, Set<String>> _allSuperClasses = {};
 
@@ -151,7 +154,7 @@ class CrossVocabularyResolver {
     _vocabularyModels[model.name] = model;
     _registeredNamespaces.add(model.namespace);
 
-    // Register classes and their superclasses
+    // Register classes, their superclasses and equivalent classes
     for (final rdfClass in model.classes) {
       final classIri = rdfClass.iri;
 
@@ -176,6 +179,26 @@ class CrossVocabularyResolver {
         // assume it's a direct subclass of the global resource types
         if (!_globalResourceTypes.contains(classIri)) {
           _directSuperClasses[classIri] = Set.from(_globalResourceTypes);
+        }
+      }
+
+      // Register equivalent classes
+      if (rdfClass.equivalentClasses.isNotEmpty) {
+        _directEquivalentClasses[classIri] = Set.from(
+          rdfClass.equivalentClasses,
+        );
+
+        // Check for equivalent classes from other vocabularies
+        for (final equivClass in rdfClass.equivalentClasses) {
+          final equivNamespace = _extractNamespace(equivClass);
+          if (equivNamespace != null &&
+              equivNamespace != model.namespace &&
+              !_registeredNamespaces.contains(equivNamespace)) {
+            _pendingNamespaces.add(equivNamespace);
+            _log.info(
+              'Found reference to external vocabulary through equivalentClass: $equivNamespace',
+            );
+          }
         }
       }
     }
@@ -287,6 +310,36 @@ class CrossVocabularyResolver {
     _log.fine('Rebuilding class hierarchy');
     _allSuperClasses.clear();
 
+    // First, handle equivalentClass relationships - add them as reciprocal superclasses
+    // since owl:equivalentClass means two classes share exactly the same instances
+    for (final entry in _directEquivalentClasses.entries) {
+      final classIri = entry.key;
+      final equivalentClasses = entry.value;
+
+      // Make sure the class has an entry in _directSuperClasses
+      if (!_directSuperClasses.containsKey(classIri)) {
+        _directSuperClasses[classIri] = <String>{};
+      }
+
+      // Add all equivalent classes as direct superclasses in both directions
+      // This effectively treats equivalentClass as a subClassOf in both directions
+      for (final equivClass in equivalentClasses) {
+        if (!_directSuperClasses.containsKey(equivClass)) {
+          _directSuperClasses[equivClass] = <String>{};
+        }
+
+        // Add equivalent class as a superclass of this class
+        _directSuperClasses[classIri]!.add(equivClass);
+
+        // Add this class as a superclass of the equivalent class (symmetric relationship)
+        _directSuperClasses[equivClass]!.add(classIri);
+
+        _log.fine(
+          'Added equivalent class relationship between $classIri and $equivClass',
+        );
+      }
+    }
+
     // Initialize with direct superclasses
     for (final entry in _directSuperClasses.entries) {
       _allSuperClasses[entry.key] = Set.from(entry.value);
@@ -316,6 +369,11 @@ class CrossVocabularyResolver {
         }
       }
     } while (changed);
+
+    // Remove self-references that may have been introduced by equivalent classes
+    for (final entry in _allSuperClasses.entries) {
+      entry.value.remove(entry.key);
+    }
 
     // Debug output
     for (final entry in _allSuperClasses.entries) {
@@ -464,6 +522,8 @@ class CrossVocabularyResolver {
     return {
       'class': classIri,
       'directSuperclasses': _directSuperClasses[classIri]?.toList() ?? [],
+      'directEquivalentClasses':
+          _directEquivalentClasses[classIri]?.toList() ?? [],
       'allSuperclasses': _allSuperClasses[classIri]?.toList() ?? [],
       'applicablePropertiesByVocabulary':
           _vocabularyProperties.entries

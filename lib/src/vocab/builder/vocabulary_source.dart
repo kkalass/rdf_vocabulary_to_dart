@@ -31,10 +31,16 @@ abstract class VocabularySource {
   /// Defaults to true if not specified.
   final bool enabled;
 
+  /// Explicit content type for the vocabulary source.
+  ///
+  /// If provided, this will override the automatic content type detection based on file extension.
+  final String? explicitContentType;
+
   const VocabularySource(
     this.namespace, {
     this.parsingFlags,
     this.enabled = true,
+    this.explicitContentType,
   });
 
   /// Loads the vocabulary content.
@@ -47,6 +53,10 @@ abstract class VocabularySource {
   String get extension;
 
   String? get contentType {
+    if (explicitContentType != null) {
+      return explicitContentType;
+    }
+
     return switch (extension) {
       '.ttl' => 'text/turtle',
       '.rdf' => 'application/rdf+xml',
@@ -76,8 +86,14 @@ class UrlVocabularySource extends VocabularySource {
     this.timeoutSeconds = 30,
     List<String>? parsingFlags,
     bool enabled = true,
+    String? explicitContentType,
   }) : sourceUrl = sourceUrl ?? namespace,
-       super(namespace, parsingFlags: parsingFlags, enabled: enabled);
+       super(
+         namespace,
+         parsingFlags: parsingFlags,
+         enabled: enabled,
+         explicitContentType: explicitContentType,
+       );
 
   @override
   Future<String> loadContent() async {
@@ -191,7 +207,13 @@ class FileVocabularySource extends VocabularySource {
     String namespace, {
     List<String>? parsingFlags,
     bool enabled = true,
-  }) : super(namespace, parsingFlags: parsingFlags, enabled: enabled);
+    String? explicitContentType,
+  }) : super(
+         namespace,
+         parsingFlags: parsingFlags,
+         enabled: enabled,
+         explicitContentType: explicitContentType,
+       );
 
   @override
   Future<String> loadContent() async {

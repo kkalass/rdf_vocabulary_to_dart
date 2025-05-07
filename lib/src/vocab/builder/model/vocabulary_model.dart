@@ -79,6 +79,9 @@ class VocabularyClass extends VocabularyTerm {
   /// Parent classes (superclasses) of this class
   final List<String> superClasses;
 
+  /// Equivalent classes of this class (owl:equivalentClass)
+  final List<String> equivalentClasses;
+
   /// Creates a new vocabulary class.
   const VocabularyClass({
     required super.localName,
@@ -87,6 +90,7 @@ class VocabularyClass extends VocabularyTerm {
     super.comment,
     super.seeAlso,
     this.superClasses = const [],
+    this.equivalentClasses = const [],
   });
 }
 
@@ -181,6 +185,7 @@ class VocabularyModelExtractor {
               comment: comment,
               seeAlso: _findSeeAlso(graph, resource),
               superClasses: _findSuperClasses(graph, resource),
+              equivalentClasses: _findEquivalentClasses(graph, resource),
             ),
           );
         } else if (_isProperty(graph, resource)) {
@@ -380,6 +385,39 @@ class VocabularyModelExtractor {
         .where((triple) => triple.object is IriTerm)
         .map((triple) => (triple.object as IriTerm).iri)
         .toList();
+  }
+
+  /// Finds the equivalent classes of a class.
+  static List<String> _findEquivalentClasses(RdfGraph graph, IriTerm resource) {
+    // Look for subject equivalentClass object triples
+    final equivalentClassTriples = graph.findTriples(
+      subject: resource,
+      predicate: IriTerm('http://www.w3.org/2002/07/owl#equivalentClass'),
+    );
+
+    // Also look for object equivalentClass subject triples (equivalentClass is symmetric)
+    final reverseEquivalentClassTriples = graph.findTriples(
+      object: resource,
+      predicate: IriTerm('http://www.w3.org/2002/07/owl#equivalentClass'),
+    );
+
+    final result = <String>[];
+
+    // Add forward equivalentClass relationships
+    result.addAll(
+      equivalentClassTriples
+          .where((triple) => triple.object is IriTerm)
+          .map((triple) => (triple.object as IriTerm).iri),
+    );
+
+    // Add reverse equivalentClass relationships (where this class is the object)
+    result.addAll(
+      reverseEquivalentClassTriples
+          .where((triple) => triple.subject is IriTerm)
+          .map((triple) => (triple.subject as IriTerm).iri),
+    );
+
+    return result;
   }
 
   /// Finds the domains of a property.

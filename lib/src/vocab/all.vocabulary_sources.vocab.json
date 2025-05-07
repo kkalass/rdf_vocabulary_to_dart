@@ -4,7 +4,7 @@
       "type": "url",
       "namespace": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
       "source": "https://www.w3.org/1999/02/22-rdf-syntax-ns.ttl",
-      "enabled": true
+      "enabled": false
     },
     "rdfs": {
       "type": "url",
@@ -13,9 +13,10 @@
       "enabled": false
     },
     "xsd": {
-      "type": "url",
+      "type": "file",
       "namespace": "http://www.w3.org/2001/XMLSchema#",
-      "enabled": false
+      "source": "lib/asset/xsd.ttl",
+      "enabled": true
     },
     "owl": {
       "type": "url",
@@ -39,6 +40,32 @@
       "type": "url",
       "namespace": "http://xmlns.com/foaf/0.1/",
       "source": "http://xmlns.com/foaf/spec/index.rdf",
+      "enabled": true
+    },
+    "geo": {
+      "type": "url",
+      "namespace": "http://www.w3.org/2003/01/geo/wgs84_pos#",
+      "source": "https://www.w3.org/2003/01/geo/wgs84_pos.rdf",
+      "enabled": false
+    },
+    "contact": {
+      "type": "url",
+      "namespace": "http://www.w3.org/2000/10/swap/pim/contact#",
+      "source": "https://www.w3.org/2000/10/swap/pim/contact#",
+      "contentType": "application/rdf+xml",
+      "enabled": false
+    },
+    "vs": {
+      "type": "url",
+      "namespace": "http://www.w3.org/2003/06/sw-vocab-status/ns#",
+      "source": "https://www.w3.org/2000/10/swap/pim/contact#",
+      "contentType": "application/rdf+xml",
+      "enabled": false
+    },
+    "dcmitype": {
+      "type": "url",
+      "namespace": "http://purl.org/dc/dcmitype/",
+      "source": "https://www.dublincore.org/specifications/dublin-core/dcmi-terms/dcmi_type.ttl",
       "enabled": false
     },
     "skos": {

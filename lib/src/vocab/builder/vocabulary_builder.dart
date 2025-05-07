@@ -145,7 +145,19 @@ class VocabularyBuilder implements Builder {
     };
   }
 
-  static Future<RdfGraph?> _loadRdfGraph(
+  static Map<(String, VocabularySource), Future<RdfGraph?>> _rdfGraphCache = {};
+
+  static Future<RdfGraph?> _loadRdfGraph(String name, VocabularySource source) {
+    var cachedGraph = _rdfGraphCache[(name, source)];
+    if (cachedGraph != null) {
+      return cachedGraph;
+    }
+    final graph = _doLoadRdfGraph(name, source);
+    _rdfGraphCache[(name, source)] = graph;
+    return graph;
+  }
+
+  static Future<RdfGraph?> _doLoadRdfGraph(
     String name,
     VocabularySource source,
   ) async {
@@ -487,6 +499,10 @@ class VocabularyBuilder implements Builder {
         // Check if the vocabulary is enabled, default to true if not specified
         final bool enabled = vocabConfig['enabled'] as bool? ?? true;
 
+        // Get explicit content type if specified
+        final String? explicitContentType =
+            vocabConfig['contentType'] as String?;
+
         VocabularySource source;
         try {
           switch (type) {
@@ -498,6 +514,7 @@ class VocabularyBuilder implements Builder {
                 sourceUrl: sourceUrl,
                 parsingFlags: parsingFlags,
                 enabled: enabled,
+                explicitContentType: explicitContentType,
               );
               break;
             case 'file':
@@ -507,6 +524,7 @@ class VocabularyBuilder implements Builder {
                 namespace,
                 parsingFlags: parsingFlags,
                 enabled: enabled,
+                explicitContentType: explicitContentType,
               );
               break;
             default:

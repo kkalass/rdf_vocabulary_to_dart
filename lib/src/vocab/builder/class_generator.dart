@@ -211,7 +211,7 @@ class VocabularyClassGenerator {
       'libraryDocumentation':
           'Universal Properties for the ${className} vocabulary',
       'libraryName': '${model.prefix}_universal_vocab',
-      'imports': ["'./${model.name.toLowerCase()}.dart'"],
+      'imports': [],
       'className': className,
       'universalClassName': universalClassName,
       'namespace': model.namespace,
@@ -312,6 +312,9 @@ class VocabularyClassGenerator {
       if (term is VocabularyProperty) {
         result['ranges'] = _toMustacheList(term.ranges);
         result['hasRanges'] = term.ranges.isNotEmpty;
+        // Add domain information for properties
+        result['domainDescription'] = _getDomainDescription(term, null);
+        result['domains'] = term.domains;
       }
 
       return result;
@@ -502,7 +505,13 @@ class VocabularyClassGenerator {
     }
 
     // Split the comment into lines
-    final lines = comment.split('\n');
+    var lines = comment.split('\n');
+
+    // Replace all instances of [[ and ]] in comments to avoid dartdoc interpreting them as references
+    lines =
+        lines
+            .map((line) => line.replaceAll('[[', '{[').replaceAll(']]', ']}'))
+            .toList();
 
     // Format each line with the Dart doc prefix
     return lines.map((line) => line.trim()).join('\n/// ');
