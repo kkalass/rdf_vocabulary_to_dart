@@ -2,7 +2,11 @@
 // All rights reserved. Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+import 'dart:io';
+
 import 'package:logging/logging.dart';
+import 'package:mustache_template/mustache.dart';
+import 'package:path/path.dart' as path;
 
 import 'cross_vocabulary_resolver.dart';
 import 'model/vocabulary_model.dart';
@@ -22,14 +26,67 @@ class VocabularyClassGenerator {
   /// Output directory for generated files, used to determine if library declarations should be included
   final String outputDir;
 
+  /// Cache for loaded Mustache templates
+  final Map<String, Template> _templateCache = {};
+
+  /// Base path for the template files
+  late final String _templatePath;
+
   /// Creates a new vocabulary class generator.
   ///
   /// [resolver] Cross-vocabulary resolver for property inheritance across vocabularies
   /// [outputDir] Output directory for generated files, used to determine library declaration inclusion
-  const VocabularyClassGenerator({
-    required this.resolver,
-    required this.outputDir,
-  });
+  VocabularyClassGenerator({required this.resolver, required this.outputDir}) {
+    // Determine the path where the templates are stored
+    final scriptPath = path.fromUri(Platform.script);
+    final currentDir = Directory.current.path;
+
+    // First try to find templates relative to the current script
+    var templateDir = path.join(path.dirname(scriptPath), 'templates');
+
+    // If not found, try to locate them in the package
+    if (!Directory(templateDir).existsSync()) {
+      // Look for templates in the package's lib directory
+      templateDir = path.join(
+        currentDir,
+        'lib',
+        'src',
+        'vocab',
+        'builder',
+        'templates',
+      );
+    }
+
+    // If still not found, throw an error
+    if (!Directory(templateDir).existsSync()) {
+      throw StateError('Could not locate template directory at $templateDir');
+    }
+
+    _templatePath = templateDir;
+    _log.fine('Using template directory: $_templatePath');
+  }
+
+  /// Loads and caches a template from the template directory
+  Template _getTemplate(String templateName) {
+    if (!_templateCache.containsKey(templateName)) {
+      final templateFile = File(
+        path.join(_templatePath, '$templateName.mustache'),
+      );
+      if (!templateFile.existsSync()) {
+        throw StateError('Template file not found: ${templateFile.path}');
+      }
+
+      final templateSource = templateFile.readAsStringSync();
+      _templateCache[templateName] = Template(
+        templateSource,
+        name: templateName,
+        lenient: true,
+        htmlEscapeValues: false, // Disable HTML escaping globally
+      );
+    }
+
+    return _templateCache[templateName]!;
+  }
 
   /// Generates Dart code for main vocabulary class.
   ///
@@ -44,106 +101,249 @@ class VocabularyClassGenerator {
     _validateModelHasTerms(model);
 
     // Generate main vocabulary file
-    final mainBuffer = StringBuffer();
-
-    // Add header and copyright
-    _writeHeader(mainBuffer);
-
-    // Write imports first
-    _writeImports(mainBuffer);
-
-    // Write main class documentation directly above the class declaration
-    _writeMainClassDoc(mainBuffer, model);
-
-    // Write primary class containing all terms
-    _writePrimaryClass(mainBuffer, model);
-
-    // Add the main class to results
-    generatedFiles['main'] = mainBuffer.toString();
+    final mainFile = _generateMainFile(model);
+    generatedFiles['main'] = mainFile;
 
     // Generate UniversalProperties class if needed
     final universalProperties =
         model.properties.where((p) => p.domains.isEmpty).toList();
     if (universalProperties.isNotEmpty) {
-      final universalBuffer = StringBuffer();
-
-      // Add header
-      _writeHeader(universalBuffer);
-
-      // Write imports first
-      _writeImports(universalBuffer);
-      _writeUniversalPropertiesImport(universalBuffer, model);
-
-      // Write universal properties documentation directly above the class
-      _writeUniversalPropertiesDoc(universalBuffer, model);
-
-      // Write the universal properties class
-      _writeUniversalPropertiesClass(universalBuffer, model);
-
-      // Add the universal class to results
-      generatedFiles['universal'] = universalBuffer.toString();
+      final universalFile = _generateUniversalPropertiesFile(
+        model,
+        universalProperties,
+      );
+      generatedFiles['universal'] = universalFile;
     }
 
     // Generate individual class files
     if (model.classes.isNotEmpty) {
-      final className = _capitalize(model.name);
       final classHierarchy = _buildClassHierarchy(model);
-      final propertyMap = {for (final prop in model.properties) prop.iri: prop};
 
       for (final rdfClass in model.classes) {
-        final classBuffer = StringBuffer();
         final dartClassName = _dartIdentifier(rdfClass.localName);
-
-        // Add header
-        _writeHeader(classBuffer);
-
-        // Write imports first
-        _writeImports(classBuffer);
-        _writeClassImport(classBuffer, model);
-
-        // Write class documentation just before the class declaration
-        _writeClassDoc(classBuffer, model, rdfClass, className);
-
-        // Write the individual class
-        _writeIndividualClass(
-          classBuffer,
-          model,
-          rdfClass,
-          classHierarchy,
-          propertyMap,
-        );
-
-        // Add the class file to results
-        generatedFiles[dartClassName] = classBuffer.toString();
+        final classFile = _generateClassFile(model, rdfClass, classHierarchy);
+        generatedFiles[dartClassName] = classFile;
       }
     }
 
     return generatedFiles;
   }
 
-  /// For backward compatibility
+  /// For backward compatibility with existing tests and integrations.
+  /// Generates all code artifacts and combines them into a single string.
   String generate(VocabularyModel model) {
-    final buffer = StringBuffer();
-
-    // Validate model has terms
     _validateModelHasTerms(model);
 
-    // Add header and copyright
-    _writeHeader(buffer);
+    // Debug log to help identify issues with test failures
+    for (final rdfClass in model.classes) {
+      _log.info('Class: ${rdfClass.localName}, SeeAlso: ${rdfClass.seeAlso}');
+    }
+    for (final prop in model.properties) {
+      _log.info('Property: ${prop.localName}, Ranges: ${prop.ranges}');
+    }
 
-    // Write library documentation and declaration first
-    _writeLibraryDoc(buffer, model);
+    final files = generateFiles(model);
+    final buffer = StringBuffer();
 
-    // Import necessary packages (after library declaration)
-    _writeImports(buffer);
+    // First add the main file
+    buffer.write(files['main']);
+    buffer.write('\n');
 
-    // Write primary class containing all terms
-    _writePrimaryClass(buffer, model);
+    // Add universal properties if they exist
+    if (files.containsKey('universal')) {
+      buffer.write(files['universal']);
+      buffer.write('\n');
+    }
 
-    // Write individual class for each RDF class
-    _writeIndividualClasses(buffer, model);
+    // Add all class-specific files
+    // Sort keys for deterministic output
+    final classKeys =
+        files.keys.where((k) => k != 'main' && k != 'universal').toList()
+          ..sort();
+
+    for (final key in classKeys) {
+      buffer.write(files[key]);
+      buffer.write('\n');
+    }
 
     return buffer.toString();
+  }
+
+  /// Generates the main vocabulary file
+  String _generateMainFile(VocabularyModel model) {
+    final className = _capitalize(model.name);
+
+    // Create the data model for the template
+    final Map<String, dynamic> templateData = {
+      'addLibraryDeclaration': !outputDir.contains('/src/'),
+      'libraryDocumentation': '${className} Vocabulary',
+      'libraryName': '${model.prefix}_vocab',
+      'imports': [],
+      'className': className,
+      'namespace': model.namespace,
+      'prefix': model.prefix,
+      'vocabPrefix': model.prefix.toLowerCase(),
+      'terms': _prepareTermsForTemplate([
+        ...model.classes,
+        ...model.datatypes,
+        ...model.otherTerms,
+        ...model.properties,
+      ], model.prefix),
+    };
+
+    // Render the header and main class templates
+    final headerTemplate = _getTemplate('header');
+    final mainClassTemplate = _getTemplate('main_class');
+
+    return headerTemplate.renderString(templateData) +
+        mainClassTemplate.renderString(templateData);
+  }
+
+  /// Generates the universal properties file
+  String _generateUniversalPropertiesFile(
+    VocabularyModel model,
+    List<VocabularyProperty> universalProperties,
+  ) {
+    final className = _capitalize(model.name);
+    final universalClassName = '${className}UniversalProperties';
+
+    // Create the data model for the template
+    final Map<String, dynamic> templateData = {
+      'addLibraryDeclaration': !outputDir.contains('/src/'),
+      'libraryDocumentation':
+          'Universal Properties for the ${className} vocabulary',
+      'libraryName': '${model.prefix}_universal_vocab',
+      'imports': ["'./${model.name.toLowerCase()}.dart'"],
+      'className': className,
+      'universalClassName': universalClassName,
+      'namespace': model.namespace,
+      'prefix': model.prefix,
+      'vocabPrefix': model.prefix.toLowerCase(),
+      'properties': _preparePropertiesForTemplate(
+        universalProperties,
+        model.prefix,
+        model.namespace,
+      ),
+    };
+
+    // Render the header and universal properties templates
+    final headerTemplate = _getTemplate('header');
+    final universalTemplate = _getTemplate('universal_properties');
+
+    return headerTemplate.renderString(templateData) +
+        universalTemplate.renderString(templateData);
+  }
+
+  /// Generates a class file for a specific RDF class
+  String _generateClassFile(
+    VocabularyModel model,
+    VocabularyClass rdfClass,
+    Map<String, Set<String>> classHierarchy,
+  ) {
+    final className = _capitalize(model.name);
+    final dartClassName = '${className}${_dartIdentifier(rdfClass.localName)}';
+
+    // Get all properties that can be used with this class
+    final properties = resolver.getPropertiesForClass(
+      rdfClass.iri,
+      model.namespace,
+    );
+
+    // Get all parent classes for documentation
+    final allSuperClasses = classHierarchy[rdfClass.iri] ?? <String>{};
+    final superClassList =
+        allSuperClasses.map((superClass) {
+          return {
+            'iri': superClass,
+            'readableName': _extractReadableNameFromIri(superClass),
+          };
+        }).toList();
+
+    // Sort parent classes for consistent output
+    superClassList.sort(
+      (a, b) =>
+          (a['readableName'] as String).compareTo(b['readableName'] as String),
+    );
+
+    // Create the data model for the template
+    final Map<String, dynamic> templateData = {
+      'addLibraryDeclaration': !outputDir.contains('/src/'),
+      'libraryDocumentation':
+          '${rdfClass.localName} class from ${className} vocabulary',
+      'libraryName': '${model.prefix}_${dartClassName.toLowerCase()}_vocab',
+      'imports': [],
+      'className': className,
+      'dartClassName': dartClassName,
+      'localName': rdfClass.localName,
+      'classIri': rdfClass.iri,
+      'comment': rdfClass.comment,
+      'namespace': model.namespace,
+      'seeAlso': rdfClass.seeAlso,
+      'superClasses': superClassList,
+      'hasSuperClasses': superClassList.isNotEmpty,
+      'properties': _preparePropertiesForTemplate(
+        properties,
+        model.prefix,
+        model.namespace,
+      ),
+    };
+
+    // Render the header and class template
+    final headerTemplate = _getTemplate('header');
+    final classTemplate = _getTemplate('class');
+
+    return headerTemplate.renderString(templateData) +
+        classTemplate.renderString(templateData);
+  }
+
+  /// Prepares a list of terms for use in a template
+  List<Map<String, dynamic>> _prepareTermsForTemplate(
+    List<VocabularyTerm> terms,
+    String prefix,
+  ) {
+    return terms.map((term) {
+      return {
+        'localName': term.localName,
+        'iri': term.iri,
+        'dartName': _dartIdentifier(term.localName),
+        'comment': term.comment,
+        'vocabPrefix': prefix.toLowerCase(),
+        'seeAlso': term.seeAlso,
+        'hasSeeAlso': term.seeAlso.isNotEmpty,
+      };
+    }).toList();
+  }
+
+  /// Enriches a list of strings for Mustache templating.
+  /// Each element becomes a map with `value` and `last`.
+  List<Map<String, dynamic>> _toMustacheList(List<String> values) {
+    return List.generate(values.length, (i) {
+      return {'value': values[i], 'last': i == values.length - 1};
+    });
+  }
+
+  /// Prepares a list of properties for use in a template
+  List<Map<String, dynamic>> _preparePropertiesForTemplate(
+    List<VocabularyProperty> properties,
+    String prefix,
+    String classNamespace,
+  ) {
+    return properties.map((property) {
+      print('Property: ${property.localName}, Ranges: ${property.ranges}');
+      return {
+        'localName': property.localName,
+        'iri': property.iri,
+        'dartName': _getPropertyName(property, classNamespace),
+        'comment': property.comment,
+        'vocabPrefix': prefix.toLowerCase(),
+        'domainDescription': _getDomainDescription(property, classNamespace),
+        'domains': property.domains,
+        'ranges': _toMustacheList(property.ranges),
+        'hasRanges': property.ranges.isNotEmpty,
+        'seeAlso': property.seeAlso,
+        'hasSeeAlso': property.seeAlso.isNotEmpty,
+      };
+    }).toList();
   }
 
   /// Validates that the model contains at least some terms (classes, properties, datatypes, or other terms).
@@ -163,460 +363,6 @@ class VocabularyClassGenerator {
     }
   }
 
-  /// Writes the file header with copyright information.
-  void _writeHeader(StringBuffer buffer) {
-    buffer.writeln('// Copyright (c) 2025, Klas Kalaß <habbatical@gmail.com>');
-    buffer.writeln(
-      '// All rights reserved. Use of this source code is governed by a BSD-style',
-    );
-    buffer.writeln('// license that can be found in the LICENSE file.');
-    buffer.writeln();
-    buffer.writeln('// GENERATED CODE - DO NOT MODIFY BY HAND');
-    buffer.writeln('// Generated by VocabularyBuilder');
-    buffer.writeln();
-  }
-
-  /// Writes the required imports for the generated file.
-  void _writeImports(StringBuffer buffer) {
-    buffer.writeln("import 'package:rdf_core/rdf_core.dart';");
-    buffer.writeln();
-  }
-
-  /// Writes import statement for the main vocabulary class in class-specific files
-  void _writeClassImport(StringBuffer buffer, VocabularyModel model) {
-    // currently not needed
-
-    //final name = model.name.toLowerCase();
-    //buffer.writeln("import '../$name.dart';");
-    //buffer.writeln();
-  }
-
-  /// Writes import statement for the main vocabulary class in universal properties file
-  void _writeUniversalPropertiesImport(
-    StringBuffer buffer,
-    VocabularyModel model,
-  ) {
-    final name = model.name.toLowerCase();
-    buffer.writeln("import './$name.dart';");
-    buffer.writeln();
-  }
-
-  /// Writes the library documentation.
-  void _writeLibraryDoc(
-    StringBuffer buffer,
-    VocabularyModel model, {
-    bool isMainFile = false,
-    bool isUniversalFile = false,
-    String? className,
-  }) {
-    final name = _capitalize(model.name);
-    final hasUniversalProperties = model.properties.any(
-      (p) => p.domains.isEmpty,
-    );
-    final universalClassName = '${name}UniversalProperties';
-
-    if (isMainFile) {
-      buffer.writeln('/// $name Vocabulary');
-      buffer.writeln('///');
-      buffer.writeln(
-        '/// Provides constants for the ${name.toUpperCase()} vocabulary',
-      );
-      buffer.writeln('/// (${model.namespace}).');
-      buffer.writeln('///');
-      buffer.writeln('/// Example usage:');
-      buffer.writeln('/// ```dart');
-      buffer.writeln(
-        '/// import \'package:rdf_vocabulary_to_dart/vocab.dart\';',
-      );
-
-      if (model.properties.isNotEmpty) {
-        final exampleProp = _dartIdentifier(model.properties.first.localName);
-        buffer.writeln(
-          '/// final property = ${name}.$exampleProp; // Access property directly from main class',
-        );
-      }
-
-      if (model.classes.isNotEmpty) {
-        final exampleClass = _dartIdentifier(model.classes.first.localName);
-        buffer.writeln(
-          '/// final classIri = ${name}$exampleClass.classIri; // Access class IRI',
-        );
-
-        if (model.properties.isNotEmpty) {
-          final exampleProp = _dartIdentifier(model.properties.first.localName);
-          buffer.writeln(
-            '/// final property = ${name}$exampleClass.$exampleProp; // Access property from class',
-          );
-        }
-      }
-
-      if (hasUniversalProperties) {
-        final universalProp = _dartIdentifier(
-          model.properties.firstWhere((p) => p.domains.isEmpty).localName,
-        );
-        buffer.writeln(
-          '/// final universalProp = $universalClassName.$universalProp; // Access universal property',
-        );
-      }
-
-      buffer.writeln('/// ```');
-      buffer.writeln('///');
-      buffer.writeln(
-        '/// All constants are pre-constructed as IriTerm objects to enable direct use in',
-      );
-      buffer.writeln(
-        '/// constructing RDF graphs without repeated string concatenation or term creation.',
-      );
-
-      if (hasUniversalProperties) {
-        buffer.writeln('///');
-        buffer.writeln('/// Universal Properties:');
-        buffer.writeln(
-          '/// This vocabulary provides a `$universalClassName` class for properties',
-        );
-        buffer.writeln(
-          '/// that have no explicitly defined domain restrictions and can be applied',
-        );
-        buffer.writeln('/// to any resource in this vocabulary\'s context.');
-      }
-
-      buffer.writeln('///');
-      buffer.writeln('/// [Vocabulary Reference](${model.namespace})');
-
-      // Only add library declaration for the main file which is not in src/
-      if (!outputDir.contains('/src/')) {
-        buffer.writeln('library ${model.prefix}_vocab;');
-      }
-      buffer.writeln();
-    } else if (isUniversalFile) {
-      buffer.writeln('/// Universal Properties for the ${name} vocabulary');
-      buffer.writeln('///');
-      buffer.writeln(
-        '/// Universal properties are RDF properties that have no explicitly defined domain',
-      );
-      buffer.writeln(
-        '/// and can therefore be applied to any resource within this vocabulary\'s context.',
-      );
-      buffer.writeln('///');
-      buffer.writeln('/// [Vocabulary Reference](${model.namespace})');
-
-      // Only add library declaration for files not in src/
-      if (!outputDir.contains('/src/')) {
-        buffer.writeln('library ${model.prefix}_universal_vocab;');
-      }
-      buffer.writeln();
-    } else if (className != null) {
-      final rdfClass = model.classes.firstWhere(
-        (c) => _dartIdentifier(c.localName) == className,
-      );
-      buffer.writeln('/// ${rdfClass.localName} class from ${name} vocabulary');
-      buffer.writeln('///');
-      if (rdfClass.comment != null) {
-        final formattedComment = _formatMultilineComment(rdfClass.comment!);
-        buffer.writeln('/// $formattedComment');
-        buffer.writeln('///');
-      }
-      buffer.writeln(
-        '/// This class provides access to all properties that can be used with ${rdfClass.localName}.',
-      );
-      buffer.writeln('/// [Class Reference](${rdfClass.iri})');
-      if (rdfClass.seeAlso.isNotEmpty) {
-        for (final seeAlso in rdfClass.seeAlso) {
-          buffer.writeln('/// [See also]($seeAlso)');
-        }
-      }
-      buffer.writeln('///');
-      buffer.writeln('/// [Vocabulary Reference](${model.namespace})');
-
-      // Only add library declaration for files not in src/
-      if (!outputDir.contains('/src/')) {
-        buffer.writeln(
-          'library ${model.prefix}_${className.toLowerCase()}_vocab;',
-        );
-      }
-      buffer.writeln();
-    } else {
-      // Default library documentation for backward compatibility
-      buffer.writeln('/// $name Vocabulary');
-      buffer.writeln('///');
-      buffer.writeln('/// [Vocabulary Reference](${model.namespace})');
-
-      // Only add library declaration for files not in src/
-      if (!outputDir.contains('/src/')) {
-        buffer.writeln('library ${model.prefix}_vocab;');
-      }
-      buffer.writeln();
-    }
-  }
-
-  /// Writes the primary vocabulary class that contains all terms.
-  void _writePrimaryClass(StringBuffer buffer, VocabularyModel model) {
-    final className = _capitalize(model.name);
-
-    buffer.writeln(
-      '/// Main ${className} vocabulary class containing all terms',
-    );
-    buffer.writeln('///');
-    buffer.writeln(
-      '/// Contains all terms defined in the ${model.namespace} vocabulary.',
-    );
-    buffer.writeln('class $className {');
-    buffer.writeln('  // Private constructor prevents instantiation');
-    buffer.writeln('  const ${className}._();');
-    buffer.writeln();
-    buffer.writeln('  /// Base IRI for ${className} vocabulary');
-    buffer.writeln('  /// [Spec](${model.namespace})');
-    buffer.writeln("  static const String namespace = '${model.namespace}';");
-    buffer.writeln("  static const String prefix = '${model.prefix}';");
-    buffer.writeln();
-
-    // Add all terms
-    for (final term in [
-      ...model.classes,
-      ...model.datatypes,
-      ...model.otherTerms,
-    ]) {
-      _writeTerm(buffer, term, className);
-    }
-
-    // Add predicates
-    for (final property in model.properties) {
-      _writeTerm(buffer, property, className);
-    }
-
-    buffer.writeln('}');
-    buffer.writeln();
-  }
-
-  /// Writes a class for universal properties (properties without explicit domains)
-  void _writeUniversalPropertiesClass(
-    StringBuffer buffer,
-    VocabularyModel model,
-  ) {
-    // Filter properties without explicit domains
-    final universalProperties =
-        model.properties.where((p) => p.domains.isEmpty).toList();
-
-    // Only generate the class if there are universal properties
-    if (universalProperties.isEmpty) {
-      return;
-    }
-
-    final className = _capitalize(model.name);
-    final universalClassName = '${className}UniversalProperties';
-
-    buffer.writeln('/// Universal Properties for the ${className} vocabulary');
-    buffer.writeln('///');
-    buffer.writeln(
-      '/// Universal properties are RDF properties that have no explicitly defined domain',
-    );
-    buffer.writeln(
-      '/// and can therefore be applied to any resource within this vocabulary\'s context.',
-    );
-    buffer.writeln(
-      '/// In RDF, when a property has no rdfs:domain constraint, it can theoretically be',
-    );
-    buffer.writeln(
-      '/// used with any subject, but best practice is to use them only within',
-    );
-    buffer.writeln('/// the intended vocabulary context.');
-    buffer.writeln('///');
-    buffer.writeln(
-      '/// This class collects all such properties from the ${className} vocabulary to make them',
-    );
-    buffer.writeln(
-      '/// easily accessible without cluttering the class-specific property interfaces.',
-    );
-    buffer.writeln('class $universalClassName {');
-    buffer.writeln('  // Private constructor prevents instantiation');
-    buffer.writeln('  const ${universalClassName}._();');
-    buffer.writeln();
-
-    // Write all universal properties
-    for (final property in universalProperties) {
-      _writeTerm(buffer, property, className, prefix: '  ');
-    }
-
-    buffer.writeln('}');
-    buffer.writeln();
-  }
-
-  /// Writes a specific individual class instead of writing all classes
-  void _writeIndividualClass(
-    StringBuffer buffer,
-    VocabularyModel model,
-    VocabularyClass rdfClass,
-    Map<String, Set<String>> classHierarchy,
-    Map<String, VocabularyProperty> propertyMap,
-  ) {
-    final className = _capitalize(model.name);
-    final dartClassName = '$className${_dartIdentifier(rdfClass.localName)}';
-
-    buffer.writeln('class $dartClassName {');
-    buffer.writeln('  // Private constructor prevents instantiation');
-    buffer.writeln('  const ${dartClassName}._();');
-    buffer.writeln();
-
-    // Add the classIri field for the class itself
-    buffer.writeln('  /// IRI term for the ${rdfClass.localName} class');
-    buffer.writeln(
-      '  /// Use this to specify that a resource is of this type.',
-    );
-    buffer.writeln(
-      "  static const classIri = IriTerm.prevalidated('${rdfClass.iri}');",
-    );
-    buffer.writeln();
-
-    // Get all properties that can be used with this class
-    final properties = _getPropertiesForClass(
-      rdfClass.iri,
-      model.namespace,
-      classHierarchy,
-      propertyMap,
-    );
-
-    // Write all applicable properties
-    for (final property in properties) {
-      _writeTerm(
-        buffer,
-        property,
-        className,
-        prefix: '  ',
-        classNamespace: model.namespace,
-      );
-    }
-
-    buffer.writeln('}');
-  }
-
-  /// Writes a class for each RDF class in the vocabulary.
-  void _writeIndividualClasses(StringBuffer buffer, VocabularyModel model) {
-    if (model.classes.isEmpty) return;
-
-    final className = _capitalize(model.name);
-
-    // Build class hierarchy for property inheritance
-    final classHierarchy = _buildClassHierarchy(model);
-
-    // Map of property IRIs to property objects
-    final propertyMap = {for (final prop in model.properties) prop.iri: prop};
-
-    // Generate a class for each RDF class
-    for (final rdfClass in model.classes) {
-      final dartClassName = '$className${_dartIdentifier(rdfClass.localName)}';
-
-      buffer.writeln(
-        '/// ${rdfClass.localName} class from ${className} vocabulary',
-      );
-      buffer.writeln('///');
-      if (rdfClass.comment != null) {
-        final formattedComment = _formatMultilineComment(rdfClass.comment!);
-        buffer.writeln('/// $formattedComment');
-        buffer.writeln('///');
-      }
-
-      buffer.writeln(
-        '/// This class provides access to all properties that can be used with ${rdfClass.localName}.',
-      );
-      buffer.writeln('/// [Class Reference](${rdfClass.iri})');
-
-      // Add seeAlso references if available
-      if (rdfClass.seeAlso.isNotEmpty) {
-        for (final seeAlso in rdfClass.seeAlso) {
-          buffer.writeln('/// [See also]($seeAlso)');
-        }
-      }
-
-      buffer.writeln('class $dartClassName {');
-      buffer.writeln('  // Private constructor prevents instantiation');
-      buffer.writeln('  const ${dartClassName}._();');
-      buffer.writeln();
-
-      // Add the classIri field for the class itself
-      buffer.writeln('  /// IRI term for the ${rdfClass.localName} class');
-      buffer.writeln(
-        '  /// Use this to specify that a resource is of this type.',
-      );
-      buffer.writeln(
-        "  static const classIri = IriTerm.prevalidated('${rdfClass.iri}');",
-      );
-      buffer.writeln();
-
-      // Get all properties that can be used with this class
-      final properties = _getPropertiesForClass(
-        rdfClass.iri,
-        model.namespace,
-        classHierarchy,
-        propertyMap,
-      );
-
-      // Write all applicable properties
-      for (final property in properties) {
-        _writeTerm(
-          buffer,
-          property,
-          className,
-          prefix: '  ',
-          classNamespace: model.namespace,
-        );
-      }
-
-      buffer.writeln('}');
-      buffer.writeln();
-    }
-  }
-
-  /// Writes class documentation directly above the class declaration
-  void _writeClassDoc(
-    StringBuffer buffer,
-    VocabularyModel model,
-    VocabularyClass rdfClass,
-    String vocabularyClassName,
-  ) {
-    buffer.writeln(
-      '/// ${rdfClass.localName} class from ${vocabularyClassName} vocabulary',
-    );
-    buffer.writeln('///');
-
-    if (rdfClass.comment != null) {
-      final formattedComment = _formatMultilineComment(rdfClass.comment!);
-      buffer.writeln('/// $formattedComment');
-      buffer.writeln('///');
-    }
-
-    // Build class hierarchy to get all parent classes (direct and indirect)
-    final classHierarchy = _buildClassHierarchy(model);
-    final allSuperClasses = classHierarchy[rdfClass.iri] ?? <String>{};
-
-    // Show inheritance information if there are any parent classes
-    if (allSuperClasses.isNotEmpty) {
-      buffer.writeln('/// Inherits from:');
-      // Sort parent classes for consistent output
-      final sortedSuperClasses = allSuperClasses.toList()..sort();
-      for (final superClass in sortedSuperClasses) {
-        // Extract readable name from IRI
-        final name = _extractReadableNameFromIri(superClass);
-        buffer.writeln('/// - $name ($superClass)');
-      }
-      buffer.writeln('///');
-    }
-
-    buffer.writeln(
-      '/// This class provides access to all properties that can be used with ${rdfClass.localName}.',
-    );
-    buffer.writeln('/// [Class Reference](${rdfClass.iri})');
-
-    if (rdfClass.seeAlso.isNotEmpty) {
-      for (final seeAlso in rdfClass.seeAlso) {
-        buffer.writeln('/// [See also]($seeAlso)');
-      }
-    }
-
-    buffer.writeln('///');
-    buffer.writeln('/// [Vocabulary Reference](${model.namespace})');
-    buffer.writeln();
-  }
-
   /// Extracts a human-readable name from an IRI
   String _extractReadableNameFromIri(String iri) {
     // Try to extract the name after the last # or /
@@ -634,173 +380,40 @@ class VocabularyClassGenerator {
     return iri;
   }
 
-  /// Writes the main class documentation directly above the class declaration
-  void _writeMainClassDoc(StringBuffer buffer, VocabularyModel model) {
-    final name = _capitalize(model.name);
-    final hasUniversalProperties = model.properties.any(
-      (p) => p.domains.isEmpty,
-    );
-    final universalClassName = '${name}UniversalProperties';
+  /// Builds a map of class IRI to list of all parent class IRIs (including inherited)
+  Map<String, Set<String>> _buildClassHierarchy(VocabularyModel model) {
+    final hierarchy = <String, Set<String>>{};
 
-    buffer.writeln('/// $name Vocabulary');
-    buffer.writeln('///');
-    buffer.writeln(
-      '/// Provides constants for the ${name.toUpperCase()} vocabulary',
-    );
-    buffer.writeln('/// (${model.namespace}).');
-    buffer.writeln('///');
-    buffer.writeln('/// Example usage:');
-    buffer.writeln('/// ```dart');
-    buffer.writeln('/// import \'package:rdf_vocabulary_to_dart/vocab.dart\';');
-
-    if (model.properties.isNotEmpty) {
-      final exampleProp = _dartIdentifier(model.properties.first.localName);
-      buffer.writeln(
-        '/// final property = ${name}.$exampleProp; // Access property directly from main class',
-      );
+    // Initialize with direct parent classes
+    for (final rdfClass in model.classes) {
+      hierarchy[rdfClass.iri] = Set.from(rdfClass.superClasses);
     }
 
-    if (model.classes.isNotEmpty) {
-      final exampleClass = _dartIdentifier(model.classes.first.localName);
-      buffer.writeln(
-        '/// final classIri = ${name}$exampleClass.classIri; // Access class IRI',
-      );
+    // Resolve full inheritance (transitive closure)
+    bool changed;
+    do {
+      changed = false;
 
-      if (model.properties.isNotEmpty) {
-        final exampleProp = _dartIdentifier(model.properties.first.localName);
-        buffer.writeln(
-          '/// final property = ${name}$exampleClass.$exampleProp; // Access property from class',
-        );
+      for (final entry in hierarchy.entries) {
+        final classIri = entry.key;
+        final parents = Set<String>.from(entry.value);
+
+        for (final parentIri in parents.toList()) {
+          // Add parent's parents
+          if (hierarchy.containsKey(parentIri)) {
+            final grandparents = hierarchy[parentIri]!;
+            final sizeBefore = parents.length;
+            parents.addAll(grandparents);
+            if (parents.length > sizeBefore) {
+              changed = true;
+              hierarchy[classIri] = parents;
+            }
+          }
+        }
       }
-    }
+    } while (changed);
 
-    if (hasUniversalProperties) {
-      final universalProp = _dartIdentifier(
-        model.properties.firstWhere((p) => p.domains.isEmpty).localName,
-      );
-      buffer.writeln(
-        '/// final universalProp = $universalClassName.$universalProp; // Access universal property',
-      );
-    }
-
-    buffer.writeln('/// ```');
-    buffer.writeln('///');
-    buffer.writeln(
-      '/// All constants are pre-constructed as IriTerm objects to enable direct use in',
-    );
-    buffer.writeln(
-      '/// constructing RDF graphs without repeated string concatenation or term creation.',
-    );
-
-    if (hasUniversalProperties) {
-      buffer.writeln('///');
-      buffer.writeln('/// Universal Properties:');
-      buffer.writeln(
-        '/// This vocabulary provides a `$universalClassName` class for properties',
-      );
-      buffer.writeln(
-        '/// that have no explicitly defined domain restrictions and can be applied',
-      );
-      buffer.writeln('/// to any resource in this vocabulary\'s context.');
-    }
-
-    buffer.writeln('///');
-    buffer.writeln('/// [Vocabulary Reference](${model.namespace})');
-
-    // Only add library declaration for the main file which is not in src/
-    if (!outputDir.contains('/src/')) {
-      buffer.writeln('library ${model.prefix}_vocab;');
-    }
-    buffer.writeln();
-  }
-
-  /// Writes the universal properties documentation directly above the class declaration
-  void _writeUniversalPropertiesDoc(
-    StringBuffer buffer,
-    VocabularyModel model,
-  ) {
-    final name = _capitalize(model.name);
-    final universalClassName = '${name}UniversalProperties';
-
-    buffer.writeln('/// Universal Properties for the ${name} vocabulary');
-    buffer.writeln('///');
-    buffer.writeln(
-      '/// Universal properties are RDF properties that have no explicitly defined domain',
-    );
-    buffer.writeln(
-      '/// and can therefore be applied to any resource within this vocabulary\'s context.',
-    );
-    buffer.writeln('///');
-    buffer.writeln('/// [Vocabulary Reference](${model.namespace})');
-
-    // Only add library declaration for files not in src/
-    if (!outputDir.contains('/src/')) {
-      buffer.writeln('library ${model.prefix}_universal_vocab;');
-    }
-    buffer.writeln();
-  }
-
-  /// Writes a single term as a static constant.
-  void _writeTerm(
-    StringBuffer buffer,
-    VocabularyTerm term,
-    String className, {
-    String prefix = '',
-    String? classNamespace,
-  }) {
-    final dartName = _getPropertyName(term, classNamespace);
-
-    // Write documentation
-    buffer.writeln(
-      '$prefix/// IRI for ${className.toLowerCase()}:${term.localName}',
-    );
-
-    if (term.comment != null) {
-      // Format the comment for Dart documentation
-      final formattedComment = _formatMultilineComment(term.comment!);
-      buffer.writeln('$prefix///');
-      buffer.writeln('$prefix/// $formattedComment');
-    }
-
-    // Add domain and range information for properties in a more developer-friendly way
-    if (term is VocabularyProperty) {
-      buffer.writeln('$prefix///');
-      buffer.writeln(
-        '$prefix/// ${_getDomainDescription(term, classNamespace)}',
-      );
-
-      if (term.ranges.isNotEmpty) {
-        buffer.writeln(
-          '$prefix/// Expects values of type: ${term.ranges.join(', ')}',
-        );
-      }
-    }
-
-    // Add seeAlso references if available
-    if (term.seeAlso.isNotEmpty) {
-      buffer.writeln('$prefix///');
-      for (final seeAlso in term.seeAlso) {
-        buffer.writeln('$prefix/// [See also]($seeAlso)');
-      }
-    }
-
-    buffer.writeln('$prefix///');
-
-    // Write the constant declaration with correct indentation
-    buffer.writeln(
-      "$prefix" +
-          "static const $dartName = IriTerm.prevalidated('${term.iri}');",
-    );
-    buffer.writeln();
-  }
-
-  /// Formats a multiline comment for Dart documentation
-  String _formatMultilineComment(String comment) {
-    return comment
-        .split('\n')
-        .map((line) => line.trim())
-        .where((line) => line.isNotEmpty)
-        .join('\n  /// ');
+    return hierarchy;
   }
 
   /// Gets a property name with prefix if it comes from a different namespace
@@ -868,53 +481,6 @@ class VocabularyClassGenerator {
     };
 
     return prefixMap[namespace];
-  }
-
-  /// Builds a map of class IRI to list of all parent class IRIs (including inherited)
-  Map<String, Set<String>> _buildClassHierarchy(VocabularyModel model) {
-    final hierarchy = <String, Set<String>>{};
-
-    // Initialize with direct parent classes
-    for (final rdfClass in model.classes) {
-      hierarchy[rdfClass.iri] = Set.from(rdfClass.superClasses);
-    }
-
-    // Resolve full inheritance (transitive closure)
-    bool changed;
-    do {
-      changed = false;
-
-      for (final entry in hierarchy.entries) {
-        final classIri = entry.key;
-        final parents = Set<String>.from(entry.value);
-
-        for (final parentIri in parents.toList()) {
-          // Add parent's parents
-          if (hierarchy.containsKey(parentIri)) {
-            final grandparents = hierarchy[parentIri]!;
-            final sizeBefore = parents.length;
-            parents.addAll(grandparents);
-            if (parents.length > sizeBefore) {
-              changed = true;
-              hierarchy[classIri] = parents;
-            }
-          }
-        }
-      }
-    } while (changed);
-
-    return hierarchy;
-  }
-
-  /// Gets all properties applicable to a given class including inherited properties
-  List<VocabularyProperty> _getPropertiesForClass(
-    String classIri,
-    String vocabNamespace,
-    Map<String, Set<String>> classHierarchy,
-    Map<String, VocabularyProperty> propertyMap,
-  ) {
-    _log.fine('Using cross-vocabulary resolver for class $classIri');
-    return resolver.getPropertiesForClass(classIri, vocabNamespace);
   }
 
   /// Provides documentation about property domain applicability

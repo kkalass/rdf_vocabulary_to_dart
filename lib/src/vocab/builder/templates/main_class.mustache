@@ -1,0 +1,29 @@
+/// Main {{className}} vocabulary class containing all terms
+///
+/// Contains all terms defined in the {{{namespace}}} vocabulary.
+class {{className}} {
+  // Private constructor prevents instantiation
+  const {{className}}._();
+
+  /// Base IRI for {{className}} vocabulary
+  /// [Spec]({{{namespace}}})
+  static const String namespace = '{{{namespace}}}';
+  static const String prefix = '{{{prefix}}}';
+
+  {{#terms}}
+  /// IRI for {{vocabPrefix}}:{{localName}}
+  {{#comment}}
+  ///
+  /// {{{comment}}}
+  {{/comment}}
+  {{#hasSeeAlso}}
+  /// 
+  {{#seeAlso}}
+  /// [See also]({{{.}}})
+  {{/seeAlso}}
+  {{/hasSeeAlso}}
+  ///
+  static const {{dartName}} = IriTerm.prevalidated('{{{iri}}}');
+
+  {{/terms}}
+}
