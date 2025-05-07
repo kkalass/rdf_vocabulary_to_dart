@@ -384,28 +384,54 @@ class VocabularyModelExtractor {
 
   /// Finds the domains of a property.
   static List<String> _findDomains(RdfGraph graph, IriTerm resource) {
+    // Standard rdfs:domain
     final domainTriples = graph.findTriples(
       subject: resource,
       predicate: IriTerm('http://www.w3.org/2000/01/rdf-schema#domain'),
     );
 
-    return domainTriples
-        .where((triple) => triple.object is IriTerm)
-        .map((triple) => (triple.object as IriTerm).iri)
-        .toList();
+    // Schema.org domainIncludes
+    final schemaOrgDomainTriples = graph.findTriples(
+      subject: resource,
+      predicate: IriTerm('http://schema.org/domainIncludes'),
+    );
+
+    final domains = [
+      ...domainTriples
+          .where((triple) => triple.object is IriTerm)
+          .map((triple) => (triple.object as IriTerm).iri),
+      ...schemaOrgDomainTriples
+          .where((triple) => triple.object is IriTerm)
+          .map((triple) => (triple.object as IriTerm).iri),
+    ];
+
+    return domains;
   }
 
   /// Finds the ranges of a property.
   static List<String> _findRanges(RdfGraph graph, IriTerm resource) {
+    // Standard rdfs:range
     final rangeTriples = graph.findTriples(
       subject: resource,
       predicate: IriTerm('http://www.w3.org/2000/01/rdf-schema#range'),
     );
 
-    return rangeTriples
-        .where((triple) => triple.object is IriTerm)
-        .map((triple) => (triple.object as IriTerm).iri)
-        .toList();
+    // Schema.org rangeIncludes
+    final schemaOrgRangeTriples = graph.findTriples(
+      subject: resource,
+      predicate: IriTerm('http://schema.org/rangeIncludes'),
+    );
+
+    final ranges = [
+      ...rangeTriples
+          .where((triple) => triple.object is IriTerm)
+          .map((triple) => (triple.object as IriTerm).iri),
+      ...schemaOrgRangeTriples
+          .where((triple) => triple.object is IriTerm)
+          .map((triple) => (triple.object as IriTerm).iri),
+    ];
+
+    return ranges;
   }
 
   /// Finds all rdfs:seeAlso references for a resource.

@@ -272,7 +272,7 @@ class VocabularyClassGenerator {
       'dartClassName': dartClassName,
       'localName': rdfClass.localName,
       'classIri': rdfClass.iri,
-      'comment': rdfClass.comment,
+      'comment': _formatDartDocComment(rdfClass.comment),
       'namespace': model.namespace,
       'seeAlso': rdfClass.seeAlso,
       'superClasses': superClassList,
@@ -302,7 +302,7 @@ class VocabularyClassGenerator {
         'localName': term.localName,
         'iri': term.iri,
         'dartName': _dartIdentifier(term.localName),
-        'comment': term.comment,
+        'comment': _formatDartDocComment(term.comment),
         'vocabPrefix': prefix.toLowerCase(),
         'seeAlso': term.seeAlso,
         'hasSeeAlso': term.seeAlso.isNotEmpty,
@@ -339,7 +339,7 @@ class VocabularyClassGenerator {
         'localName': property.localName,
         'iri': property.iri,
         'dartName': propertyName,
-        'comment': property.comment,
+        'comment': _formatDartDocComment(property.comment),
         'vocabPrefix': prefix.toLowerCase(),
         'domainDescription': _getDomainDescription(property, classNamespace),
         'domains': property.domains,
@@ -492,5 +492,19 @@ class VocabularyClassGenerator {
   String _capitalize(String s) {
     if (s.isEmpty) return s;
     return s[0].toUpperCase() + s.substring(1);
+  }
+
+  /// Formats a potentially multiline comment for Dart documentation.
+  /// Each line will be properly prefixed with /// for Dart doc comments.
+  String _formatDartDocComment(String? comment) {
+    if (comment == null || comment.isEmpty) {
+      return '';
+    }
+
+    // Split the comment into lines
+    final lines = comment.split('\n');
+
+    // Format each line with the Dart doc prefix
+    return lines.map((line) => line.trim()).join('\n/// ');
   }
 }
