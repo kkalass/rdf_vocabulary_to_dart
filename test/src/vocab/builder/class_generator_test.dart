@@ -2,6 +2,8 @@
 // All rights reserved. Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+import 'package:build/build.dart';
+import 'package:build_test/build_test.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:rdf_vocabulary_to_dart/src/vocab/builder/class_generator.dart';
@@ -17,9 +19,10 @@ void main() {
     late MockCrossVocabularyResolver mockResolver;
     late VocabularyClassGenerator generator;
     late VocabularyModel testModel;
-
-    setUp(() {
+    late AssetReader assetReader;
+    setUp(() async {
       mockResolver = MockCrossVocabularyResolver();
+      assetReader = await PackageAssetReader.currentIsolate();
       generator = VocabularyClassGenerator(
         resolver: mockResolver,
         outputDir: 'lib/src/vocab/generated',
@@ -94,8 +97,8 @@ void main() {
       });
     });
 
-    test('generates primary vocabulary class correctly', () {
-      final code = generator.generate(testModel);
+    test('generates primary vocabulary class correctly', () async {
+      final code = await generator.generate(testModel, assetReader);
 
       // Verify the code contains the class definition
       expect(code, contains('class Test {'));
@@ -138,8 +141,8 @@ void main() {
       );
     });
 
-    test('generates RDF class-specific classes correctly', () {
-      final code = generator.generate(testModel);
+    test('generates RDF class-specific classes correctly', () async {
+      final code = await generator.generate(testModel, assetReader);
 
       // Verify Person class is generated
       expect(code, contains('class TestPerson {'));
@@ -169,8 +172,8 @@ void main() {
 
     test(
       'generates UniversalProperties class when properties with no domains exist',
-      () {
-        final code = generator.generate(testModel);
+      () async {
+        final code = await generator.generate(testModel, assetReader);
 
         // Verify UniversalProperties class is generated
         expect(code, contains('class TestUniversalProperties {'));
@@ -194,11 +197,14 @@ void main() {
         otherTerms: [],
       );
 
-      expect(() => generator.generate(emptyModel), throwsStateError);
+      expect(
+        () async => await generator.generate(emptyModel, assetReader),
+        throwsStateError,
+      );
     });
 
-    test('properly handles comments and documentation', () {
-      final code = generator.generate(testModel);
+    test('properly handles comments and documentation', () async {
+      final code = await generator.generate(testModel, assetReader);
 
       // Check class documentation
       expect(code, contains('/// A person class for testing'));
@@ -210,15 +216,15 @@ void main() {
       expect(code, contains('/// An email address datatype'));
     });
 
-    test('properly formats documentation with See Also references', () {
-      final code = generator.generate(testModel);
+    test('properly formats documentation with See Also references', () async {
+      final code = await generator.generate(testModel, assetReader);
 
       // Check for seeAlso references
       expect(code, contains('[See also](http://example.org/docs/Person)'));
     });
 
-    test('adds domain and range documentation for properties', () {
-      final code = generator.generate(testModel);
+    test('adds domain and range documentation for properties', () async {
+      final code = await generator.generate(testModel, assetReader);
 
       // Check for domain information
       expect(code, contains('Can be used on: http://example.org/test#Person'));

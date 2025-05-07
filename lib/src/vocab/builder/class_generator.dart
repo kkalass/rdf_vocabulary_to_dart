@@ -2,8 +2,10 @@
 // All rights reserved. Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:build/build.dart';
 import 'package:logging/logging.dart';
 import 'package:mustache_template/mustache.dart';
 import 'package:path/path.dart' as path;
@@ -26,57 +28,34 @@ class VocabularyClassGenerator {
   /// Output directory for generated files, used to determine if library declarations should be included
   final String outputDir;
 
-  /// Cache for loaded Mustache templates
-  final Map<String, Template> _templateCache = {};
-
-  /// Base path for the template files
-  late final String _templatePath;
-
   /// Creates a new vocabulary class generator.
   ///
   /// [resolver] Cross-vocabulary resolver for property inheritance across vocabularies
   /// [outputDir] Output directory for generated files, used to determine library declaration inclusion
-  VocabularyClassGenerator({required this.resolver, required this.outputDir}) {
-    // Determine the path where the templates are stored
-    final scriptPath = path.fromUri(Platform.script);
-    final currentDir = Directory.current.path;
+  VocabularyClassGenerator({required this.resolver, required this.outputDir});
 
-    // First try to find templates relative to the current script
-    var templateDir = path.join(path.dirname(scriptPath), 'templates');
+  /// Cache for loaded Mustache templates
+  final Map<String, Template> _templateCache = {};
 
-    // If not found, try to locate them in the package
-    if (!Directory(templateDir).existsSync()) {
-      // Look for templates in the package's lib directory
-      templateDir = path.join(
-        currentDir,
+  Future<String> loadTemplate(String name, AssetReader reader) async {
+    final assetId = AssetId(
+      'rdf_vocabulary_to_dart',
+      path.join(
         'lib',
         'src',
         'vocab',
         'builder',
         'templates',
-      );
-    }
-
-    // If still not found, throw an error
-    if (!Directory(templateDir).existsSync()) {
-      throw StateError('Could not locate template directory at $templateDir');
-    }
-
-    _templatePath = templateDir;
-    _log.fine('Using template directory: $_templatePath');
+        '$name.mustache',
+      ),
+    );
+    return await reader.readAsString(assetId);
   }
 
-  /// Loads and caches a template from the template directory
-  Template _getTemplate(String templateName) {
+  /// Loads and caches a template from the template directory using package URI
+  Future<Template> _getTemplate(String templateName, AssetReader reader) async {
     if (!_templateCache.containsKey(templateName)) {
-      final templateFile = File(
-        path.join(_templatePath, '$templateName.mustache'),
-      );
-      if (!templateFile.existsSync()) {
-        throw StateError('Template file not found: ${templateFile.path}');
-      }
-
-      final templateSource = templateFile.readAsStringSync();
+      final templateSource = await loadTemplate(templateName, reader);
       _templateCache[templateName] = Template(
         templateSource,
         name: templateName,
@@ -94,23 +73,27 @@ class VocabularyClassGenerator {
   /// - 'main': The main vocabulary class (e.g. 'Rdf')
   /// - 'universal': The universal properties class (if applicable)
   /// - A key for each class name (e.g. 'RdfProperty') with its code
-  Map<String, String> generateFiles(VocabularyModel model) {
+  Future<Map<String, String>> generateFiles(
+    VocabularyModel model,
+    AssetReader assetReader,
+  ) async {
     final Map<String, String> generatedFiles = {};
 
     // Validate model has terms
     _validateModelHasTerms(model);
 
     // Generate main vocabulary file
-    final mainFile = _generateMainFile(model);
+    final mainFile = await _generateMainFile(model, assetReader);
     generatedFiles['main'] = mainFile;
 
     // Generate UniversalProperties class if needed
     final universalProperties =
         model.properties.where((p) => p.domains.isEmpty).toList();
     if (universalProperties.isNotEmpty) {
-      final universalFile = _generateUniversalPropertiesFile(
+      final universalFile = await _generateUniversalPropertiesFile(
         model,
         universalProperties,
+        assetReader,
       );
       generatedFiles['universal'] = universalFile;
     }
@@ -119,7 +102,11 @@ class VocabularyClassGenerator {
     if (model.classes.isNotEmpty) {
       for (final rdfClass in model.classes) {
         final dartClassName = _dartIdentifier(rdfClass.localName);
-        final classFile = _generateClassFile(model, rdfClass);
+        final classFile = await _generateClassFile(
+          model,
+          rdfClass,
+          assetReader,
+        );
         generatedFiles[dartClassName] = classFile;
       }
     }
@@ -129,7 +116,10 @@ class VocabularyClassGenerator {
 
   /// For backward compatibility with existing tests and integrations.
   /// Generates all code artifacts and combines them into a single string.
-  String generate(VocabularyModel model) {
+  Future<String> generate(
+    VocabularyModel model,
+    AssetReader assetReader,
+  ) async {
     _validateModelHasTerms(model);
 
     // Debug log to help identify issues with test failures
@@ -140,7 +130,7 @@ class VocabularyClassGenerator {
       _log.info('Property: ${prop.localName}, Ranges: ${prop.ranges}');
     }
 
-    final files = generateFiles(model);
+    final files = await generateFiles(model, assetReader);
     final buffer = StringBuffer();
 
     // First add the main file
@@ -168,7 +158,10 @@ class VocabularyClassGenerator {
   }
 
   /// Generates the main vocabulary file
-  String _generateMainFile(VocabularyModel model) {
+  Future<String> _generateMainFile(
+    VocabularyModel model,
+    AssetReader assetReader,
+  ) async {
     final className = _capitalize(model.name);
 
     // Create the data model for the template
@@ -190,18 +183,19 @@ class VocabularyClassGenerator {
     };
 
     // Render the header and main class templates
-    final headerTemplate = _getTemplate('header');
-    final mainClassTemplate = _getTemplate('main_class');
+    final headerTemplate = await _getTemplate('header', assetReader);
+    final mainClassTemplate = await _getTemplate('main_class', assetReader);
 
     return headerTemplate.renderString(templateData) +
         mainClassTemplate.renderString(templateData);
   }
 
   /// Generates the universal properties file
-  String _generateUniversalPropertiesFile(
+  Future<String> _generateUniversalPropertiesFile(
     VocabularyModel model,
     List<VocabularyProperty> universalProperties,
-  ) {
+    AssetReader assetReader,
+  ) async {
     final className = _capitalize(model.name);
     final universalClassName = '${className}UniversalProperties';
 
@@ -225,15 +219,22 @@ class VocabularyClassGenerator {
     };
 
     // Render the header and universal properties templates
-    final headerTemplate = _getTemplate('header');
-    final universalTemplate = _getTemplate('universal_properties');
+    final headerTemplate = await _getTemplate('header', assetReader);
+    final universalTemplate = await _getTemplate(
+      'universal_properties',
+      assetReader,
+    );
 
     return headerTemplate.renderString(templateData) +
         universalTemplate.renderString(templateData);
   }
 
   /// Generates a class file for a specific RDF class
-  String _generateClassFile(VocabularyModel model, VocabularyClass rdfClass) {
+  Future<String> _generateClassFile(
+    VocabularyModel model,
+    VocabularyClass rdfClass,
+    AssetReader assetReader,
+  ) async {
     final className = _capitalize(model.name);
     final dartClassName = '${className}${_dartIdentifier(rdfClass.localName)}';
 
@@ -285,8 +286,8 @@ class VocabularyClassGenerator {
     };
 
     // Render the header and class template
-    final headerTemplate = _getTemplate('header');
-    final classTemplate = _getTemplate('class');
+    final headerTemplate = await _getTemplate('header', assetReader);
+    final classTemplate = await _getTemplate('class', assetReader);
 
     return headerTemplate.renderString(templateData) +
         classTemplate.renderString(templateData);

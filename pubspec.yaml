@@ -19,8 +19,8 @@ environment:
 dependencies:
   logging: ^1.2.0
   http: ^1.1.0
-  rdf_core: ^0.7.1
-  rdf_xml: ^0.2.1
+  rdf_core: ^0.7.5
+  rdf_xml: ^0.2.3
   yaml: ^3.1.2
   path: ^1.8.0
   build: ^2.4.1

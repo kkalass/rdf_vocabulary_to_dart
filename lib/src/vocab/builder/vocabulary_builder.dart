@@ -650,7 +650,7 @@ class VocabularyBuilder implements Builder {
 
         // Instead of writing to individual files, we'll generate a combined file
         // that contains all the necessary code and exports
-        final filesMap = generator.generateFiles(model);
+        final filesMap = await generator.generateFiles(model, buildStep);
 
         // Format and write the main vocabulary file which we've declared in buildExtensions
         final mainCode = _formatDartCode(filesMap['main']!);
