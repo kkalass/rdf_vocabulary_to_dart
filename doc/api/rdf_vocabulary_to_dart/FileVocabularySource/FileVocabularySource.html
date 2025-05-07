@@ -60,7 +60,10 @@
       <span class="name ">FileVocabularySource</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="-param-filePath"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">filePath</span>, </span></li>
 <li><span class="parameter" id="-param-namespace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">namespace</span>, {</span></li>
 <li><span class="parameter" id="-param-parsingFlags"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span> <span class="parameter-name">parsingFlags</span>, </span></li>
-<li><span class="parameter" id="-param-enabled"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">enabled</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="-param-generate"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">generate</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="-param-explicitContentType"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">explicitContentType</span>, </span></li>
+<li><span class="parameter" id="-param-skipDownload"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">skipDownload</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="-param-skipDownloadReason"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">skipDownloadReason</span>, </span></li>
 </ol>})
     </section>
     
@@ -73,8 +76,18 @@
   this.filePath,
   String namespace, {
   List&lt;String&gt;? parsingFlags,
-  bool enabled = true,
-}) : super(namespace, parsingFlags: parsingFlags, enabled: enabled);</code></pre>
+  bool generate = true,
+  String? explicitContentType,
+  bool skipDownload = false,
+  String? skipDownloadReason,
+}) : super(
+       namespace,
+       parsingFlags: parsingFlags,
+       generate: generate,
+       explicitContentType: explicitContentType,
+       skipDownload: skipDownload,
+       skipDownloadReason: skipDownloadReason,
+     );</code></pre>
 </section>
 
 

@@ -89,7 +89,7 @@
     <h2>Constructors</h2>
     <dl class="constructor-summary-list">
         <dt id="FileVocabularySource" class="callable">
-          <span class="name"><a href="../rdf_vocabulary_to_dart/FileVocabularySource/FileVocabularySource.html">FileVocabularySource</a></span><span class="signature">(<span class="parameter" id="-param-filePath"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">filePath</span>, </span><span class="parameter" id="-param-namespace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">namespace</span>, {</span><span class="parameter" id="-param-parsingFlags"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span> <span class="parameter-name">parsingFlags</span>, </span><span class="parameter" id="-param-enabled"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">enabled</span> = <span class="default-value">true</span></span>})</span>
+          <span class="name"><a href="../rdf_vocabulary_to_dart/FileVocabularySource/FileVocabularySource.html">FileVocabularySource</a></span><span class="signature">(<span class="parameter" id="-param-filePath"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">filePath</span>, </span><span class="parameter" id="-param-namespace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">namespace</span>, {</span><span class="parameter" id="-param-parsingFlags"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span> <span class="parameter-name">parsingFlags</span>, </span><span class="parameter" id="-param-generate"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">generate</span> = <span class="default-value">true</span>, </span><span class="parameter" id="-param-explicitContentType"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">explicitContentType</span>, </span><span class="parameter" id="-param-skipDownload"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">skipDownload</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-skipDownloadReason"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">skipDownloadReason</span></span>})</span>
         </dt>
         <dd>
           
@@ -115,14 +115,14 @@
 
 </dd>
 
-        <dt id="enabled" class="property inherited">
-  <span class="name"><a href="../rdf_vocabulary_to_dart/VocabularySource/enabled.html">enabled</a></span>
-  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+        <dt id="explicitContentType" class="property inherited">
+  <span class="name"><a href="../rdf_vocabulary_to_dart/VocabularySource/explicitContentType.html">explicitContentType</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span>
   
 
 </dt>
 <dd class="inherited">
-  Flag indicating if this vocabulary should be processed during generation.
+  Explicit content type for the vocabulary source.
   <div class="features"><span class="feature">final</span><span class="feature">inherited</span></div>
 
 </dd>
@@ -148,6 +148,18 @@
 <dd>
   
   <div class="features"><span class="feature">final</span></div>
+
+</dd>
+
+        <dt id="generate" class="property inherited">
+  <span class="name"><a href="../rdf_vocabulary_to_dart/VocabularySource/generate.html">generate</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  Flag indicating if this vocabulary should be processed during generation.
+  <div class="features"><span class="feature">final</span><span class="feature">inherited</span></div>
 
 </dd>
 
@@ -196,6 +208,30 @@
 <dd class="inherited">
   A representation of the runtime type of the object.
   <div class="features"><span class="feature">no setter</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="skipDownload" class="property inherited">
+  <span class="name"><a href="../rdf_vocabulary_to_dart/VocabularySource/skipDownload.html">skipDownload</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span>
+  
+
+</dt>
+<dd class="inherited">
+  Flag indicating if this vocabulary should be deliberately skipped.
+  <div class="features"><span class="feature">final</span><span class="feature">inherited</span></div>
+
+</dd>
+
+        <dt id="skipDownloadReason" class="property inherited">
+  <span class="name"><a href="../rdf_vocabulary_to_dart/VocabularySource/skipDownloadReason.html">skipDownloadReason</a></span>
+  <span class="signature">&#8594; <a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span>
+  
+
+</dt>
+<dd class="inherited">
+  Reason for skipping this vocabulary.
+  <div class="features"><span class="feature">final</span><span class="feature">inherited</span></div>
 
 </dd>
 

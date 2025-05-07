@@ -164,8 +164,8 @@ class VocabularyBuilder implements Builder {
     final namespace = source.namespace;
 
     // Überprüfen, ob das Vokabular übersprungen werden soll
-    if (source.skip) {
-      final reason = source.skipReason ?? 'No reason provided';
+    if (source.skipDownload) {
+      final reason = source.skipDownloadReason ?? 'No reason provided';
       log.info('Deliberately skipping vocabulary "$name": $reason');
       return null;
     }
@@ -594,8 +594,8 @@ class VocabularyBuilder implements Builder {
           continue;
         }
 
-        if (source.skip) {
-          final reason = source.skipReason ?? 'No reason provided';
+        if (source.skipDownload) {
+          final reason = source.skipDownloadReason ?? 'No reason provided';
           log.info('Deliberately skipping vocabulary "$name": $reason');
           continue;
         }

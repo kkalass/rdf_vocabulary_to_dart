@@ -41,21 +41,21 @@ abstract class VocabularySource {
   /// This differs from `enabled` in that it's meant for vocabularies that cannot
   /// be loaded due to licensing restrictions or proprietary content, rather than
   /// just being temporarily disabled.
-  final bool skip;
+  final bool skipDownload;
 
   /// Reason for skipping this vocabulary.
   ///
   /// This provides documentation about why a vocabulary is skipped, especially
   /// useful for proprietary or licensed vocabularies.
-  final String? skipReason;
+  final String? skipDownloadReason;
 
   const VocabularySource(
     this.namespace, {
     this.parsingFlags,
     this.generate = true,
     this.explicitContentType,
-    this.skip = false,
-    this.skipReason,
+    this.skipDownload = false,
+    this.skipDownloadReason,
   });
 
   /// Loads the vocabulary content.
@@ -110,8 +110,8 @@ class UrlVocabularySource extends VocabularySource {
          parsingFlags: parsingFlags,
          generate: enabled,
          explicitContentType: explicitContentType,
-         skip: skipDownload,
-         skipReason: skipDownloadReason,
+         skipDownload: skipDownload,
+         skipDownloadReason: skipDownloadReason,
        );
 
   @override
@@ -234,8 +234,8 @@ class FileVocabularySource extends VocabularySource {
          parsingFlags: parsingFlags,
          generate: generate,
          explicitContentType: explicitContentType,
-         skip: skipDownload,
-         skipReason: skipDownloadReason,
+         skipDownload: skipDownload,
+         skipDownloadReason: skipDownloadReason,
        );
 
   @override

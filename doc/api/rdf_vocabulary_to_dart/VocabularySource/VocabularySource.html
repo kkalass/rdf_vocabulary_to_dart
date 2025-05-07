@@ -59,7 +59,10 @@
       const
       <span class="name ">VocabularySource</span>(<wbr><ol class="parameter-list"> <li><span class="parameter" id="-param-namespace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">namespace</span>, {</span></li>
 <li><span class="parameter" id="-param-parsingFlags"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span> <span class="parameter-name">parsingFlags</span>, </span></li>
-<li><span class="parameter" id="-param-enabled"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">enabled</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="-param-generate"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">generate</span> = <span class="default-value">true</span>, </span></li>
+<li><span class="parameter" id="-param-explicitContentType"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">explicitContentType</span>, </span></li>
+<li><span class="parameter" id="-param-skipDownload"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">skipDownload</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="-param-skipDownloadReason"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">skipDownloadReason</span>, </span></li>
 </ol>})
     </section>
     
@@ -71,7 +74,10 @@
   <pre class="language-dart"><code class="language-dart">const VocabularySource(
   this.namespace, {
   this.parsingFlags,
-  this.enabled = true,
+  this.generate = true,
+  this.explicitContentType,
+  this.skipDownload = false,
+  this.skipDownloadReason,
 });</code></pre>
 </section>
 
