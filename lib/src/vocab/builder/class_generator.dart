@@ -49,11 +49,11 @@ class VocabularyClassGenerator {
     // Add header and copyright
     _writeHeader(mainBuffer);
 
-    // Write library documentation and declaration for main class
-    _writeLibraryDoc(mainBuffer, model, isMainFile: true);
-
-    // Import necessary packages
+    // Write imports first
     _writeImports(mainBuffer);
+
+    // Write main class documentation directly above the class declaration
+    _writeMainClassDoc(mainBuffer, model);
 
     // Write primary class containing all terms
     _writePrimaryClass(mainBuffer, model);
@@ -67,11 +67,15 @@ class VocabularyClassGenerator {
     if (universalProperties.isNotEmpty) {
       final universalBuffer = StringBuffer();
 
-      // Add header and imports
+      // Add header
       _writeHeader(universalBuffer);
-      _writeLibraryDoc(universalBuffer, model, isUniversalFile: true);
+
+      // Write imports first
       _writeImports(universalBuffer);
       _writeUniversalPropertiesImport(universalBuffer, model);
+
+      // Write universal properties documentation directly above the class
+      _writeUniversalPropertiesDoc(universalBuffer, model);
 
       // Write the universal properties class
       _writeUniversalPropertiesClass(universalBuffer, model);
@@ -569,26 +573,136 @@ class VocabularyClassGenerator {
     VocabularyClass rdfClass,
     String vocabularyClassName,
   ) {
-    buffer.writeln('/// ${rdfClass.localName} class from ${vocabularyClassName} vocabulary');
+    buffer.writeln(
+      '/// ${rdfClass.localName} class from ${vocabularyClassName} vocabulary',
+    );
     buffer.writeln('///');
-    
+
     if (rdfClass.comment != null) {
       final formattedComment = _formatMultilineComment(rdfClass.comment!);
       buffer.writeln('/// $formattedComment');
       buffer.writeln('///');
     }
-    
-    buffer.writeln('/// This class provides access to all properties that can be used with ${rdfClass.localName}.');
+
+    buffer.writeln(
+      '/// This class provides access to all properties that can be used with ${rdfClass.localName}.',
+    );
     buffer.writeln('/// [Class Reference](${rdfClass.iri})');
-    
+
     if (rdfClass.seeAlso.isNotEmpty) {
       for (final seeAlso in rdfClass.seeAlso) {
         buffer.writeln('/// [See also]($seeAlso)');
       }
     }
-    
+
     buffer.writeln('///');
     buffer.writeln('/// [Vocabulary Reference](${model.namespace})');
+    buffer.writeln();
+  }
+
+  /// Writes the main class documentation directly above the class declaration
+  void _writeMainClassDoc(StringBuffer buffer, VocabularyModel model) {
+    final name = _capitalize(model.name);
+    final hasUniversalProperties = model.properties.any(
+      (p) => p.domains.isEmpty,
+    );
+    final universalClassName = '${name}UniversalProperties';
+
+    buffer.writeln('/// $name Vocabulary');
+    buffer.writeln('///');
+    buffer.writeln(
+      '/// Provides constants for the ${name.toUpperCase()} vocabulary',
+    );
+    buffer.writeln('/// (${model.namespace}).');
+    buffer.writeln('///');
+    buffer.writeln('/// Example usage:');
+    buffer.writeln('/// ```dart');
+    buffer.writeln('/// import \'package:rdf_vocabulary_to_dart/vocab.dart\';');
+
+    if (model.properties.isNotEmpty) {
+      final exampleProp = _dartIdentifier(model.properties.first.localName);
+      buffer.writeln(
+        '/// final property = ${name}.$exampleProp; // Access property directly from main class',
+      );
+    }
+
+    if (model.classes.isNotEmpty) {
+      final exampleClass = _dartIdentifier(model.classes.first.localName);
+      buffer.writeln(
+        '/// final classIri = ${name}$exampleClass.classIri; // Access class IRI',
+      );
+
+      if (model.properties.isNotEmpty) {
+        final exampleProp = _dartIdentifier(model.properties.first.localName);
+        buffer.writeln(
+          '/// final property = ${name}$exampleClass.$exampleProp; // Access property from class',
+        );
+      }
+    }
+
+    if (hasUniversalProperties) {
+      final universalProp = _dartIdentifier(
+        model.properties.firstWhere((p) => p.domains.isEmpty).localName,
+      );
+      buffer.writeln(
+        '/// final universalProp = $universalClassName.$universalProp; // Access universal property',
+      );
+    }
+
+    buffer.writeln('/// ```');
+    buffer.writeln('///');
+    buffer.writeln(
+      '/// All constants are pre-constructed as IriTerm objects to enable direct use in',
+    );
+    buffer.writeln(
+      '/// constructing RDF graphs without repeated string concatenation or term creation.',
+    );
+
+    if (hasUniversalProperties) {
+      buffer.writeln('///');
+      buffer.writeln('/// Universal Properties:');
+      buffer.writeln(
+        '/// This vocabulary provides a `$universalClassName` class for properties',
+      );
+      buffer.writeln(
+        '/// that have no explicitly defined domain restrictions and can be applied',
+      );
+      buffer.writeln('/// to any resource in this vocabulary\'s context.');
+    }
+
+    buffer.writeln('///');
+    buffer.writeln('/// [Vocabulary Reference](${model.namespace})');
+
+    // Only add library declaration for the main file which is not in src/
+    if (!outputDir.contains('/src/')) {
+      buffer.writeln('library ${model.prefix}_vocab;');
+    }
+    buffer.writeln();
+  }
+
+  /// Writes the universal properties documentation directly above the class declaration
+  void _writeUniversalPropertiesDoc(
+    StringBuffer buffer,
+    VocabularyModel model,
+  ) {
+    final name = _capitalize(model.name);
+    final universalClassName = '${name}UniversalProperties';
+
+    buffer.writeln('/// Universal Properties for the ${name} vocabulary');
+    buffer.writeln('///');
+    buffer.writeln(
+      '/// Universal properties are RDF properties that have no explicitly defined domain',
+    );
+    buffer.writeln(
+      '/// and can therefore be applied to any resource within this vocabulary\'s context.',
+    );
+    buffer.writeln('///');
+    buffer.writeln('/// [Vocabulary Reference](${model.namespace})');
+
+    // Only add library declaration for files not in src/
+    if (!outputDir.contains('/src/')) {
+      buffer.writeln('library ${model.prefix}_universal_vocab;');
+    }
     buffer.writeln();
   }
 
