@@ -18,6 +18,14 @@
       "source": "lib/asset/xsd.ttl",
       "generate": false
     },
+    "void": {
+      "type": "url",
+      "namespace": "http://rdfs.org/ns/void#",
+      "source": "http://vocab.deri.ie/void.ttl",
+      "skipDownload": true,
+      "skipDownloadReason": "The source URL is currently blocking, the build waits forever.",
+      "generate": false
+    },
     "owl": {
       "type": "url",
       "namespace": "http://www.w3.org/2002/07/owl#",
@@ -37,6 +45,13 @@
       "skipDownload": true,
       "skipDownloadReason": "Licensed vocabulary, requires authentication for access"
     },
+    "eventowl": {
+      "type": "url",
+      "namespace": "http://purl.org/NET/c4dm/event.owl#",
+      "source": "https://motools.sf.net/event/event.n3",
+      "contentType": "text/turtle",
+      "generate": false
+    },
     "dcterms": {
       "type": "url",
       "namespace": "http://purl.org/dc/terms/",
@@ -47,7 +62,7 @@
       "type": "url",
       "namespace": "http://xmlns.com/foaf/0.1/",
       "source": "http://xmlns.com/foaf/spec/index.rdf",
-      "generate": true
+      "generate": false
     },
     "geo": {
       "type": "url",
