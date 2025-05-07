@@ -584,6 +584,23 @@ class VocabularyClassGenerator {
       buffer.writeln('///');
     }
 
+    // Build class hierarchy to get all parent classes (direct and indirect)
+    final classHierarchy = _buildClassHierarchy(model);
+    final allSuperClasses = classHierarchy[rdfClass.iri] ?? <String>{};
+
+    // Show inheritance information if there are any parent classes
+    if (allSuperClasses.isNotEmpty) {
+      buffer.writeln('/// Inherits from:');
+      // Sort parent classes for consistent output
+      final sortedSuperClasses = allSuperClasses.toList()..sort();
+      for (final superClass in sortedSuperClasses) {
+        // Extract readable name from IRI
+        final name = _extractReadableNameFromIri(superClass);
+        buffer.writeln('/// - $name ($superClass)');
+      }
+      buffer.writeln('///');
+    }
+
     buffer.writeln(
       '/// This class provides access to all properties that can be used with ${rdfClass.localName}.',
     );
@@ -598,6 +615,23 @@ class VocabularyClassGenerator {
     buffer.writeln('///');
     buffer.writeln('/// [Vocabulary Reference](${model.namespace})');
     buffer.writeln();
+  }
+
+  /// Extracts a human-readable name from an IRI
+  String _extractReadableNameFromIri(String iri) {
+    // Try to extract the name after the last # or /
+    final hashIndex = iri.lastIndexOf('#');
+    if (hashIndex != -1 && hashIndex < iri.length - 1) {
+      return iri.substring(hashIndex + 1);
+    }
+
+    final slashIndex = iri.lastIndexOf('/');
+    if (slashIndex != -1 && slashIndex < iri.length - 1) {
+      return iri.substring(slashIndex + 1);
+    }
+
+    // Fallback to the full IRI
+    return iri;
   }
 
   /// Writes the main class documentation directly above the class declaration
