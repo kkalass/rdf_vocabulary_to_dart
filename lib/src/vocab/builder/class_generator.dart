@@ -246,7 +246,9 @@ class VocabularyClassGenerator {
     // Get all parent classes for documentation
     final allSuperClasses = resolver.getAllClassTypes(rdfClass.iri);
     final superClassList =
-        allSuperClasses.map((superClass) {
+        allSuperClasses.where((superClass) => superClass != rdfClass.iri).map((
+          superClass,
+        ) {
           return {
             'iri': superClass,
             'readableName': _extractReadableNameFromIri(superClass),
@@ -332,7 +334,7 @@ class VocabularyClassGenerator {
   ) {
     return properties.map((property) {
       final propertyName = _getPropertyName(property, classNamespace);
-
+      final externalPrefix = _getPropertyPrefix(property, classNamespace);
       return {
         'localName': property.localName,
         'iri': property.iri,
@@ -345,6 +347,7 @@ class VocabularyClassGenerator {
         'hasRanges': property.ranges.isNotEmpty,
         'seeAlso': property.seeAlso,
         'hasSeeAlso': property.seeAlso.isNotEmpty,
+        'externalPrefix': externalPrefix,
       };
     }).toList();
   }
@@ -386,9 +389,16 @@ class VocabularyClassGenerator {
   /// Gets a property name with prefix if it comes from a different namespace
   String _getPropertyName(VocabularyTerm term, String? classNamespace) {
     final dartName = _dartIdentifier(term.localName);
-
+    final propertyPrefix = _getPropertyPrefix(term, classNamespace);
     // If classNamespace is null, we're generating the main class (no prefix needed)
-    if (classNamespace == null) return dartName;
+    return propertyPrefix == null
+        ? dartName
+        : '${propertyPrefix}${_capitalize(dartName)}';
+  }
+
+  String? _getPropertyPrefix(VocabularyTerm term, String? classNamespace) {
+    // If classNamespace is null, we're generating the main class (no prefix needed)
+    if (classNamespace == null) return null;
 
     // If the property belongs to a different namespace than the class,
     // prefix it to avoid naming conflicts
@@ -398,12 +408,12 @@ class VocabularyClassGenerator {
       if (namespace != null && namespace != classNamespace) {
         final prefix = _getNamespacePrefix(namespace);
         if (prefix != null) {
-          return '${prefix}${_capitalize(dartName)}';
+          return prefix;
         }
       }
     }
 
-    return dartName;
+    return null;
   }
 
   /// Extracts the namespace from an IRI

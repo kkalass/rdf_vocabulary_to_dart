@@ -30,7 +30,7 @@ class {{dartClassName}} {
   static const classIri = IriTerm.prevalidated('{{{classIri}}}');
 
   {{#properties}}
-  /// IRI for {{vocabPrefix}}:{{localName}}{{#hasRanges}} [Expects: {{#ranges}}{{{value}}}{{^last}}, {{/last}}{{/ranges}}]{{/hasRanges}}
+  /// {{localName}}{{#externalPrefix}} from {{externalPrefix}} vocabulary{{/externalPrefix}}{{#hasRanges}} [Expects: {{#ranges}}{{{value}}}{{^last}}, {{/last}}{{/ranges}}]{{/hasRanges}}
   {{#comment}}
   ///
   /// {{{comment}}}
