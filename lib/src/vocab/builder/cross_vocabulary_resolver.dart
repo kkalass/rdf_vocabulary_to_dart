@@ -290,11 +290,13 @@ class CrossVocabularyResolver {
 
       // Try to load the vocabulary
       final model = await _vocabularyLoader(namespace, name);
+
+      // Null can be returned if the vocabulary is deliberately skipped or cannot be loaded
       if (model != null) {
         registerVocabulary(model);
       } else {
         _log.warning(
-          'Failed to load implied vocabulary from namespace: $namespace',
+          'Skipped or failed to load implied vocabulary from namespace: $namespace',
         );
       }
     }

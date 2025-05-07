@@ -114,7 +114,7 @@ class VocabularyBuilder implements Builder {
 
         if (source == null) {
           log.warning(
-            'No configured source found for vocabulary $name, trying to guess it',
+            'No configured source found for vocabulary $namespace ($name), trying to guess it',
           );
           // Try to derive a turtle URL from the namespace
           final sourceUrl = await _findVocabularyUrl(namespace);
@@ -162,6 +162,13 @@ class VocabularyBuilder implements Builder {
     VocabularySource source,
   ) async {
     final namespace = source.namespace;
+
+    // Überprüfen, ob das Vokabular übersprungen werden soll
+    if (source.skip) {
+      final reason = source.skipReason ?? 'No reason provided';
+      log.info('Deliberately skipping vocabulary "$name": $reason');
+      return null;
+    }
 
     try {
       // Load the vocabulary content
@@ -497,34 +504,55 @@ class VocabularyBuilder implements Builder {
         }
 
         // Check if the vocabulary is enabled, default to true if not specified
-        final bool enabled = vocabConfig['enabled'] as bool? ?? true;
+        final bool generate = vocabConfig['generate'] as bool? ?? true;
 
         // Get explicit content type if specified
         final String? explicitContentType =
             vocabConfig['contentType'] as String?;
+
+        // Extract skip flag and reason if present
+        final bool skipDownload = vocabConfig['skipDownload'] as bool? ?? false;
+        final String? skipDownloadReason =
+            vocabConfig['skipDownloadReason'] as String?;
 
         VocabularySource source;
         try {
           switch (type) {
             case 'url':
               // Use 'source' field if available, otherwise fall back to namespace
-              final sourceUrl = vocabConfig['source'] as String? ?? namespace;
+              final sourceUrl = vocabConfig['source'] ?? namespace;
+              if (sourceUrl is! String) {
+                throw ArgumentError(
+                  'Invalid sourceUrl for vocabulary $name, expected a string, not $sourceUrl',
+                );
+              }
+
               source = UrlVocabularySource(
                 namespace,
                 sourceUrl: sourceUrl,
                 parsingFlags: parsingFlags,
-                enabled: enabled,
+                enabled: generate,
                 explicitContentType: explicitContentType,
+                skipDownload: skipDownload,
+                skipDownloadReason: skipDownloadReason,
               );
               break;
             case 'file':
-              final filePath = vocabConfig['filePath'] as String;
+              final filePath = vocabConfig['source'];
+              if (filePath is! String) {
+                throw ArgumentError(
+                  'Invalid filePath for vocabulary $name, expected a string, not $filePath',
+                );
+              }
+
               source = FileVocabularySource(
                 filePath,
                 namespace,
                 parsingFlags: parsingFlags,
-                enabled: enabled,
+                generate: generate,
                 explicitContentType: explicitContentType,
+                skipDownload: skipDownload,
+                skipDownloadReason: skipDownloadReason,
               );
               break;
             default:
@@ -533,8 +561,10 @@ class VocabularyBuilder implements Builder {
           }
 
           vocabularies[name] = source;
-        } catch (e) {
-          log.warning('Error creating source for vocabulary $name: $e');
+        } catch (e, stackTrace) {
+          log.severe(
+            'Error creating source for vocabulary $name: $e\n$stackTrace',
+          );
           // Skip this vocabulary
         }
       }
@@ -559,8 +589,14 @@ class VocabularyBuilder implements Builder {
       final source = entry.value;
 
       try {
-        if (!source.enabled) {
+        if (!source.generate) {
           log.info('Skipping disabled vocabulary: $name');
+          continue;
+        }
+
+        if (source.skip) {
+          final reason = source.skipReason ?? 'No reason provided';
+          log.info('Deliberately skipping vocabulary "$name": $reason');
           continue;
         }
 

@@ -29,18 +29,33 @@ abstract class VocabularySource {
   ///
   /// If set to false, this vocabulary will be skipped during the generation process.
   /// Defaults to true if not specified.
-  final bool enabled;
+  final bool generate;
 
   /// Explicit content type for the vocabulary source.
   ///
   /// If provided, this will override the automatic content type detection based on file extension.
   final String? explicitContentType;
 
+  /// Flag indicating if this vocabulary should be deliberately skipped.
+  ///
+  /// This differs from `enabled` in that it's meant for vocabularies that cannot
+  /// be loaded due to licensing restrictions or proprietary content, rather than
+  /// just being temporarily disabled.
+  final bool skip;
+
+  /// Reason for skipping this vocabulary.
+  ///
+  /// This provides documentation about why a vocabulary is skipped, especially
+  /// useful for proprietary or licensed vocabularies.
+  final String? skipReason;
+
   const VocabularySource(
     this.namespace, {
     this.parsingFlags,
-    this.enabled = true,
+    this.generate = true,
     this.explicitContentType,
+    this.skip = false,
+    this.skipReason,
   });
 
   /// Loads the vocabulary content.
@@ -87,12 +102,16 @@ class UrlVocabularySource extends VocabularySource {
     List<String>? parsingFlags,
     bool enabled = true,
     String? explicitContentType,
+    bool skipDownload = false,
+    String? skipDownloadReason,
   }) : sourceUrl = sourceUrl ?? namespace,
        super(
          namespace,
          parsingFlags: parsingFlags,
-         enabled: enabled,
+         generate: enabled,
          explicitContentType: explicitContentType,
+         skip: skipDownload,
+         skipReason: skipDownloadReason,
        );
 
   @override
@@ -206,13 +225,17 @@ class FileVocabularySource extends VocabularySource {
     this.filePath,
     String namespace, {
     List<String>? parsingFlags,
-    bool enabled = true,
+    bool generate = true,
     String? explicitContentType,
+    bool skipDownload = false,
+    String? skipDownloadReason,
   }) : super(
          namespace,
          parsingFlags: parsingFlags,
-         enabled: enabled,
+         generate: generate,
          explicitContentType: explicitContentType,
+         skip: skipDownload,
+         skipReason: skipDownloadReason,
        );
 
   @override
