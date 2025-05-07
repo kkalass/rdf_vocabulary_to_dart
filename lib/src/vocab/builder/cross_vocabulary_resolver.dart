@@ -44,9 +44,9 @@ class CrossVocabularyResolver {
   final Map<String, String> _extractedNamespaceToVocab = {};
 
   /// Well-known global resource types that all other types implicitly inherit from
-  static const _globalResourceTypes = {
-    'http://www.w3.org/2000/01/rdf-schema#Resource',
-    'http://www.w3.org/2002/07/owl#Thing',
+  static const _globalResourceTypes = <String>{
+    //'http://www.w3.org/2000/01/rdf-schema#Resource',
+    //'http://www.w3.org/2002/07/owl#Thing',
   };
 
   /// Function to load an implied vocabulary model if available
@@ -342,11 +342,7 @@ class CrossVocabularyResolver {
     final result = <VocabularyProperty>{};
 
     // Get the full set of classes (this class and all its superclasses)
-    final allClassTypes = {
-      classIri,
-      ...(_allSuperClasses[classIri] ?? {}),
-      ..._globalResourceTypes,
-    };
+    final allClassTypes = getAllClassTypes(classIri);
 
     _log.fine('Getting properties for $classIri in namespace $vocabNamespace');
     _log.fine('Class hierarchy: ${allClassTypes.join(', ')}');
@@ -385,6 +381,14 @@ class CrossVocabularyResolver {
     return result.toList();
   }
 
+  Set<String> getAllClassTypes(String classIri) {
+    return {
+      classIri,
+      ...(_allSuperClasses[classIri] ?? {}),
+      ..._globalResourceTypes,
+    };
+  }
+
   /// Gets properties from external vocabularies that apply to a given class
   Set<VocabularyProperty> _getExternalPropertiesForClass(
     String classIri,
@@ -399,11 +403,7 @@ class CrossVocabularyResolver {
     final result = <VocabularyProperty>{};
 
     // Get the full set of classes (this class and all its superclasses)
-    final allClassTypes = {
-      classIri,
-      ...(_allSuperClasses[classIri] ?? {}),
-      ..._globalResourceTypes,
-    };
+    final allClassTypes = getAllClassTypes(classIri);
 
     // Add properties from all other vocabularies
     for (final entry in _vocabularyProperties.entries) {
@@ -475,11 +475,7 @@ class CrossVocabularyResolver {
                           final domains = _propertyDomains[prop.iri] ?? {};
                           if (domains.isEmpty) return true;
 
-                          final allTypes = {
-                            classIri,
-                            ...(_allSuperClasses[classIri] ?? {}),
-                            ..._globalResourceTypes,
-                          };
+                          final allTypes = getAllClassTypes(classIri);
 
                           return domains.any(
                             (domain) => allTypes.contains(domain),

@@ -70,6 +70,14 @@ class MockCrossVocabularyResolver extends _i1.Mock
           as List<_i3.VocabularyProperty>);
 
   @override
+  Set<String> getAllClassTypes(String? classIri) =>
+      (super.noSuchMethod(
+            Invocation.method(#getAllClassTypes, [classIri]),
+            returnValue: <String>{},
+          )
+          as Set<String>);
+
+  @override
   List<_i3.VocabularyProperty> getCrossVocabPropertiesForClass(
     String? classIri,
     String? sourceVocabNamespace,

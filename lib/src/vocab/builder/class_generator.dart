@@ -117,11 +117,9 @@ class VocabularyClassGenerator {
 
     // Generate individual class files
     if (model.classes.isNotEmpty) {
-      final classHierarchy = _buildClassHierarchy(model);
-
       for (final rdfClass in model.classes) {
         final dartClassName = _dartIdentifier(rdfClass.localName);
-        final classFile = _generateClassFile(model, rdfClass, classHierarchy);
+        final classFile = _generateClassFile(model, rdfClass);
         generatedFiles[dartClassName] = classFile;
       }
     }
@@ -235,11 +233,7 @@ class VocabularyClassGenerator {
   }
 
   /// Generates a class file for a specific RDF class
-  String _generateClassFile(
-    VocabularyModel model,
-    VocabularyClass rdfClass,
-    Map<String, Set<String>> classHierarchy,
-  ) {
+  String _generateClassFile(VocabularyModel model, VocabularyClass rdfClass) {
     final className = _capitalize(model.name);
     final dartClassName = '${className}${_dartIdentifier(rdfClass.localName)}';
 
@@ -250,7 +244,7 @@ class VocabularyClassGenerator {
     );
 
     // Get all parent classes for documentation
-    final allSuperClasses = classHierarchy[rdfClass.iri] ?? <String>{};
+    final allSuperClasses = resolver.getAllClassTypes(rdfClass.iri);
     final superClassList =
         allSuperClasses.map((superClass) {
           return {
@@ -378,42 +372,6 @@ class VocabularyClassGenerator {
 
     // Fallback to the full IRI
     return iri;
-  }
-
-  /// Builds a map of class IRI to list of all parent class IRIs (including inherited)
-  Map<String, Set<String>> _buildClassHierarchy(VocabularyModel model) {
-    final hierarchy = <String, Set<String>>{};
-
-    // Initialize with direct parent classes
-    for (final rdfClass in model.classes) {
-      hierarchy[rdfClass.iri] = Set.from(rdfClass.superClasses);
-    }
-
-    // Resolve full inheritance (transitive closure)
-    bool changed;
-    do {
-      changed = false;
-
-      for (final entry in hierarchy.entries) {
-        final classIri = entry.key;
-        final parents = Set<String>.from(entry.value);
-
-        for (final parentIri in parents.toList()) {
-          // Add parent's parents
-          if (hierarchy.containsKey(parentIri)) {
-            final grandparents = hierarchy[parentIri]!;
-            final sizeBefore = parents.length;
-            parents.addAll(grandparents);
-            if (parents.length > sizeBefore) {
-              changed = true;
-              hierarchy[classIri] = parents;
-            }
-          }
-        }
-      }
-    } while (changed);
-
-    return hierarchy;
   }
 
   /// Gets a property name with prefix if it comes from a different namespace
