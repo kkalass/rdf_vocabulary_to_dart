@@ -296,7 +296,7 @@ class VocabularyClassGenerator {
     String prefix,
   ) {
     return terms.map((term) {
-      return {
+      final Map<String, dynamic> result = {
         'localName': term.localName,
         'iri': term.iri,
         'dartName': _dartIdentifier(term.localName),
@@ -305,6 +305,14 @@ class VocabularyClassGenerator {
         'seeAlso': term.seeAlso,
         'hasSeeAlso': term.seeAlso.isNotEmpty,
       };
+
+      // Add range information if the term is a property
+      if (term is VocabularyProperty) {
+        result['ranges'] = _toMustacheList(term.ranges);
+        result['hasRanges'] = term.ranges.isNotEmpty;
+      }
+
+      return result;
     }).toList();
   }
 
@@ -323,11 +331,12 @@ class VocabularyClassGenerator {
     String classNamespace,
   ) {
     return properties.map((property) {
-      print('Property: ${property.localName}, Ranges: ${property.ranges}');
+      final propertyName = _getPropertyName(property, classNamespace);
+
       return {
         'localName': property.localName,
         'iri': property.iri,
-        'dartName': _getPropertyName(property, classNamespace),
+        'dartName': propertyName,
         'comment': property.comment,
         'vocabPrefix': prefix.toLowerCase(),
         'domainDescription': _getDomainDescription(property, classNamespace),

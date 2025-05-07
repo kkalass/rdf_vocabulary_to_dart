@@ -13,15 +13,11 @@ class {{universalClassName}} {
   const {{universalClassName}}._();
 
   {{#properties}}
-  /// IRI for {{vocabPrefix}}:{{localName}}
+  /// IRI for {{vocabPrefix}}:{{localName}}{{#hasRanges}} [Expects: {{#ranges}}{{{value}}}{{^last}}, {{/last}}{{/ranges}}]{{/hasRanges}}
   {{#comment}}
   ///
   /// {{{comment}}}
   {{/comment}}
-  {{#hasRanges}}
-  ///
-  /// Expects values of type: {{#ranges}}{{{value}}}{{^last}}, {{/last}}{{/ranges}}
-  {{/hasRanges}}
   {{#hasSeeAlso}}
   ///
   {{#seeAlso}}

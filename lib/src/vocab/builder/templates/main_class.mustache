@@ -11,7 +11,7 @@ class {{className}} {
   static const String prefix = '{{{prefix}}}';
 
   {{#terms}}
-  /// IRI for {{vocabPrefix}}:{{localName}}
+  /// IRI for {{vocabPrefix}}:{{localName}}{{#hasRanges}} [Expects: {{#ranges}}{{{value}}}{{^last}}, {{/last}}{{/ranges}}]{{/hasRanges}}
   {{#comment}}
   ///
   /// {{{comment}}}
