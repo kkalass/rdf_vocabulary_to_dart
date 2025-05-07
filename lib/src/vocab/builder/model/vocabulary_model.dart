@@ -428,10 +428,14 @@ class VocabularyModelExtractor {
       predicate: IriTerm('http://www.w3.org/2000/01/rdf-schema#domain'),
     );
 
-    // Schema.org domainIncludes
-    final schemaOrgDomainTriples = graph.findTriples(
+    // Schema.org http domainIncludes
+    final schemaOrgHttpDomainTriples = graph.findTriples(
       subject: resource,
       predicate: IriTerm('http://schema.org/domainIncludes'),
+    );
+    final schemaOrgDomainTriples = graph.findTriples(
+      subject: resource,
+      predicate: IriTerm('https://schema.org/domainIncludes'),
     );
 
     final domains = [
@@ -439,6 +443,9 @@ class VocabularyModelExtractor {
           .where((triple) => triple.object is IriTerm)
           .map((triple) => (triple.object as IriTerm).iri),
       ...schemaOrgDomainTriples
+          .where((triple) => triple.object is IriTerm)
+          .map((triple) => (triple.object as IriTerm).iri),
+      ...schemaOrgHttpDomainTriples
           .where((triple) => triple.object is IriTerm)
           .map((triple) => (triple.object as IriTerm).iri),
     ];
@@ -457,6 +464,11 @@ class VocabularyModelExtractor {
     // Schema.org rangeIncludes
     final schemaOrgRangeTriples = graph.findTriples(
       subject: resource,
+      predicate: IriTerm('https://schema.org/rangeIncludes'),
+    );
+    // Schema.org http rangeIncludes
+    final schemaOrgHttpRangeTriples = graph.findTriples(
+      subject: resource,
       predicate: IriTerm('http://schema.org/rangeIncludes'),
     );
 
@@ -465,6 +477,9 @@ class VocabularyModelExtractor {
           .where((triple) => triple.object is IriTerm)
           .map((triple) => (triple.object as IriTerm).iri),
       ...schemaOrgRangeTriples
+          .where((triple) => triple.object is IriTerm)
+          .map((triple) => (triple.object as IriTerm).iri),
+      ...schemaOrgHttpRangeTriples
           .where((triple) => triple.object is IriTerm)
           .map((triple) => (triple.object as IriTerm).iri),
     ];
