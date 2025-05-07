@@ -11,6 +11,7 @@ import 'package:build/build.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:http/http.dart' as http;
 import 'package:logging/logging.dart';
+import 'package:path/path.dart' as path;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:rdf_core/rdf_core.dart';
 import 'package:rdf_xml/rdf_xml.dart';
@@ -93,8 +94,15 @@ class VocabularyBuilder implements Builder {
   /// Loads an implied vocabulary that was discovered through references
   static Future<VocabularyModel?> Function(String namespace, String name)
   createVocabularyLoader(Map<String, VocabularySource> vocabularySources) {
-    // Load the manifest file to get the namespace and name
+    final loader = createRdfGraphLoader(vocabularySources);
+    return (String namespace, String name) async {
+      final graph = await loader(namespace, name);
+      return _extractVocabulary(name, namespace, graph);
+    };
+  }
 
+  static Future<RdfGraph?> Function(String namespace, String name)
+  createRdfGraphLoader(Map<String, VocabularySource> vocabularySources) {
     return (String namespace, String name) async {
       log.info('Loading implied vocabulary "$name" from namespace $namespace');
 
@@ -127,7 +135,7 @@ class VocabularyBuilder implements Builder {
           );
         }
 
-        return _loadVocabulary(name, source);
+        return _loadRdfGraph(name, source);
       } catch (e, stackTrace) {
         log.severe(
           'Error loading implied vocabulary $name from $namespace: $e\n$stackTrace',
@@ -137,7 +145,7 @@ class VocabularyBuilder implements Builder {
     };
   }
 
-  static Future<VocabularyModel?> _loadVocabulary(
+  static Future<RdfGraph?> _loadRdfGraph(
     String name,
     VocabularySource source,
   ) async {
@@ -182,10 +190,29 @@ class VocabularyBuilder implements Builder {
         );
 
         log.info('Successfully parsed $name');
+        return graph;
       } catch (e) {
         log.severe(
           'Failed to parse implied vocabulary $name from $namespace: $e',
         );
+        return null;
+      }
+    } catch (e, stackTrace) {
+      log.severe(
+        'Error loading vocabulary $name from $namespace: $e\n$stackTrace',
+      );
+      return null;
+    }
+  }
+
+  static Future<VocabularyModel?> _extractVocabulary(
+    String name,
+    String namespace,
+    RdfGraph? graph,
+  ) async {
+    try {
+      if (graph == null) {
+        log.severe('Failed to load RDF graph for vocabulary $name');
         return null;
       }
 
@@ -200,10 +227,20 @@ class VocabularyBuilder implements Builder {
       return model;
     } catch (e, stackTrace) {
       log.severe(
-        'Error loading vocabulary $name from $namespace: $e\n$stackTrace',
+        'Error extracting vocabulary $name from $namespace: $e\n$stackTrace',
       );
       return null;
     }
+  }
+
+  static Future<VocabularyModel?> _loadVocabulary(
+    String name,
+    VocabularySource source,
+  ) async {
+    final namespace = source.namespace;
+
+    final graph = await _loadRdfGraph(name, source);
+    return _extractVocabulary(name, namespace, graph);
   }
 
   /// Algorithmically tries to find a valid turtle URL for a vocabulary namespace
@@ -332,12 +369,13 @@ class VocabularyBuilder implements Builder {
     final outputs = <String>[];
 
     // Always add the index file as required output
-    outputs.add(_getFullOutputPath('_index.dart'));
+    outputs.add('${_getFullOutputPath('_index.dart')}');
 
     // Add vocabulary files from manifest as potential outputs
     final vocabularyNames = _getVocabularyNamesFromManifest();
     for (final name in vocabularyNames) {
-      outputs.add(_getFullOutputPath('$name.dart'));
+      // Main vocabulary file
+      outputs.add('${_getFullOutputPath('$name.dart')}');
     }
 
     return {manifestAssetPath: outputs};
@@ -346,10 +384,9 @@ class VocabularyBuilder implements Builder {
   /// Converts a relative file path to the full output path.
   /// This ensures consistency between buildExtensions and actual file output.
   String _getFullOutputPath(String relativePath) {
-    if (!outputDir.startsWith('lib/')) {
-      return 'lib/$outputDir/$relativePath';
-    }
-    return '$outputDir/$relativePath';
+    final baseOutputDir =
+        outputDir.startsWith('lib/') ? outputDir : 'lib/$outputDir';
+    return '$baseOutputDir/$relativePath';
   }
 
   /// Formats a Dart source code string according to Dart style guidelines
@@ -559,20 +596,122 @@ class VocabularyBuilder implements Builder {
       final model = entry.value;
 
       try {
-        // Generate the Dart class with cross-vocabulary awareness
-        final generator = VocabularyClassGenerator(resolver: _resolver);
-        final dartCode = generator.generate(model);
+        // Generate Dart code with the class generator
+        final generator = VocabularyClassGenerator(
+          resolver: _resolver,
+          outputDir: outputDir,
+        );
 
-        // Format the generated code
-        final formattedCode = _formatDartCode(dartCode);
+        // Instead of writing to individual files, we'll generate a combined file
+        // that contains all the necessary code and exports
+        final filesMap = generator.generateFiles(model);
 
-        // Write the generated code to a file
-        final outputPath = _getFullOutputPath('$name.dart');
-        final outputId = AssetId(buildStep.inputId.package, outputPath);
+        // Format and write the main vocabulary file which we've declared in buildExtensions
+        final mainCode = _formatDartCode(filesMap['main']!);
+        final mainFilePath = _getFullOutputPath('$name.dart');
+        final mainFileId = AssetId(buildStep.inputId.package, mainFilePath);
+        await buildStep.writeAsString(mainFileId, mainCode);
 
-        await buildStep.writeAsString(outputId, formattedCode);
+        // Create the directory structure for sub-files manually (not through build system)
+        Directory(
+          path.dirname(_getVocabularyDirPath(name)),
+        ).createSync(recursive: true);
 
-        log.info('Generated vocabulary class: $name');
+        // Create vocabulary-specific directory
+        final vocabDir = Directory(_getVocabularyDirPath(name));
+        if (!vocabDir.existsSync()) {
+          vocabDir.createSync();
+        }
+
+        // Create classes directory
+        final classesDir = Directory(_getVocabularyClassesPath(name));
+        if (!classesDir.existsSync()) {
+          classesDir.createSync();
+        }
+
+        // Write universal properties file if it exists
+        if (filesMap.containsKey('universal')) {
+          final universalCode = _formatDartCode(filesMap['universal']!);
+          final universalFile = File(
+            '${_getVocabularyDirPath(name)}/${name}_universal.dart',
+          );
+          universalFile.writeAsStringSync(universalCode);
+        }
+
+        // Write each class to its own file in the classes directory
+        for (final classEntry in filesMap.entries) {
+          final className = classEntry.key;
+
+          // Skip the main and universal files
+          if (className == 'main' || className == 'universal') continue;
+
+          // Use lowercase filenames for dart conventions
+          final classFileName = className.toLowerCase();
+
+          // Fix import path in the class file to point to the correct location
+          String classCode = classEntry.value;
+          classCode = classCode.replaceAll(
+            "import '../$name.dart';",
+            "import '../../$name.dart';",
+          );
+
+          // Check if the code imports the main class but doesn't use it - if so, remove the import
+          if (!classCode.contains("$className.") &&
+              classCode.contains("import '../../$name.dart';")) {
+            classCode = classCode.replaceAll(
+              "import '../../$name.dart';\n",
+              "",
+            );
+          }
+
+          final formattedCode = _formatDartCode(classCode);
+          final classFile = File(
+            '${_getVocabularyClassesPath(name)}/$classFileName.dart',
+          );
+          classFile.writeAsStringSync(formattedCode);
+        }
+
+        // Generate vocabulary index file
+        final indexBuffer =
+            StringBuffer()
+              ..writeln(
+                '// Copyright (c) 2025, Klas Kalaß <habbatical@gmail.com>',
+              )
+              ..writeln(
+                '// All rights reserved. Use of this source code is governed by a BSD-style',
+              )
+              ..writeln('// license that can be found in the LICENSE file.')
+              ..writeln()
+              ..writeln('// GENERATED CODE - DO NOT MODIFY BY HAND')
+              ..writeln('// Generated by VocabularyBuilder')
+              ..writeln();
+
+        // Export all generated class files
+        final sortedClassNames =
+            filesMap.keys
+                .where((key) => key != 'main' && key != 'universal')
+                .toList()
+              ..sort();
+
+        for (final className in sortedClassNames) {
+          // Use lowercase filenames for exports
+          final classFileName = className.toLowerCase();
+          indexBuffer.writeln("export 'classes/$classFileName.dart';");
+        }
+
+        // Export universal properties if applicable
+        if (filesMap.containsKey('universal')) {
+          indexBuffer.writeln("export '${name}_universal.dart';");
+        }
+
+        // Write the formatted index file
+        final indexCode = _formatDartCode(indexBuffer.toString());
+        final indexFile = File('${_getVocabularyDirPath(name)}/index.dart');
+        indexFile.writeAsStringSync(indexCode);
+
+        log.info(
+          'Generated vocabulary class: $name with ${filesMap.length - 2} class files',
+        );
         results[name] = true;
       } catch (e, stack) {
         log.severe('Error generating class for vocabulary $name: $e\n$stack');
@@ -581,6 +720,49 @@ class VocabularyBuilder implements Builder {
     }
 
     return results;
+  }
+
+  /// Generates a vocabulary-specific index file that exports all class files
+  Future<void> _generateVocabularyIndex(
+    BuildStep buildStep,
+    String vocabularyName,
+    List<String> classNames,
+  ) async {
+    final buffer =
+        StringBuffer()
+          ..writeln('// Copyright (c) 2025, Klas Kalaß <habbatical@gmail.com>')
+          ..writeln(
+            '// All rights reserved. Use of this source code is governed by a BSD-style',
+          )
+          ..writeln('// license that can be found in the LICENSE file.')
+          ..writeln()
+          ..writeln('// GENERATED CODE - DO NOT MODIFY BY HAND')
+          ..writeln('// Generated by VocabularyBuilder')
+          ..writeln();
+
+    // Export all generated class files
+    final sortedNames = classNames..sort();
+    for (final className in sortedNames) {
+      buffer.writeln("export 'classes/$className.dart';");
+    }
+
+    // Export universal properties if applicable
+    final universalPath = _getVocabularyDirPath(
+      '${vocabularyName}_universal.dart',
+    );
+    final universalFile = File(universalPath);
+    if (universalFile.existsSync()) {
+      buffer.writeln("export '${vocabularyName}_universal.dart';");
+    }
+
+    // Format the index file code
+    final indexCode = buffer.toString();
+    final formattedIndexCode = _formatDartCode(indexCode);
+
+    final outputPath = _getVocabularyDirPath(vocabularyName) + '/index.dart';
+    final outputId = AssetId(buildStep.inputId.package, outputPath);
+
+    await buildStep.writeAsString(outputId, formattedIndexCode);
   }
 
   /// Generates an index file that exports all generated vocabulary classes.
@@ -604,6 +786,15 @@ class VocabularyBuilder implements Builder {
     final sortedNames = vocabularyNames.toList()..sort();
     for (final name in sortedNames) {
       buffer.writeln("export '$name.dart';");
+
+      // Also export the vocabulary directory with its classes if it exists
+      final vocabDirPath = _getVocabularyDirPath(name);
+      final vocabIndexPath = '$vocabDirPath/index.dart';
+      final vocabIndexFile = File(vocabIndexPath);
+
+      if (vocabIndexFile.existsSync()) {
+        buffer.writeln("export '$name/index.dart';");
+      }
     }
 
     // Format the index file code
@@ -616,5 +807,17 @@ class VocabularyBuilder implements Builder {
     await buildStep.writeAsString(outputId, formattedIndexCode);
 
     log.info('Generated vocabulary index file');
+  }
+
+  /// Gets the path to a vocabulary directory
+  String _getVocabularyDirPath(String vocabName) {
+    final baseOutputDir =
+        outputDir.startsWith('lib/') ? outputDir : 'lib/$outputDir';
+    return '$baseOutputDir/$vocabName';
+  }
+
+  /// Gets the path to a vocabulary's classes directory
+  String _getVocabularyClassesPath(String vocabName) {
+    return '${_getVocabularyDirPath(vocabName)}/classes';
   }
 }

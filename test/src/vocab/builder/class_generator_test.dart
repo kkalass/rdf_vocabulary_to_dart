@@ -20,7 +20,10 @@ void main() {
 
     setUp(() {
       mockResolver = MockCrossVocabularyResolver();
-      generator = VocabularyClassGenerator(resolver: mockResolver);
+      generator = VocabularyClassGenerator(
+        resolver: mockResolver,
+        outputDir: 'lib/src/vocab/generated',
+      );
 
       // Create a basic test model
       testModel = VocabularyModel(

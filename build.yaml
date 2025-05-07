@@ -25,7 +25,7 @@ builders:
     # Mapping of input file extensions to output file patterns
     # "{{}}" is a placeholder for the input file's directory
     build_extensions: {
-      ".vocab.json": ["{{}}/generated/_index.dart", "{{}}/generated/*.dart"],
+      ".vocab.json": ["{{}}/generated/_index.dart", "{{}}/generated/**.dart"],
     }
     # Specifies that output goes to the source tree (not to .dart_tool)
     build_to: source
