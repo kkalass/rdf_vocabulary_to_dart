@@ -99,6 +99,17 @@ void main() {
         testModel.classes[0].iri,
         ...testModel.classes[0].superClasses,
       });
+      when(
+        mockResolver.getAllSuperClasses('http://example.org/test#Person'),
+      ).thenReturn({...testModel.classes[0].superClasses});
+      when(
+        mockResolver.getAllEquivalentClasses('http://example.org/test#Person'),
+      ).thenReturn(<String>{});
+      when(
+        mockResolver.getAllEquivalentClassSuperClasses(
+          'http://example.org/test#Person',
+        ),
+      ).thenReturn(<String>{});
     });
 
     test('generates primary vocabulary class correctly', () async {
