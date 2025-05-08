@@ -50,12 +50,6 @@ class CrossVocabularyResolver {
   final RdfNamespaceMappings _namespaceMappings;
   final Map<String, String> _customNamespaceMappings = {};
 
-  /// Well-known global resource types that all other types implicitly inherit from
-  static const _globalResourceTypes = <String>{
-    //'http://www.w3.org/2000/01/rdf-schema#Resource',
-    //'http://www.w3.org/2002/07/owl#Thing',
-  };
-
   /// Function to load an implied vocabulary model if available
   final Future<VocabularyModel?> Function(String namespace, String name)
   _vocabularyLoader;
@@ -118,11 +112,7 @@ class CrossVocabularyResolver {
           }
         }
       } else {
-        // If no superclasses specified and this isn't a global type itself,
-        // assume it's a direct subclass of the global resource types
-        if (!_globalResourceTypes.contains(classIri)) {
-          _directSuperClasses[classIri] = Set.from(_globalResourceTypes);
-        }
+        _directSuperClasses[classIri] = {};
       }
 
       // Register equivalent classes
@@ -463,10 +453,7 @@ class CrossVocabularyResolver {
   }
 
   Set<String> getAllSuperClasses(String classIri) {
-    final result = <String>{
-      ...(_allSuperClasses[classIri] ?? const {}),
-      ..._globalResourceTypes,
-    };
+    final result = <String>{...(_allSuperClasses[classIri] ?? const {})};
     return otherExceptSchemeChanges({classIri}, result).toSet();
   }
 
