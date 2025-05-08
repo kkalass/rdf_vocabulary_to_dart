@@ -267,7 +267,12 @@ class CrossVocabularyResolver {
       }
 
       // Add direct equivalent classes
-      _allEquivalentClasses[classIri]!.addAll(equivalentClasses);
+      _allEquivalentClasses[classIri]!.addAll(
+        otherExceptSchemeChanges(
+          _allEquivalentClasses[classIri]!,
+          equivalentClasses,
+        ),
+      );
 
       // Make sure equivalent classes have reciprocal relationships
       for (final equivClass in equivalentClasses) {
@@ -276,7 +281,11 @@ class CrossVocabularyResolver {
         }
 
         // Add the original class as equivalent to the equivalent class (symmetric relationship)
-        _allEquivalentClasses[equivClass]!.add(classIri);
+        _allEquivalentClasses[equivClass]!.addAll(
+          otherExceptSchemeChanges(_allEquivalentClasses[equivClass]!, {
+            classIri,
+          }),
+        );
       }
     }
 
