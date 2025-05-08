@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.2] - 2025-05-06
+
+### Fixed
+- Vocabularies which use https (like https://schema.org) sometimes are referenced via http://. We are now consistently only including those references to the scheme we first saw - e.g. foaf will have http://schema.org references, while schema (which is connected to foaf) will have only https://schema.org.
+
 ## [0.7.1] - 2025-05-06
 
 ### Added
