@@ -10,7 +10,6 @@ import 'package:test/test.dart';
 
 import '../test_vocabulary_source.dart';
 import 'cross_vocabulary_resolver_test.mocks.dart';
-import 'package:rdf_vocabulary_to_dart/src/vocab/builder/vocabulary_source.dart';
 
 // Create a class to mock instead of a function type
 abstract class VocabularyLoader {

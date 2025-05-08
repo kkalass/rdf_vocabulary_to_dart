@@ -19,6 +19,14 @@ The tool generates two complementary sets of classes:
 
 This dual approach makes RDF concepts accessible to both RDF experts and Dart developers new to the semantic web.
 
+---
+
+## Looking for pre-generated Vocabularies?
+
+**=>** Our companion project [rdf_vocabularies](https://github.com/kkalass/rdf_vocabularies) provides classes for many well-known vocabularies. This includes `Schema`, `Foaf`, `Rdf`, `Xsd` etc. as classes with all terms of the vocabulary as dart constants. And extra-user friendly specialized classes like `SchemaPerson` with all terms from many vocabularies that can be used directly with a `Schema.Person` type (aka `schema:Person`).
+
+---
+
 ## Features
 
 - **Type-Safe RDF Terms**: Access vocabulary terms as constants with proper typing
@@ -259,11 +267,6 @@ for (final person in people) {
 }
 ```
 
-## 🛣️ Roadmap / Next Steps
-
-- Create extra package for common, well-known vocabularies so you do not have to convert them yourself
-- Further improve generated documentation
-- Support owl:equivalentClass, schema:domainIncludes, schema:rangeIncludes
 
 ## 🤝 Contributing
 

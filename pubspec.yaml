@@ -17,10 +17,8 @@ maintainers:
 environment:
   sdk: ^3.7.0
 dependencies:
-  rdf_core: 
-    path: ../rdf_core
-  rdf_xml: 
-    path: ../rdf_xml
+  rdf_core: ^0.7.6
+  rdf_xml: ^0.2.4
   yaml: ^3.1.2
   logging: ^1.2.0
   http: ^1.1.0
