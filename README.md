@@ -195,8 +195,12 @@ Each vocabulary in your configuration file can have these properties:
 |----------|-------------|----------|
 | `type` | Either "url" for remote vocabularies or "file" for local files | Yes |
 | `namespace` | The base IRI namespace of the vocabulary | Yes |
-| `source` | Specific URL to fetch the vocabulary (for "url" type) | No (defaults to namespace) |
-| `filePath` | Path to local vocabulary file (for "file" type) | Yes (for "file" type) |
+| `source` | For "url" type: URL to fetch the vocabulary from; for "file" type: path to local file | Yes (for "file" type), No (for "url" type, defaults to namespace) |
+| `parsingFlags` | Array of string flags passed to the TurtleFormat when parsing Turtle files | No |
+| `generate` | Boolean indicating if this vocabulary should be processed (defaults to true) | No |
+| `contentType` | Explicit content type to use for the vocabulary source, overriding auto-detection | No |
+| `skipDownload` | Boolean flag to deliberately skip a vocabulary (defaults to false) | No |
+| `skipDownloadReason` | Text explanation for why a vocabulary is skipped | No |
 
 ### Build Configuration
 

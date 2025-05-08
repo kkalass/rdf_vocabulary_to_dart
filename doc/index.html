@@ -514,6 +514,83 @@ dev_dependencies:
           vocabulary_config_path: "lib/src/vocab/vocabulary_sources.vocab.json"
           output_dir: "lib/src/vocab/generated"</code><div class="code-label">YAML</div></pre>
 
+            <h3>Configuration Options</h3>
+            <p>Each vocabulary in your configuration file can have these properties:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Property</th>
+                        <th>Description</th>
+                        <th>Required</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>type</code></td>
+                        <td>Either "url" for remote vocabularies or "file" for local files</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td><code>namespace</code></td>
+                        <td>The base IRI namespace of the vocabulary</td>
+                        <td>Yes</td>
+                    </tr>
+                    <tr>
+                        <td><code>source</code></td>
+                        <td>For "url" type: URL to fetch the vocabulary from; for "file" type: path to local file</td>
+                        <td>Yes (for "file" type), No (for "url" type, defaults to namespace)</td>
+                    </tr>
+                    <tr>
+                        <td><code>parsingFlags</code></td>
+                        <td>Array of string flags passed to the TurtleFormat when parsing Turtle files</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>generate</code></td>
+                        <td>Boolean indicating if this vocabulary should be processed (defaults to true)</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>contentType</code></td>
+                        <td>Explicit content type to use for the vocabulary source, overriding auto-detection</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>skipDownload</code></td>
+                        <td>Boolean flag to deliberately skip a vocabulary (defaults to false)</td>
+                        <td>No</td>
+                    </tr>
+                    <tr>
+                        <td><code>skipDownloadReason</code></td>
+                        <td>Text explanation for why a vocabulary is skipped</td>
+                        <td>No</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>The <code>build.yaml</code> file supports these options:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Option</th>
+                        <th>Description</th>
+                        <th>Default</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>vocabulary_config_path</code></td>
+                        <td>Path to vocabulary configuration JSON</td>
+                        <td><code>"lib/src/vocab/vocabulary_sources.vocab.json"</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>output_dir</code></td>
+                        <td>Directory where generated files are placed</td>
+                        <td><code>"lib/src/vocab/generated"</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
             <h3>3. Generate Code</h3>
             <p>Run the build_runner to generate Dart files from your RDF vocabularies:</p>
             <pre><code class="language-bash">dart run build_runner build</code><div class="code-label">Shell</div></pre>
