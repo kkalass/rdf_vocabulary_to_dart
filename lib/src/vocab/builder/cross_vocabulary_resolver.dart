@@ -289,11 +289,17 @@ class CrossVocabularyResolver {
       }
     }
 
-    // Compute transitive closure for equivalent classes
+    // Initialize with direct superclasses
+    for (final entry in _directSuperClasses.entries) {
+      _allSuperClasses[entry.key] = Set.from(entry.value);
+    }
+
+    // Compute transitive closure for equivalence and inheritance relationships together
     bool changed;
     do {
       changed = false;
 
+      // First compute equivalent classes transitivity
       for (final classIri in _allEquivalentClasses.keys.toList()) {
         final currentEquivClasses = Set<String>.from(
           _allEquivalentClasses[classIri] ?? {},
@@ -308,28 +314,23 @@ class CrossVocabularyResolver {
           );
         }
 
+        // Add equivalent classes of superclasses
+        final superClasses = _allSuperClasses[classIri] ?? {};
+        for (final superClass in superClasses.toList()) {
+          final superClassEquivs = _allEquivalentClasses[superClass] ?? {};
+          newEquivClasses.addAll(
+            otherExceptSchemeChanges(newEquivClasses, superClassEquivs),
+          );
+        }
+
         // If we've added new equivalent classes, update and flag for another iteration
         if (newEquivClasses.length > currentEquivClasses.length) {
           _allEquivalentClasses[classIri] = newEquivClasses;
           changed = true;
         }
       }
-    } while (changed);
 
-    // Remove self-references in equivalent classes
-    for (final entry in _allEquivalentClasses.entries) {
-      entry.value.remove(entry.key);
-    }
-
-    // Initialize with direct superclasses
-    for (final entry in _directSuperClasses.entries) {
-      _allSuperClasses[entry.key] = Set.from(entry.value);
-    }
-
-    // Now compute the transitive closure for superclasses
-    do {
-      changed = false;
-
+      // Then compute superclass transitivity including equivalent classes
       for (final classIri in _allSuperClasses.keys.toList()) {
         final currentSuperClasses = Set<String>.from(
           _allSuperClasses[classIri] ?? {},
@@ -360,6 +361,11 @@ class CrossVocabularyResolver {
         }
       }
     } while (changed);
+
+    // Remove self-references in equivalent classes
+    for (final entry in _allEquivalentClasses.entries) {
+      entry.value.remove(entry.key);
+    }
 
     // Remove self-references that may have been introduced
     for (final entry in _allSuperClasses.entries) {
@@ -465,15 +471,15 @@ class CrossVocabularyResolver {
   }
 
   Set<String> getAllEquivalentClassSuperClasses(String classIri) {
+    var equivClasses = getAllEquivalentClasses(classIri);
     var excludeClasses = <String>{
       classIri,
       ...getAllSuperClasses(classIri),
-      ...getAllEquivalentClasses(classIri),
+      ...equivClasses,
     };
     final result = <String>{};
 
     // Also include superclasses of equivalent classes
-    final equivClasses = _allEquivalentClasses[classIri] ?? const {};
     for (final equivClass in equivClasses) {
       var classesToAdd = otherExceptSchemeChanges(
         excludeClasses,

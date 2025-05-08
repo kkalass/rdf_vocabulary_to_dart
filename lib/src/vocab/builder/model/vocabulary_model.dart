@@ -9,6 +9,28 @@ import 'package:rdf_vocabulary_to_dart/src/vocab/builder/vocabulary_source.dart'
 /// Logger for vocabulary model operations
 final _log = Logger('VocabularyModel');
 
+const _rdfsClass = const IriTerm.prevalidated(
+  'http://www.w3.org/2000/01/rdf-schema#Class',
+);
+const _rdfProperty = const IriTerm.prevalidated(
+  'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property',
+);
+const _rdfsResource = const IriTerm.prevalidated(
+  'http://www.w3.org/2000/01/rdf-schema#Resource',
+);
+const _rdfsSubClassOf = const IriTerm.prevalidated(
+  'http://www.w3.org/2000/01/rdf-schema#subClassOf',
+);
+const _owlClass = const IriTerm.prevalidated(
+  'http://www.w3.org/2002/07/owl#Class',
+);
+const _owlThing = const IriTerm.prevalidated(
+  'http://www.w3.org/2002/07/owl#Thing',
+);
+const _rdfType = const IriTerm.prevalidated(
+  'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+);
+
 /// Represents a parsed RDF vocabulary in an intermediate format.
 ///
 /// This model serves as a bridge between the parsed RDF graph and the
@@ -209,8 +231,9 @@ class VocabularyModelExtractor {
 
         final label = _findLabel(graph, resource);
         final comment = _findComment(graph, resource);
-
-        if (_isClass(graph, resource)) {
+        final rdfsClass = _isRdfsClass(graph, resource);
+        final owlClass = _isOwlClass(graph, resource);
+        if (rdfsClass || owlClass) {
           classes.add(
             VocabularyClass(
               localName: localName,
@@ -218,7 +241,13 @@ class VocabularyModelExtractor {
               label: label,
               comment: comment,
               seeAlso: _findSeeAlso(graph, resource),
-              superClasses: _findSuperClasses(graph, resource),
+              superClasses:
+                  {
+                    // owl:Class implies rdfs:Class
+                    _rdfsResource.iri,
+                    if (owlClass) _owlThing.iri,
+                    ..._findSuperClasses(graph, resource),
+                  }.toList(),
               equivalentClasses: _findEquivalentClasses(graph, resource),
             ),
           );
@@ -312,24 +341,78 @@ class VocabularyModelExtractor {
   }
 
   /// Determines if a resource is a class.
-  static bool _isClass(RdfGraph graph, IriTerm resource) {
-    const classTypes = [
-      'http://www.w3.org/2000/01/rdf-schema#Class',
-      'http://www.w3.org/2002/07/owl#Class',
-    ];
+  static bool _isRdfsClass(RdfGraph graph, IriTerm resource) {
+    // Check if explicitly typed as a class
 
-    for (final classType in classTypes) {
-      final typeTriples = graph.findTriples(
-        subject: resource,
-        predicate: IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-        object: IriTerm(classType),
-      );
+    if (_isA(graph, resource, _rdfsClass)) {
+      return true;
+    }
 
-      if (typeTriples.isNotEmpty) {
+    // Check if resource is used as subject of a rdfs:subClassOf relationship
+    // According to RDFS semantics, this implicitly makes it an rdfs:Class
+    final subClassOfTriples = graph.findTriples(
+      subject: resource,
+      predicate: _rdfsSubClassOf,
+    );
+
+    if (subClassOfTriples.isNotEmpty) {
+      return true;
+    }
+    // do not do the more expensive check for all subclasses of rdfs:Class
+    // if we know it is a property
+    if (_isA(graph, resource, _rdfProperty)) {
+      return false;
+    }
+
+    if (_isSubtypeOf(graph, resource, _rdfsClass)) {
+      return true;
+    }
+    return false;
+  }
+
+  static bool _isOwlClass(RdfGraph graph, IriTerm resource) {
+    // Check if explicitly typed as a class
+
+    return _isA(graph, resource, _owlClass);
+  }
+
+  static bool _isA(RdfGraph graph, IriTerm resource, IriTerm type) {
+    // Check if explicitly typed as a class
+
+    final typeTriples = graph.findTriples(
+      subject: resource,
+      predicate: _rdfType,
+      object: type,
+    );
+
+    if (typeTriples.isNotEmpty) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /// Determines if a resource is a subtype of a given type - not a subclass!
+  /// Meaning for example that a resource is typed not as a class directly, but
+  /// as something which is a subclass of a class. For example, if a resource is typed as a
+  /// rdfs:Datatype and not as a rdfs:Class, we still want to treat it as a class.
+  ///
+  static bool _isSubtypeOf(RdfGraph graph, IriTerm resource, IriTerm type) {
+    // Check if explicitly typed as a class
+    if (_isA(graph, resource, type)) {
+      return true;
+    }
+    var subclassesOfType =
+        graph
+            .findTriples(predicate: _rdfsSubClassOf, object: type)
+            .map((triple) => triple.subject)
+            .whereType<IriTerm>()
+            .toList();
+    for (var subtype in subclassesOfType) {
+      if (_isSubtypeOf(graph, resource, subtype)) {
         return true;
       }
     }
-
     return false;
   }
 
