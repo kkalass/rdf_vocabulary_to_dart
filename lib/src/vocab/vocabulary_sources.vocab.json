@@ -121,7 +121,7 @@
       "parsingFlags": [
         "allowDigitInLocalName"
       ],
-      "generate": true
+      "generate": false
     },
     "schemaHttp": {
       "type": "url",
@@ -130,7 +130,7 @@
       "parsingFlags": [
         "allowDigitInLocalName"
       ],
-      "generate": false
+      "generate": true
     },
     "solid": {
       "type": "url",

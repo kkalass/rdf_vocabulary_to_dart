@@ -72,6 +72,30 @@ class MockCrossVocabularyResolver extends _i1.Mock
           as Set<String>);
 
   @override
+  Set<String> getAllEquivalentClasses(String? classIri) =>
+      (super.noSuchMethod(
+            Invocation.method(#getAllEquivalentClasses, [classIri]),
+            returnValue: <String>{},
+          )
+          as Set<String>);
+
+  @override
+  Set<String> getAllSuperClasses(String? classIri) =>
+      (super.noSuchMethod(
+            Invocation.method(#getAllSuperClasses, [classIri]),
+            returnValue: <String>{},
+          )
+          as Set<String>);
+
+  @override
+  Set<String> getAllEquivalentClassSuperClasses(String? classIri) =>
+      (super.noSuchMethod(
+            Invocation.method(#getAllEquivalentClassSuperClasses, [classIri]),
+            returnValue: <String>{},
+          )
+          as Set<String>);
+
+  @override
   List<_i3.VocabularyProperty> getCrossVocabPropertiesForClass(
     String? classIri,
     String? sourceVocabNamespace,

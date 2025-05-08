@@ -5,14 +5,17 @@
 import 'package:rdf_core/rdf_core.dart';
 import 'package:rdf_vocabulary_to_dart/src/vocab/builder/model/vocabulary_model.dart';
 import 'package:test/test.dart';
+import '../test_vocabulary_source.dart';
 
 void main() {
   group('VocabularyModelExtractor', () {
     late RdfGraph testGraph;
     const testNamespace = 'http://example.org/test#';
     const testName = 'test';
-
+    late TestVocabularySource source;
     setUp(() {
+      source = TestVocabularySource(testNamespace);
+
       // Create a test graph with some common vocabulary patterns
       testGraph = RdfGraph(
         triples: [
@@ -97,6 +100,7 @@ void main() {
         testGraph,
         testNamespace,
         testName,
+        source,
       );
 
       // Test basic properties
@@ -163,6 +167,7 @@ void main() {
         graphWithInvalidIdentifier,
         testNamespace,
         testName,
+        source,
       );
 
       // Find the sanitized identifier (should start with 'n' to avoid starting with a number)
@@ -198,6 +203,7 @@ void main() {
         graphWithExcludedUris,
         testNamespace,
         testName,
+        source,
       );
 
       // The excluded URIs should not appear in the model
@@ -242,7 +248,7 @@ void main() {
 
   group('VocabularyClass', () {
     test('constructs with superclasses', () {
-      const vocabularyClass = VocabularyClass(
+      final vocabularyClass = VocabularyClass(
         localName: 'Person',
         iri: 'http://example.org/Person',
         superClasses: ['http://example.org/Agent', 'http://example.org/Thing'],

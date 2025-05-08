@@ -8,7 +8,9 @@ import 'package:rdf_vocabulary_to_dart/src/vocab/builder/cross_vocabulary_resolv
 import 'package:rdf_vocabulary_to_dart/src/vocab/builder/model/vocabulary_model.dart';
 import 'package:test/test.dart';
 
+import '../test_vocabulary_source.dart';
 import 'cross_vocabulary_resolver_test.mocks.dart';
+import 'package:rdf_vocabulary_to_dart/src/vocab/builder/vocabulary_source.dart';
 
 // Create a class to mock instead of a function type
 abstract class VocabularyLoader {
@@ -20,9 +22,10 @@ void main() {
   group('CrossVocabularyResolver', () {
     late MockVocabularyLoader mockLoader;
     late CrossVocabularyResolver resolver;
-
+    late TestVocabularySource source;
     setUp(() {
       mockLoader = MockVocabularyLoader();
+      source = TestVocabularySource('http://example.org/test#');
       resolver = CrossVocabularyResolver(
         vocabularyLoader:
             (namespace, name) => mockLoader.loadVocabulary(namespace, name),
@@ -64,6 +67,7 @@ void main() {
         ],
         datatypes: [],
         otherTerms: [],
+        source: source,
       );
 
       // Register the vocabulary
@@ -111,6 +115,7 @@ void main() {
         ],
         datatypes: [],
         otherTerms: [],
+        source: source,
       );
 
       // Create the implied vocabulary that should be loaded
@@ -133,6 +138,7 @@ void main() {
         ],
         datatypes: [],
         otherTerms: [],
+        source: source,
       );
 
       // Configure mock to return the implied vocabulary
@@ -210,6 +216,7 @@ void main() {
         ],
         datatypes: [],
         otherTerms: [],
+        source: source,
       );
 
       // Register the vocabulary
@@ -237,6 +244,48 @@ void main() {
           'http://example.org/test#Thing',
         ]),
       );
+    });
+  });
+
+  group('otherExceptSchemeChanges', () {
+    test('same will be removed', () {
+      var result = CrossVocabularyResolver.otherExceptSchemeChanges(
+        {'http://example.org/test#'},
+        {'http://example.org/test#'},
+      );
+      expect(result, isEmpty);
+    });
+    test('same with https instead of http will be removed', () {
+      var result = CrossVocabularyResolver.otherExceptSchemeChanges(
+        {'http://example.org/test#'},
+        {'https://example.org/test#'},
+      );
+      expect(result, isEmpty);
+    });
+    test('same with http instead of https will be removed', () {
+      var result = CrossVocabularyResolver.otherExceptSchemeChanges(
+        {'https://example.org/test#'},
+        {'http://example.org/test#'},
+      );
+      expect(result, isEmpty);
+    });
+    test('different will not be removed', () {
+      var result = CrossVocabularyResolver.otherExceptSchemeChanges(
+        {'https://example.org/test#'},
+        {'http://example.org/test2#'},
+      );
+      expect(result, equals({'http://example.org/test2#'}));
+    });
+    test('different will not be removed while same will be removed', () {
+      var result = CrossVocabularyResolver.otherExceptSchemeChanges(
+        {'https://example.org/test#'},
+        {
+          'http://example.org/test2#',
+          'http://example.org/test#',
+          'https://example.org/test#',
+        },
+      );
+      expect(result, equals({'http://example.org/test2#'}));
     });
   });
 }

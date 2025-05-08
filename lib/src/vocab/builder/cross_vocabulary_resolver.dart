@@ -26,6 +26,9 @@ class CrossVocabularyResolver {
   /// Map of class IRIs to their full set of superclass IRIs (transitive closure)
   final Map<String, Set<String>> _allSuperClasses = {};
 
+  /// Map of class IRIs to their full set of equivalent class IRIs (transitive closure)
+  final Map<String, Set<String>> _allEquivalentClasses = {};
+
   /// Map of property IRIs to their domain IRIs
   final Map<String, Set<String>> _propertyDomains = {};
 
@@ -251,35 +254,62 @@ class CrossVocabularyResolver {
   void _rebuildClassHierarchy() {
     _log.fine('Rebuilding class hierarchy');
     _allSuperClasses.clear();
+    _allEquivalentClasses.clear();
 
-    // First, handle equivalentClass relationships - add them as reciprocal superclasses
-    // since owl:equivalentClass means two classes share exactly the same instances
+    // First, build the equivalence relationships (transitive closure)
     for (final entry in _directEquivalentClasses.entries) {
       final classIri = entry.key;
       final equivalentClasses = entry.value;
 
-      // Make sure the class has an entry in _directSuperClasses
-      if (!_directSuperClasses.containsKey(classIri)) {
-        _directSuperClasses[classIri] = <String>{};
+      // Initialize equivalent classes set
+      if (!_allEquivalentClasses.containsKey(classIri)) {
+        _allEquivalentClasses[classIri] = <String>{};
       }
 
-      // Add all equivalent classes as direct superclasses in both directions
-      // This effectively treats equivalentClass as a subClassOf in both directions
+      // Add direct equivalent classes
+      _allEquivalentClasses[classIri]!.addAll(equivalentClasses);
+
+      // Make sure equivalent classes have reciprocal relationships
       for (final equivClass in equivalentClasses) {
-        if (!_directSuperClasses.containsKey(equivClass)) {
-          _directSuperClasses[equivClass] = <String>{};
+        if (!_allEquivalentClasses.containsKey(equivClass)) {
+          _allEquivalentClasses[equivClass] = <String>{};
         }
 
-        // Add equivalent class as a superclass of this class
-        _directSuperClasses[classIri]!.add(equivClass);
-
-        // Add this class as a superclass of the equivalent class (symmetric relationship)
-        _directSuperClasses[equivClass]!.add(classIri);
-
-        _log.fine(
-          'Added equivalent class relationship between $classIri and $equivClass',
-        );
+        // Add the original class as equivalent to the equivalent class (symmetric relationship)
+        _allEquivalentClasses[equivClass]!.add(classIri);
       }
+    }
+
+    // Compute transitive closure for equivalent classes
+    bool changed;
+    do {
+      changed = false;
+
+      for (final classIri in _allEquivalentClasses.keys.toList()) {
+        final currentEquivClasses = Set<String>.from(
+          _allEquivalentClasses[classIri] ?? {},
+        );
+        final newEquivClasses = Set<String>.from(currentEquivClasses);
+
+        // Add equivalent classes of equivalent classes
+        for (final equivClass in currentEquivClasses.toList()) {
+          final transitiveEquivs = _allEquivalentClasses[equivClass] ?? {};
+          newEquivClasses.addAll(
+            otherExceptSchemeChanges(newEquivClasses, transitiveEquivs),
+          );
+        }
+
+        // If we've added new equivalent classes, update and flag for another iteration
+        if (newEquivClasses.length > currentEquivClasses.length) {
+          _allEquivalentClasses[classIri] = newEquivClasses;
+          changed = true;
+        }
+      }
+    } while (changed);
+
+    // Remove self-references in equivalent classes
+    for (final entry in _allEquivalentClasses.entries) {
+      entry.value.remove(entry.key);
     }
 
     // Initialize with direct superclasses
@@ -287,12 +317,11 @@ class CrossVocabularyResolver {
       _allSuperClasses[entry.key] = Set.from(entry.value);
     }
 
-    // Compute transitive closure using a fixed-point algorithm
-    bool changed;
+    // Now compute the transitive closure for superclasses
     do {
       changed = false;
 
-      for (final classIri in _allSuperClasses.keys) {
+      for (final classIri in _allSuperClasses.keys.toList()) {
         final currentSuperClasses = Set<String>.from(
           _allSuperClasses[classIri] ?? {},
         );
@@ -301,7 +330,18 @@ class CrossVocabularyResolver {
         // Add parent's parents
         for (final parentIri in currentSuperClasses.toList()) {
           final grandparents = _allSuperClasses[parentIri] ?? {};
-          newSuperClasses.addAll(grandparents);
+          newSuperClasses.addAll(
+            otherExceptSchemeChanges(newSuperClasses, grandparents),
+          );
+        }
+
+        // Add superclasses of equivalent classes
+        final equivClasses = _allEquivalentClasses[classIri] ?? {};
+        for (final equivClass in equivClasses) {
+          final equivSuperClasses = _allSuperClasses[equivClass] ?? {};
+          newSuperClasses.addAll(
+            otherExceptSchemeChanges(newSuperClasses, equivSuperClasses),
+          );
         }
 
         // If we've added new superclasses, update and flag for another iteration
@@ -312,7 +352,7 @@ class CrossVocabularyResolver {
       }
     } while (changed);
 
-    // Remove self-references that may have been introduced by equivalent classes
+    // Remove self-references that may have been introduced
     for (final entry in _allSuperClasses.entries) {
       entry.value.remove(entry.key);
     }
@@ -322,8 +362,15 @@ class CrossVocabularyResolver {
       _log.fine('Class ${entry.key} inherits from: ${entry.value.join(', ')}');
     }
 
+    for (final entry in _allEquivalentClasses.entries) {
+      _log.fine(
+        'Class ${entry.key} is equivalent to: ${entry.value.join(', ')}',
+      );
+    }
+
     _log.info(
-      'Completed class hierarchy computation (total classes: ${_allSuperClasses.length})',
+      'Completed class hierarchy computation (total classes: ${_allSuperClasses.length}, ' +
+          'with ${_allEquivalentClasses.length} having equivalent classes)',
     );
   }
 
@@ -381,12 +428,53 @@ class CrossVocabularyResolver {
     return result.toList();
   }
 
+  /// Gets all class types for a given class, including itself, its superclasses,
+  /// equivalent classes, and global resource types.
   Set<String> getAllClassTypes(String classIri) {
     return {
       classIri,
-      ...(_allSuperClasses[classIri] ?? {}),
+      ...getAllSuperClasses(classIri),
+      ...getAllEquivalentClasses(classIri),
+      ...getAllEquivalentClassSuperClasses(classIri),
+    };
+  }
+
+  Set<String> getAllEquivalentClasses(String classIri) {
+    var excludeClasses = {classIri, ...getAllSuperClasses(classIri)};
+    return otherExceptSchemeChanges(
+      excludeClasses,
+      _allEquivalentClasses[classIri] ?? const <String>{},
+    ).toSet();
+  }
+
+  Set<String> getAllSuperClasses(String classIri) {
+    final result = <String>{
+      ...(_allSuperClasses[classIri] ?? const {}),
       ..._globalResourceTypes,
     };
+    return otherExceptSchemeChanges({classIri}, result).toSet();
+  }
+
+  Set<String> getAllEquivalentClassSuperClasses(String classIri) {
+    var excludeClasses = <String>{
+      classIri,
+      ...getAllSuperClasses(classIri),
+      ...getAllEquivalentClasses(classIri),
+    };
+    final result = <String>{};
+
+    // Also include superclasses of equivalent classes
+    final equivClasses = _allEquivalentClasses[classIri] ?? const {};
+    for (final equivClass in equivClasses) {
+      var classesToAdd = otherExceptSchemeChanges(
+        excludeClasses,
+        _allSuperClasses[equivClass] ?? const {},
+      );
+      excludeClasses.addAll(classesToAdd);
+      result.addAll(classesToAdd);
+    }
+
+    return result;
   }
 
   /// Gets properties from external vocabularies that apply to a given class
@@ -491,5 +579,29 @@ class CrossVocabularyResolver {
               .where((e) => e.value.isNotEmpty)
               .toList(),
     };
+  }
+
+  static String _trimHttpsHttpPrefix(String iri) {
+    if (iri.startsWith('http://')) {
+      return iri.substring(7);
+    }
+    if (iri.startsWith('https://')) {
+      return iri.substring(8);
+    }
+    return iri;
+  }
+
+  //@visibleForTesting
+  static Iterable<String> otherExceptSchemeChanges(
+    Set<String> classes,
+    Set<String> other,
+  ) {
+    return other.where((superClass) {
+      // Exclude scheme changes (e.g., http://example.com/ -> https://example.com/)
+      return !classes.any(
+        (existing) =>
+            _trimHttpsHttpPrefix(existing) == _trimHttpsHttpPrefix(superClass),
+      );
+    });
   }
 }

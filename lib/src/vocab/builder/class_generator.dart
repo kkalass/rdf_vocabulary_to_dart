@@ -247,6 +247,7 @@ class VocabularyClassGenerator {
     Map<String, String> customMappings,
   ) async {
     final className = _capitalize(model.name);
+
     final dartClassName = '${className}${_dartIdentifier(rdfClass.localName)}';
 
     // Get all properties that can be used with this class
@@ -256,21 +257,33 @@ class VocabularyClassGenerator {
     );
 
     // Get all parent classes for documentation
-    final allSuperClasses = resolver.getAllClassTypes(rdfClass.iri);
-    final superClassList =
-        allSuperClasses.where((superClass) => superClass != rdfClass.iri).map((
-          superClass,
-        ) {
-          return {
-            'iri': superClass,
-            'readableName': _extractReadableNameFromIri(superClass),
-          };
-        }).toList();
-
-    // Sort parent classes for consistent output
-    superClassList.sort(
-      (a, b) =>
-          (a['readableName'] as String).compareTo(b['readableName'] as String),
+    final superClassList = _classsListForMustache(
+      resolver.getAllSuperClasses(rdfClass.iri),
+      rdfClass,
+    );
+    final equivalentClassesList = _classsListForMustache(
+      resolver.getAllEquivalentClasses(rdfClass.iri),
+      rdfClass,
+    );
+    // Remove any classes from equivalentClassesList that are already in superClassList
+    // to avoid duplication in documentation
+    equivalentClassesList.removeWhere(
+      (eqClass) => superClassList.any(
+        (superClass) => superClass['iri'] == eqClass['iri'],
+      ),
+    );
+    final equivalentClassesSuperClassList = _classsListForMustache(
+      resolver.getAllEquivalentClassSuperClasses(rdfClass.iri),
+      rdfClass,
+    );
+    equivalentClassesSuperClassList.removeWhere(
+      (eqClass) =>
+          superClassList.any(
+            (superClass) => superClass['iri'] == eqClass['iri'],
+          ) ||
+          equivalentClassesList.any(
+            (superClass) => superClass['iri'] == eqClass['iri'],
+          ),
     );
 
     // Create the data model for the template
@@ -289,6 +302,11 @@ class VocabularyClassGenerator {
       'seeAlso': rdfClass.seeAlso,
       'superClasses': superClassList,
       'hasSuperClasses': superClassList.isNotEmpty,
+      'equivalentClasses': equivalentClassesList,
+      'hasEquivalentClasses': equivalentClassesList.isNotEmpty,
+      'equivalentClassesSuperClasses': equivalentClassesSuperClassList,
+      'hasEquivalentClassesSuperClasses':
+          equivalentClassesSuperClassList.isNotEmpty,
       'properties': _preparePropertiesForTemplate(
         properties,
         model.prefix,
@@ -303,6 +321,28 @@ class VocabularyClassGenerator {
 
     return headerTemplate.renderString(templateData) +
         classTemplate.renderString(templateData);
+  }
+
+  List<Map<String, String>> _classsListForMustache(
+    Set<String> allSuperClasses,
+    VocabularyClass rdfClass,
+  ) {
+    final superClassList =
+        allSuperClasses.where((superClass) => superClass != rdfClass.iri).map((
+          superClass,
+        ) {
+          return {
+            'iri': superClass,
+            'readableName': _extractReadableNameFromIri(superClass),
+          };
+        }).toList();
+
+    // Sort parent classes for consistent output
+    superClassList.sort(
+      (a, b) =>
+          (a['readableName'] as String).compareTo(b['readableName'] as String),
+    );
+    return superClassList;
   }
 
   /// Prepares a list of terms for use in a template

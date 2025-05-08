@@ -97,6 +97,16 @@ class VocabularyClass extends VocabularyTerm {
     List<String> equivalentClasses = const [],
   }) {
     this.equivalentClasses = cleanupEquivalentClasses(equivalentClasses, iri);
+    assert(
+      localName.isNotEmpty && localName[0].toUpperCase() == localName[0],
+      'Class localName must start with an uppercase letter: $localName',
+    );
+    assert(
+      iri.split(RegExp(r'[/#]')).last.isNotEmpty &&
+          iri.split(RegExp(r'[/#]')).last[0].toUpperCase() ==
+              iri.split(RegExp(r'[/#]')).last[0],
+      'The last part of the IRI must start with an uppercase letter: $iri',
+    );
   }
 
   static List<String> cleanupEquivalentClasses(

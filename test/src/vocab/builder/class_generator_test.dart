@@ -12,6 +12,7 @@ import 'package:rdf_vocabulary_to_dart/src/vocab/builder/model/vocabulary_model.
 import 'package:test/test.dart';
 
 import 'class_generator_test.mocks.dart';
+import '../test_vocabulary_source.dart';
 
 @GenerateMocks([CrossVocabularyResolver])
 void main() {
@@ -20,9 +21,11 @@ void main() {
     late VocabularyClassGenerator generator;
     late VocabularyModel testModel;
     late AssetReader assetReader;
+    late TestVocabularySource source;
     setUp(() async {
       mockResolver = MockCrossVocabularyResolver();
       assetReader = await PackageAssetReader.currentIsolate();
+      source = TestVocabularySource('http://example.org/test#');
       generator = VocabularyClassGenerator(
         resolver: mockResolver,
         outputDir: 'lib/src/vocab/generated',
@@ -78,6 +81,7 @@ void main() {
                 'Some other term that is not a class, property, or datatype',
           ),
         ],
+        source: source,
       );
 
       // Set up resolver behavior
@@ -195,6 +199,7 @@ void main() {
         properties: [],
         datatypes: [],
         otherTerms: [],
+        source: source,
       );
 
       expect(

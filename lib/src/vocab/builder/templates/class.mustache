@@ -5,12 +5,26 @@
 ///
 {{/comment}}
 {{#hasSuperClasses}}
-/// Inherits from or equivalent to:
+/// Inherits from:
 {{#superClasses}}
 /// - {{readableName}} ({{{iri}}})
 {{/superClasses}}
 ///
 {{/hasSuperClasses}}
+{{#hasEquivalentClasses}}
+/// Equivalent to:
+{{#equivalentClasses}}
+/// - {{readableName}} ({{{iri}}})
+{{/equivalentClasses}}
+///
+{{/hasEquivalentClasses}}
+{{#hasEquivalentClassesSuperClasses}}
+/// Superclasses of Equivalent to:
+{{#equivalentClassesSuperClasses}}
+/// - {{readableName}} ({{{iri}}})
+{{/equivalentClassesSuperClasses}}
+///
+{{/hasEquivalentClassesSuperClasses}}
 /// This class provides access to all properties that can be used with {{localName}}.
 /// [Class Reference]({{{classIri}}})
 {{#hasSeeAlso}}
