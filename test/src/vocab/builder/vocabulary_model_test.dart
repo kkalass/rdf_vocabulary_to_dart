@@ -118,8 +118,14 @@ void main() {
         personClass.comment,
         equals('A person (alive, dead, undead, or fictional).'),
       );
-      expect(personClass.superClasses.length, equals(1));
-      expect(personClass.superClasses.first, equals('${testNamespace}Agent'));
+      expect(personClass.superClasses.length, equals(2));
+      expect(
+        personClass.superClasses.toSet(),
+        equals({
+          '${testNamespace}Agent',
+          'http://www.w3.org/2000/01/rdf-schema#Resource',
+        }),
+      );
       expect(personClass.seeAlso.length, equals(1));
       expect(
         personClass.seeAlso.first,
