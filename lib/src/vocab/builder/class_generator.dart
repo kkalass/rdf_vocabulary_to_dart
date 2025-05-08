@@ -2,13 +2,11 @@
 // All rights reserved. Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:build/build.dart';
 import 'package:logging/logging.dart';
 import 'package:mustache_template/mustache.dart';
 import 'package:path/path.dart' as path;
+import 'package:rdf_core/rdf_core.dart';
 
 import 'cross_vocabulary_resolver.dart';
 import 'model/vocabulary_model.dart';
@@ -28,11 +26,17 @@ class VocabularyClassGenerator {
   /// Output directory for generated files, used to determine if library declarations should be included
   final String outputDir;
 
+  final RdfNamespaceMappings _namespaceMappings;
+
   /// Creates a new vocabulary class generator.
   ///
   /// [resolver] Cross-vocabulary resolver for property inheritance across vocabularies
   /// [outputDir] Output directory for generated files, used to determine library declaration inclusion
-  VocabularyClassGenerator({required this.resolver, required this.outputDir});
+  VocabularyClassGenerator({
+    required this.resolver,
+    required this.outputDir,
+    RdfNamespaceMappings namespaceMappings = const RdfNamespaceMappings(),
+  }) : _namespaceMappings = namespaceMappings;
 
   /// Cache for loaded Mustache templates
   final Map<String, Template> _templateCache = {};
@@ -76,6 +80,7 @@ class VocabularyClassGenerator {
   Future<Map<String, String>> generateFiles(
     VocabularyModel model,
     AssetReader assetReader,
+    Map<String, String> customMappings,
   ) async {
     final Map<String, String> generatedFiles = {};
 
@@ -94,6 +99,7 @@ class VocabularyClassGenerator {
         model,
         universalProperties,
         assetReader,
+        customMappings,
       );
       generatedFiles['universal'] = universalFile;
     }
@@ -106,6 +112,7 @@ class VocabularyClassGenerator {
           model,
           rdfClass,
           assetReader,
+          customMappings,
         );
         generatedFiles[dartClassName] = classFile;
       }
@@ -120,6 +127,7 @@ class VocabularyClassGenerator {
     VocabularyModel model,
     AssetReader assetReader,
   ) async {
+    final Map<String, String> customMappings = {model.prefix: model.namespace};
     _validateModelHasTerms(model);
 
     // Debug log to help identify issues with test failures
@@ -130,7 +138,7 @@ class VocabularyClassGenerator {
       _log.info('Property: ${prop.localName}, Ranges: ${prop.ranges}');
     }
 
-    final files = await generateFiles(model, assetReader);
+    final files = await generateFiles(model, assetReader, customMappings);
     final buffer = StringBuffer();
 
     // First add the main file
@@ -195,6 +203,7 @@ class VocabularyClassGenerator {
     VocabularyModel model,
     List<VocabularyProperty> universalProperties,
     AssetReader assetReader,
+    Map<String, String> customMappings,
   ) async {
     final className = _capitalize(model.name);
     final universalClassName = '${className}UniversalProperties';
@@ -215,6 +224,7 @@ class VocabularyClassGenerator {
         universalProperties,
         model.prefix,
         model.namespace,
+        customMappings,
       ),
     };
 
@@ -234,6 +244,7 @@ class VocabularyClassGenerator {
     VocabularyModel model,
     VocabularyClass rdfClass,
     AssetReader assetReader,
+    Map<String, String> customMappings,
   ) async {
     final className = _capitalize(model.name);
     final dartClassName = '${className}${_dartIdentifier(rdfClass.localName)}';
@@ -282,6 +293,7 @@ class VocabularyClassGenerator {
         properties,
         model.prefix,
         model.namespace,
+        customMappings,
       ),
     };
 
@@ -335,10 +347,19 @@ class VocabularyClassGenerator {
     List<VocabularyProperty> properties,
     String prefix,
     String classNamespace,
+    Map<String, String> customMappings,
   ) {
     return properties.map((property) {
-      final propertyName = _getPropertyName(property, classNamespace);
-      final externalPrefix = _getPropertyPrefix(property, classNamespace);
+      final propertyName = _getPropertyName(
+        property,
+        classNamespace,
+        customMappings,
+      );
+      final externalPrefix = _getPropertyPrefix(
+        property,
+        classNamespace,
+        customMappings,
+      );
       return {
         'localName': property.localName,
         'iri': property.iri,
@@ -391,16 +412,28 @@ class VocabularyClassGenerator {
   }
 
   /// Gets a property name with prefix if it comes from a different namespace
-  String _getPropertyName(VocabularyTerm term, String? classNamespace) {
+  String _getPropertyName(
+    VocabularyTerm term,
+    String? classNamespace,
+    Map<String, String> customMappings,
+  ) {
     final dartName = _dartIdentifier(term.localName);
-    final propertyPrefix = _getPropertyPrefix(term, classNamespace);
+    final propertyPrefix = _getPropertyPrefix(
+      term,
+      classNamespace,
+      customMappings,
+    );
     // If classNamespace is null, we're generating the main class (no prefix needed)
     return propertyPrefix == null
         ? dartName
         : '${propertyPrefix}${_capitalize(dartName)}';
   }
 
-  String? _getPropertyPrefix(VocabularyTerm term, String? classNamespace) {
+  String? _getPropertyPrefix(
+    VocabularyTerm term,
+    String? classNamespace,
+    Map<String, String> customMappings,
+  ) {
     // If classNamespace is null, we're generating the main class (no prefix needed)
     if (classNamespace == null) return null;
 
@@ -410,10 +443,14 @@ class VocabularyClassGenerator {
       // Extract the namespace from the IRI
       final namespace = _extractNamespace(term.iri);
       if (namespace != null && namespace != classNamespace) {
-        final prefix = _getNamespacePrefix(namespace);
-        if (prefix != null) {
-          return prefix;
+        final (prefix, generated) = _namespaceMappings.getOrGeneratePrefix(
+          namespace,
+          customMappings: customMappings,
+        );
+        if (generated) {
+          customMappings[prefix] = namespace;
         }
+        return prefix;
       }
     }
 
@@ -440,28 +477,6 @@ class VocabularyClassGenerator {
     }
 
     return null;
-  }
-
-  /// Get the preferred prefix for a namespace
-  String? _getNamespacePrefix(String namespace) {
-    // Common namespace prefixes
-    final prefixMap = {
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#': 'rdf',
-      'http://www.w3.org/2000/01/rdf-schema#': 'rdfs',
-      'http://www.w3.org/2001/XMLSchema#': 'xsd',
-      'http://www.w3.org/2002/07/owl#': 'owl',
-      'http://purl.org/dc/elements/1.1/': 'dc',
-      'http://purl.org/dc/terms/': 'dcterms',
-      'http://xmlns.com/foaf/0.1/': 'foaf',
-      'http://www.w3.org/2004/02/skos/core#': 'skos',
-      'http://www.w3.org/2006/vcard/ns#': 'vcard',
-      'http://www.w3.org/ns/auth/acl#': 'acl',
-      'http://www.w3.org/ns/ldp#': 'ldp',
-      'http://schema.org/': 'schema',
-      'http://www.w3.org/ns/solid/terms#': 'solid',
-    };
-
-    return prefixMap[namespace];
   }
 
   /// Provides documentation about property domain applicability

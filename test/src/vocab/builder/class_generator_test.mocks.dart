@@ -35,12 +35,6 @@ class MockCrossVocabularyResolver extends _i1.Mock
   }
 
   @override
-  void extractPrefixesFromTurtle(String? turtleContent) => super.noSuchMethod(
-    Invocation.method(#extractPrefixesFromTurtle, [turtleContent]),
-    returnValueForMissingStub: null,
-  );
-
-  @override
   void registerVocabulary(_i3.VocabularyModel? model) => super.noSuchMethod(
     Invocation.method(#registerVocabulary, [model]),
     returnValueForMissingStub: null,

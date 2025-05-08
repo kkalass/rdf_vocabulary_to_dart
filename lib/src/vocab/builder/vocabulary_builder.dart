@@ -635,7 +635,9 @@ class VocabularyBuilder implements Builder {
     log.info('Phase 2: Generating vocabulary classes');
 
     final results = <String, bool>{};
-
+    final customNamespaces = <String, String>{
+      for (var m in _vocabularyModels.values) m.prefix: m.namespace,
+    };
     // Generate classes for each vocabulary
     for (final entry in _vocabularyModels.entries) {
       final name = entry.key;
@@ -650,7 +652,11 @@ class VocabularyBuilder implements Builder {
 
         // Instead of writing to individual files, we'll generate a combined file
         // that contains all the necessary code and exports
-        final filesMap = await generator.generateFiles(model, buildStep);
+        final filesMap = await generator.generateFiles(
+          model,
+          buildStep,
+          customNamespaces,
+        );
 
         // Format and write the main vocabulary file which we've declared in buildExtensions
         final mainCode = _formatDartCode(filesMap['main']!);
