@@ -96,12 +96,15 @@ class VocabularyBuilder implements Builder {
   createVocabularyLoader(Map<String, VocabularySource> vocabularySources) {
     final loader = createRdfGraphLoader(vocabularySources);
     return (String namespace, String name) async {
-      final graph = await loader(namespace, name);
-      return _extractVocabulary(name, namespace, graph);
+      final result = (await loader(namespace, name));
+      return _extractVocabulary(name, namespace, result?.$1, result?.$2);
     };
   }
 
-  static Future<RdfGraph?> Function(String namespace, String name)
+  static Future<(RdfGraph?, VocabularySource)?> Function(
+    String namespace,
+    String name,
+  )
   createRdfGraphLoader(Map<String, VocabularySource> vocabularySources) {
     return (String namespace, String name) async {
       log.info('Loading implied vocabulary "$name" from namespace $namespace');
@@ -145,9 +148,13 @@ class VocabularyBuilder implements Builder {
     };
   }
 
-  static Map<(String, VocabularySource), Future<RdfGraph?>> _rdfGraphCache = {};
+  static Map<(String, VocabularySource), Future<(RdfGraph?, VocabularySource)>>
+  _rdfGraphCache = {};
 
-  static Future<RdfGraph?> _loadRdfGraph(String name, VocabularySource source) {
+  static Future<(RdfGraph?, VocabularySource)> _loadRdfGraph(
+    String name,
+    VocabularySource source,
+  ) {
     var cachedGraph = _rdfGraphCache[(name, source)];
     if (cachedGraph != null) {
       return cachedGraph;
@@ -157,7 +164,7 @@ class VocabularyBuilder implements Builder {
     return graph;
   }
 
-  static Future<RdfGraph?> _doLoadRdfGraph(
+  static Future<(RdfGraph?, VocabularySource)> _doLoadRdfGraph(
     String name,
     VocabularySource source,
   ) async {
@@ -167,7 +174,7 @@ class VocabularyBuilder implements Builder {
     if (source.skipDownload) {
       final reason = source.skipDownloadReason ?? 'No reason provided';
       log.info('Deliberately skipping vocabulary "$name": $reason');
-      return null;
+      return (null, source);
     }
 
     try {
@@ -175,7 +182,7 @@ class VocabularyBuilder implements Builder {
       final content = await source.loadContent();
       if (content.isEmpty) {
         log.warning('Empty content for implied vocabulary $name');
-        return null;
+        return (null, source);
       }
 
       log.info(
@@ -209,18 +216,18 @@ class VocabularyBuilder implements Builder {
         );
 
         log.info('Successfully parsed $name');
-        return graph;
+        return (graph, source);
       } catch (e) {
         log.severe(
           'Failed to parse implied vocabulary $name from $namespace: $e',
         );
-        return null;
+        return (null, source);
       }
     } catch (e, stackTrace) {
       log.severe(
         'Error loading vocabulary $name from $namespace: $e\n$stackTrace',
       );
-      return null;
+      return (null, source);
     }
   }
 
@@ -228,9 +235,10 @@ class VocabularyBuilder implements Builder {
     String name,
     String namespace,
     RdfGraph? graph,
+    VocabularySource? source,
   ) async {
     try {
-      if (graph == null) {
+      if (graph == null || source == null) {
         log.severe('Failed to load RDF graph for vocabulary $name');
         return null;
       }
@@ -240,6 +248,7 @@ class VocabularyBuilder implements Builder {
         graph,
         namespace,
         name,
+        source,
       );
       log.info('Successfully extracted vocabulary model for $name');
 
@@ -258,8 +267,8 @@ class VocabularyBuilder implements Builder {
   ) async {
     final namespace = source.namespace;
 
-    final graph = await _loadRdfGraph(name, source);
-    return _extractVocabulary(name, namespace, graph);
+    final (graph, _) = await _loadRdfGraph(name, source);
+    return _extractVocabulary(name, namespace, graph, source);
   }
 
   /// Algorithmically tries to find a valid turtle URL for a vocabulary namespace
@@ -589,11 +598,6 @@ class VocabularyBuilder implements Builder {
       final source = entry.value;
 
       try {
-        if (!source.generate) {
-          log.info('Skipping disabled vocabulary: $name');
-          continue;
-        }
-
         if (source.skipDownload) {
           final reason = source.skipDownloadReason ?? 'No reason provided';
           log.info('Deliberately skipping vocabulary "$name": $reason');
@@ -642,7 +646,10 @@ class VocabularyBuilder implements Builder {
     for (final entry in _vocabularyModels.entries) {
       final name = entry.key;
       final model = entry.value;
-
+      if (!model.source.generate) {
+        log.info('Skipping vocabulary $name as per manifest configuration');
+        continue;
+      }
       try {
         // Generate Dart code with the class generator
         final generator = VocabularyClassGenerator(

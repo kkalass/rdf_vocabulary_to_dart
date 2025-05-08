@@ -4,6 +4,7 @@
 
 import 'package:logging/logging.dart';
 import 'package:rdf_core/rdf_core.dart';
+import 'package:rdf_vocabulary_to_dart/src/vocab/builder/vocabulary_source.dart';
 
 /// Logger for vocabulary model operations
 final _log = Logger('VocabularyModel');
@@ -35,6 +36,8 @@ class VocabularyModel {
   /// Other terms that don't fit into the above categories
   final List<VocabularyTerm> otherTerms;
 
+  final VocabularySource source;
+
   /// Creates a new vocabulary model.
   const VocabularyModel({
     required this.name,
@@ -44,6 +47,7 @@ class VocabularyModel {
     required this.properties,
     required this.datatypes,
     required this.otherTerms,
+    required this.source,
   });
 }
 
@@ -80,18 +84,37 @@ class VocabularyClass extends VocabularyTerm {
   final List<String> superClasses;
 
   /// Equivalent classes of this class (owl:equivalentClass)
-  final List<String> equivalentClasses;
+  late List<String> equivalentClasses;
 
   /// Creates a new vocabulary class.
-  const VocabularyClass({
+  VocabularyClass({
     required super.localName,
     required super.iri,
     super.label,
     super.comment,
     super.seeAlso,
     this.superClasses = const [],
-    this.equivalentClasses = const [],
-  });
+    List<String> equivalentClasses = const [],
+  }) {
+    this.equivalentClasses = cleanupEquivalentClasses(equivalentClasses, iri);
+  }
+
+  static List<String> cleanupEquivalentClasses(
+    List<String> equivalentClasses,
+    String iri,
+  ) {
+    // Remove duplicates and most importantly, remove the IRI and its http(s) variant
+    final uniqueClassesSet = equivalentClasses.toSet();
+    uniqueClassesSet.remove(iri);
+    if (iri.startsWith("https://")) {
+      uniqueClassesSet.remove(iri.replaceFirst("https://", "http://"));
+    } else if (iri.startsWith("http://")) {
+      uniqueClassesSet.remove(iri.replaceFirst("http://", "https://"));
+    }
+    final uniqueClasses = uniqueClassesSet.toList();
+    uniqueClasses.sort();
+    return uniqueClasses;
+  }
 }
 
 /// Represents a property defined in a vocabulary.
@@ -144,6 +167,7 @@ class VocabularyModelExtractor {
     RdfGraph graph,
     String namespace,
     String name,
+    VocabularySource source,
   ) {
     final prefix = _determinePrefix(name);
 
@@ -235,6 +259,7 @@ class VocabularyModelExtractor {
       properties: properties,
       datatypes: datatypes,
       otherTerms: otherTerms,
+      source: source,
     );
   }
 
