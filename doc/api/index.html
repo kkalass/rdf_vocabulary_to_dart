@@ -64,6 +64,16 @@
 </li>
 </ol>
 <p>This dual approach makes RDF concepts accessible to both RDF experts and Dart developers new to the semantic web.</p>
+<hr>
+<h2 id="part-of-a-whole-family-of-projects">Part of a whole family of projects</h2>
+<p>If you are looking for more rdf-related functionality, have a look at our companion projects:</p>
+<ul>
+<li>basic graph classes as well as turtle/jsonld/n-triple serialization and parsing: <a href="https://github.com/kkalass/rdf_core">rdf_core</a></li>
+<li>parse and serialize rdf/xml format: <a href="https://github.com/kkalass/rdf_xml">rdf_xml</a></li>
+<li>easy-to-use constants for many well-known vocabularies: <a href="https://github.com/kkalass/rdf_vocabularies">rdf_vocabularies</a></li>
+<li>map Dart Objects ↔️ RDF: <a href="https://github.com/kkalass/rdf_mapper">rdf_mapper</a></li>
+</ul>
+<hr>
 <h2 id="features">Features</h2>
 <ul>
 <li><strong>Type-Safe RDF Terms</strong>: Access vocabulary terms as constants with proper typing</li>
@@ -77,11 +87,11 @@
 <h3 id="installation">Installation</h3>
 <p>Add these dependencies to your <code>pubspec.yaml</code>:</p>
 <pre class="language-yaml"><code class="language-yaml">dependencies:
-  rdf_core: ^0.6.2  # Core library for working with RDF data
+  rdf_core: ^0.7.5  # Core library for working with RDF data
 
 dev_dependencies:
   build_runner: ^2.4.0  # Runs the code generator
-  rdf_vocabulary_to_dart: ^0.1.0  # The code generator
+  rdf_vocabulary_to_dart: ^0.7.2  # The code generator
 </code></pre>
 <h3 id="configuration">Configuration</h3>
 <ol>
@@ -226,13 +236,33 @@ class SchemaPerson {
 </tr>
 <tr>
 <td><code>source</code></td>
-<td>Specific URL to fetch the vocabulary (for "url" type)</td>
-<td>No (defaults to namespace)</td>
+<td>For "url" type: URL to fetch the vocabulary from; for "file" type: path to local file</td>
+<td>Yes (for "file" type), No (for "url" type, defaults to namespace)</td>
 </tr>
 <tr>
-<td><code>filePath</code></td>
-<td>Path to local vocabulary file (for "file" type)</td>
-<td>Yes (for "file" type)</td>
+<td><code>parsingFlags</code></td>
+<td>Array of string flags passed to the TurtleFormat when parsing Turtle files</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>generate</code></td>
+<td>Boolean indicating if this vocabulary should be processed (defaults to true)</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>contentType</code></td>
+<td>Explicit content type to use for the vocabulary source, overriding auto-detection</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>skipDownload</code></td>
+<td>Boolean flag to deliberately skip a vocabulary (defaults to false)</td>
+<td>No</td>
+</tr>
+<tr>
+<td><code>skipDownloadReason</code></td>
+<td>Text explanation for why a vocabulary is skipped</td>
+<td>No</td>
 </tr>
 </tbody>
 </table>
@@ -310,9 +340,7 @@ for (final person in people) {
 </code></pre>
 <h2 id="-roadmap--next-steps">🛣️ Roadmap / Next Steps</h2>
 <ul>
-<li>Create extra package for common, well-known vocabularies so you do not have to convert them yourself</li>
-<li>Further improve generated documentation</li>
-<li>Support owl:equivalentClass, schema:domainIncludes, schema:rangeIncludes</li>
+<li>More and better tests</li>
 </ul>
 <h2 id="-contributing">🤝 Contributing</h2>
 <p>Contributions, bug reports, and feature requests are welcome!</p>
@@ -366,7 +394,7 @@ from RDF vocabulary namespace IRIs.
 <footer>
   <span class="no-break">
     rdf_vocabulary_to_dart
-      0.7.2-dev
+      0.7.2
   </span>
   
 </footer>
