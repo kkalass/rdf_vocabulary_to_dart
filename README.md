@@ -40,6 +40,7 @@ If you are looking for more rdf-related functionality, have a look at our compan
 - **IDE Completion**: Discover available terms through IDE autocompletion
 - **Inheritance Support**: Class-specific objects include properties from parent classes
 - **Comprehensive Vocabulary Coverage**: Works with any RDF vocabulary accessible via URL or local file
+- **Full Platform Compatibility**: While pub.dev shows "no support for web" (because this is a build_runner tool used only during build time), the generated code is 100% compatible with all platforms including web, Flutter, and native Dart
 
 ## Getting Started
 
@@ -280,6 +281,8 @@ for (final person in people) {
 
 - More and better tests
 - Ensure that we stick to dart file name conventions for lowerCamelCase prefixes, e.g. do not write schemaHttp.dart files but schema_http.dart instead.
+- Improve documentation
+- Include an example
 
 
 ## 🤝 Contributing
