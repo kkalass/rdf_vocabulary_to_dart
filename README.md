@@ -279,6 +279,8 @@ for (final person in people) {
 ## 🛣️ Roadmap / Next Steps
 
 - More and better tests
+- Ensure that we stick to dart file name conventions for lowerCamelCase prefixes, e.g. do not write schemaHttp.dart files but schema_http.dart instead.
+
 
 ## 🤝 Contributing
 
