@@ -21,9 +21,14 @@ This dual approach makes RDF concepts accessible to both RDF experts and Dart de
 
 ---
 
-## Looking for pre-generated Vocabularies?
+## Part of a whole family of projects
 
-**=>** Our companion project [rdf_vocabularies](https://github.com/kkalass/rdf_vocabularies) provides classes for many well-known vocabularies. This includes `Schema`, `Foaf`, `Rdf`, `Xsd` etc. as classes with all terms of the vocabulary as dart constants. And extra-user friendly specialized classes like `SchemaPerson` with all terms from many vocabularies that can be used directly with a `Schema.Person` type (aka `schema:Person`).
+If you are looking for more rdf-related functionality, have a look at our companion projects:
+
+* basic graph classes as well as turtle/jsonld/n-triple serialization and parsing: [rdf_core](https://github.com/kkalass/rdf_core) 
+* parse and serialize rdf/xml format: [rdf_xml](https://github.com/kkalass/rdf_xml) 
+* easy-to-use constants for many well-known vocabularies: [rdf_vocabularies](https://github.com/kkalass/rdf_vocabularies)
+* map Dart Objects ↔️ RDF: [rdf_mapper](https://github.com/kkalass/rdf_mapper)
 
 ---
 
