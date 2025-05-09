@@ -112,7 +112,7 @@ import 'package:your_package/src/vocab/generated/foaf.dart';
 final triple = Triple(
   IriTerm('http://example.org/john'),
   Schema.name,  // https://schema.org/name
-  LiteralTerm('John Doe')
+  LiteralTerm.string('John Doe')
 );
 
 // Use vocabulary terms in queries or graph operations
@@ -137,8 +137,8 @@ void createPersonTriples(IriTerm person) {
   final graph = RdfGraph(triples: [
     // Properties from other vocabularies are properly prefixed, like e.g. type from rdf which you need to declare this to be a schema:Person.
     Triple(person, SchemaPerson.rdfType, SchemaPerson.classIri),
-    Triple(person, SchemaPerson.name, LiteralTerm('Jane Doe')),
-    Triple(person, SchemaPerson.email, LiteralTerm('jane@example.com')),
+    Triple(person, SchemaPerson.name, LiteralTerm.string('Jane Doe')),
+    Triple(person, SchemaPerson.email, LiteralTerm.string('jane@example.com')),
   ]);
 }
 ```

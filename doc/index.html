@@ -419,7 +419,7 @@ import 'package:my_package/vocab/generated/schema.dart';
 final triple = Triple(
   IriTerm('http://example.org/john'),
   Schema.name,  // https://schema.org/name
-  LiteralTerm('John Doe')
+  LiteralTerm.string('John Doe')
 );</code><div class="code-label">Dart</div></pre>
                 </div>
                 <div class="approach-card">
@@ -430,8 +430,8 @@ final triple = Triple(
 import 'package:my_package/vocab/generated/schema_person.dart';
 
 // SchemaPerson contains all properties related to Person
-Triple(person, SchemaPerson.name, LiteralTerm('Jane Doe')),
-Triple(person, SchemaPerson.email, LiteralTerm('jane@example.com')),
+Triple(person, SchemaPerson.name, LiteralTerm.string('Jane Doe')),
+Triple(person, SchemaPerson.email, LiteralTerm.string('jane@example.com')),
 // Properties from other vocabularies are properly prefixed
 Triple(person, SchemaPerson.rdfType, SchemaPerson.classIri),</code><div class="code-label">Dart</div></pre>
                 </div>
@@ -611,7 +611,7 @@ import 'package:your_package/src/vocab/generated/foaf.dart';
 final triple = Triple(
   IriTerm('http://example.org/john'),
   Schema.name,  // https://schema.org/name
-  LiteralTerm('John Doe')
+  LiteralTerm.string('John Doe')
 );
 
 // Use vocabulary terms in queries or graph operations
@@ -634,8 +634,8 @@ void createPersonTriples(IriTerm person) {
   final graph = RdfGraph(triples: [
     // Properties from other vocabularies are properly prefixed
     Triple(person, SchemaPerson.rdfType, SchemaPerson.classIri),
-    Triple(person, SchemaPerson.name, LiteralTerm('Jane Doe')),
-    Triple(person, SchemaPerson.email, LiteralTerm('jane@example.com')),
+    Triple(person, SchemaPerson.name, LiteralTerm.string('Jane Doe')),
+    Triple(person, SchemaPerson.email, LiteralTerm.string('jane@example.com')),
   ]);
 }</code><div class="code-label">Dart</div></pre>
                 </div>
