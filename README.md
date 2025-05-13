@@ -25,8 +25,8 @@ This dual approach makes RDF concepts accessible to both RDF experts and Dart de
 
 If you are looking for more rdf-related functionality, have a look at our companion projects:
 
-* basic graph classes as well as turtle/jsonld/n-triple serialization and parsing: [rdf_core](https://github.com/kkalass/rdf_core) 
-* parse and serialize rdf/xml format: [rdf_xml](https://github.com/kkalass/rdf_xml) 
+* basic graph classes as well as turtle/jsonld/n-triple encoding and decoding: [rdf_core](https://github.com/kkalass/rdf_core) 
+* encode and decode rdf/xml format: [rdf_xml](https://github.com/kkalass/rdf_xml) 
 * easy-to-use constants for many well-known vocabularies: [rdf_vocabularies](https://github.com/kkalass/rdf_vocabularies)
 * map Dart Objects ↔️ RDF: [rdf_mapper](https://github.com/kkalass/rdf_mapper)
 
@@ -50,11 +50,11 @@ Add these dependencies to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  rdf_core: ^0.7.5  # Core library for working with RDF data
+  rdf_core: ^0.8.1  # Core library for working with RDF data
 
 dev_dependencies:
   build_runner: ^2.4.0  # Runs the code generator
-  rdf_vocabulary_to_dart: ^0.7.2  # The code generator
+  rdf_vocabulary_to_dart: ^0.8.0  # The code generator
 ```
 
 ### Configuration
@@ -202,7 +202,7 @@ Each vocabulary in your configuration file can have these properties:
 | `type` | Either "url" for remote vocabularies or "file" for local files | Yes |
 | `namespace` | The base IRI namespace of the vocabulary | Yes |
 | `source` | For "url" type: URL to fetch the vocabulary from; for "file" type: path to local file | Yes (for "file" type), No (for "url" type, defaults to namespace) |
-| `parsingFlags` | Array of string flags passed to the TurtleFormat when parsing Turtle files | No |
+| `parsingFlags` | Array of string flags passed to the TurtleCodec when decoding Turtle files | No |
 | `generate` | Boolean indicating if this vocabulary should be processed (defaults to true) | No |
 | `contentType` | Explicit content type to use for the vocabulary source, overriding auto-detection | No |
 | `skipDownload` | Boolean flag to deliberately skip a vocabulary (defaults to false) | No |
@@ -221,7 +221,7 @@ The `build.yaml` file supports these options:
 
 1. **Loading Configuration**: The builder reads your vocabulary configuration
 2. **Fetching Vocabularies**: For each vocabulary, retrieves content from URL or file
-3. **Parsing RDF**: Processes the vocabulary data using rdf_core parsers
+3. **Decode RDF**: Processes the vocabulary data using rdf_core decoders
 4. **Cross-Vocabulary Resolution**: Identifies relationships between vocabularies
 5. **Code Generation**: Produces Dart classes for each vocabulary and RDF class
 6. **Indexing**: Creates an index file for easy importing
@@ -250,14 +250,14 @@ For domain-specific RDF vocabularies, use the "file" type and provide a local Tu
 
 ### Integration with RDF Data Sources
 
-The generated code works seamlessly with rdf_core's parsers and serializers, making it easy to process RDF data from various sources:
+The generated code works seamlessly with rdf_core's decoders and encoders, making it easy to process RDF data from various sources:
 
 ```dart
 import 'package:rdf_core/rdf_core.dart';
 import 'package:your_package/src/vocab/generated/schema.dart';
 
-final parser = TurtleParser();
-final graph = await parser.parseFile('data.ttl');
+final turtleContent = ...;
+final graph = await turtle.decode(turtleContent);
 
 // Query using vocabulary terms
 final people = graph.find(

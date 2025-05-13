@@ -192,12 +192,12 @@ class VocabularyBuilder implements Builder {
       final parsingFlags = _convertParsingFlagsToSet(source.parsingFlags);
 
       // Parse the vocabulary
-      final rdfCore = RdfCore.withFormats(
-        formats: [
-          TurtleFormat(parsingFlags: parsingFlags),
-          JsonLdFormat(),
-          RdfXmlFormat(),
-          NTriplesFormat(),
+      final rdfCore = RdfCore.withCodecs(
+        codecs: [
+          TurtleCodec(parsingFlags: parsingFlags),
+          JsonLdGraphCodec(),
+          RdfXmlCodec(),
+          NTriplesCodec(),
         ],
       );
 
@@ -209,7 +209,7 @@ class VocabularyBuilder implements Builder {
           log.info('Using parsing flags: ${source.parsingFlags!.join(", ")}');
         }
 
-        graph = rdfCore.parse(
+        graph = rdfCore.decode(
           content,
           documentUrl: source.namespace,
           contentType: source.contentType,

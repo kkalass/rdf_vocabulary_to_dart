@@ -6,6 +6,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [0.8.0] - 2025-05-13
+
+### Added
+- Documentation clarification about platform compatibility: The package shows "no support for web" on pub.dev only because it's a build_runner tool, but the generated code is 100% compatible with all platforms including web, Flutter, and native Dart
+
+### Changed
+- Updated rdf_core dependency to ^0.8.1
+- Updated other dependencies to latest versions
+- Improved documentation clarity and formatting
+
+### Fixed
+- Documentation issue regarding "unresolved doc reference" in the generated documentation
+
 ## [0.7.2] - 2025-05-08
 
 ### Added
