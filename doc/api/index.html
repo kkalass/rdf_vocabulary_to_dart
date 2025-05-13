@@ -68,8 +68,8 @@
 <h2 id="part-of-a-whole-family-of-projects">Part of a whole family of projects</h2>
 <p>If you are looking for more rdf-related functionality, have a look at our companion projects:</p>
 <ul>
-<li>basic graph classes as well as turtle/jsonld/n-triple serialization and parsing: <a href="https://github.com/kkalass/rdf_core">rdf_core</a></li>
-<li>parse and serialize rdf/xml format: <a href="https://github.com/kkalass/rdf_xml">rdf_xml</a></li>
+<li>basic graph classes as well as turtle/jsonld/n-triple encoding and decoding: <a href="https://github.com/kkalass/rdf_core">rdf_core</a></li>
+<li>encode and decode rdf/xml format: <a href="https://github.com/kkalass/rdf_xml">rdf_xml</a></li>
 <li>easy-to-use constants for many well-known vocabularies: <a href="https://github.com/kkalass/rdf_vocabularies">rdf_vocabularies</a></li>
 <li>map Dart Objects ↔️ RDF: <a href="https://github.com/kkalass/rdf_mapper">rdf_mapper</a></li>
 </ul>
@@ -82,16 +82,17 @@
 <li><strong>IDE Completion</strong>: Discover available terms through IDE autocompletion</li>
 <li><strong>Inheritance Support</strong>: Class-specific objects include properties from parent classes</li>
 <li><strong>Comprehensive Vocabulary Coverage</strong>: Works with any RDF vocabulary accessible via URL or local file</li>
+<li><strong>Full Platform Compatibility</strong>: While pub.dev shows "no support for web" (because this is a build_runner tool used only during build time), the generated code is 100% compatible with all platforms including web, Flutter, and native Dart</li>
 </ul>
 <h2 id="getting-started">Getting Started</h2>
 <h3 id="installation">Installation</h3>
 <p>Add these dependencies to your <code>pubspec.yaml</code>:</p>
 <pre class="language-yaml"><code class="language-yaml">dependencies:
-  rdf_core: ^0.7.5  # Core library for working with RDF data
+  rdf_core: ^0.8.1  # Core library for working with RDF data
 
 dev_dependencies:
   build_runner: ^2.4.0  # Runs the code generator
-  rdf_vocabulary_to_dart: ^0.7.2  # The code generator
+  rdf_vocabulary_to_dart: ^0.8.0  # The code generator
 </code></pre>
 <h3 id="configuration">Configuration</h3>
 <ol>
@@ -142,7 +143,7 @@ import 'package:your_package/src/vocab/generated/foaf.dart';
 final triple = Triple(
   IriTerm('http://example.org/john'),
   Schema.name,  // https://schema.org/name
-  LiteralTerm('John Doe')
+  LiteralTerm.string('John Doe')
 );
 
 // Use vocabulary terms in queries or graph operations
@@ -164,8 +165,8 @@ void createPersonTriples(IriTerm person) {
   final graph = RdfGraph(triples: [
     // Properties from other vocabularies are properly prefixed, like e.g. type from rdf which you need to declare this to be a schema:Person.
     Triple(person, SchemaPerson.rdfType, SchemaPerson.classIri),
-    Triple(person, SchemaPerson.name, LiteralTerm('Jane Doe')),
-    Triple(person, SchemaPerson.email, LiteralTerm('jane@example.com')),
+    Triple(person, SchemaPerson.name, LiteralTerm.string('Jane Doe')),
+    Triple(person, SchemaPerson.email, LiteralTerm.string('jane@example.com')),
   ]);
 }
 </code></pre>
@@ -241,7 +242,7 @@ class SchemaPerson {
 </tr>
 <tr>
 <td><code>parsingFlags</code></td>
-<td>Array of string flags passed to the TurtleFormat when parsing Turtle files</td>
+<td>Array of string flags passed to the TurtleCodec when decoding Turtle files</td>
 <td>No</td>
 </tr>
 <tr>
@@ -293,7 +294,7 @@ class SchemaPerson {
 <ol>
 <li><strong>Loading Configuration</strong>: The builder reads your vocabulary configuration</li>
 <li><strong>Fetching Vocabularies</strong>: For each vocabulary, retrieves content from URL or file</li>
-<li><strong>Parsing RDF</strong>: Processes the vocabulary data using rdf_core parsers</li>
+<li><strong>Decode RDF</strong>: Processes the vocabulary data using rdf_core decoders</li>
 <li><strong>Cross-Vocabulary Resolution</strong>: Identifies relationships between vocabularies</li>
 <li><strong>Code Generation</strong>: Produces Dart classes for each vocabulary and RDF class</li>
 <li><strong>Indexing</strong>: Creates an index file for easy importing</li>
@@ -314,12 +315,12 @@ class SchemaPerson {
 }
 </code></pre>
 <h3 id="integration-with-rdf-data-sources">Integration with RDF Data Sources</h3>
-<p>The generated code works seamlessly with rdf_core's parsers and serializers, making it easy to process RDF data from various sources:</p>
+<p>The generated code works seamlessly with rdf_core's decoders and encoders, making it easy to process RDF data from various sources:</p>
 <pre class="language-dart"><code class="language-dart">import 'package:rdf_core/rdf_core.dart';
 import 'package:your_package/src/vocab/generated/schema.dart';
 
-final parser = TurtleParser();
-final graph = await parser.parseFile('data.ttl');
+final turtleContent = ...;
+final graph = await turtle.decode(turtleContent);
 
 // Query using vocabulary terms
 final people = graph.find(
@@ -341,6 +342,10 @@ for (final person in people) {
 <h2 id="-roadmap--next-steps">🛣️ Roadmap / Next Steps</h2>
 <ul>
 <li>More and better tests</li>
+<li>Ensure that we stick to dart file name conventions for lowerCamelCase prefixes, e.g. do not write schemaHttp.dart files but schema_http.dart instead.</li>
+<li>Improve documentation</li>
+<li>Include an example</li>
+<li>Solve the issue with "unresolved doc reference" in the generated documentation</li>
 </ul>
 <h2 id="-contributing">🤝 Contributing</h2>
 <p>Contributions, bug reports, and feature requests are welcome!</p>
@@ -394,7 +399,7 @@ from RDF vocabulary namespace IRIs.
 <footer>
   <span class="no-break">
     rdf_vocabulary_to_dart
-      0.7.2
+      0.8.0
   </span>
   
 </footer>
