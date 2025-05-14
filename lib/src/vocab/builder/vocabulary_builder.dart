@@ -194,7 +194,9 @@ class VocabularyBuilder implements Builder {
       // Parse the vocabulary
       final rdfCore = RdfCore.withCodecs(
         codecs: [
-          TurtleCodec(parsingFlags: parsingFlags),
+          TurtleCodec(
+            decoderOptions: TurtleDecoderOptions(parsingFlags: parsingFlags),
+          ),
           JsonLdGraphCodec(),
           RdfXmlCodec(),
           NTriplesCodec(),
