@@ -50,11 +50,11 @@ Add these dependencies to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  rdf_core: ^0.8.1  # Core library for working with RDF data
+  rdf_core: ^0.9.0  # Core library for working with RDF data
 
 dev_dependencies:
   build_runner: ^2.4.0  # Runs the code generator
-  rdf_vocabulary_to_dart: ^0.8.0  # The code generator
+  rdf_vocabulary_to_dart: ^0.9.0  # The code generator
 ```
 
 ### Configuration
