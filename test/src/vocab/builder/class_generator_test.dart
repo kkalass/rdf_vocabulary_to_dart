@@ -14,6 +14,12 @@ import 'package:test/test.dart';
 import 'class_generator_test.mocks.dart';
 import '../test_vocabulary_source.dart';
 
+Future<AssetReader> createTestAssetReader() async {
+  final readerWriter = TestReaderWriter();
+  await readerWriter.testing.loadIsolateSources();
+  return readerWriter;
+}
+
 @GenerateMocks([CrossVocabularyResolver])
 void main() {
   group('VocabularyClassGenerator', () {
@@ -24,7 +30,7 @@ void main() {
     late TestVocabularySource source;
     setUp(() async {
       mockResolver = MockCrossVocabularyResolver();
-      assetReader = await PackageAssetReader.currentIsolate();
+      assetReader = await createTestAssetReader();
       source = TestVocabularySource('http://example.org/test#');
       generator = VocabularyClassGenerator(
         resolver: mockResolver,
