@@ -35,7 +35,7 @@ dependencies:
 dev_dependencies:
   test: ^1.21.0
   mockito: ^5.4.6
-  build_test: ^2.2.3
+  build_test: ">=2.2.3 <4.0.0"
   coverage: ^1.13.1
   analyzer: ^7.4.4
   crypto: ^3.0.6
