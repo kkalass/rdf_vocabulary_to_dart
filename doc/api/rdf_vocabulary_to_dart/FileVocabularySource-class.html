@@ -25,24 +25,21 @@
   <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
   <ol class="breadcrumbs gt-separated dark hidden-xs">
     <li><a href="../index.html">rdf_vocabulary_to_dart</a></li>
-    <li><a href="../rdf_vocabulary_to_dart">rdf_vocabulary_to_dart.dart</a></li>
+    <li><a href="../rdf_vocabulary_to_dart/">rdf_vocabulary_to_dart.dart</a></li>
     <li class="self-crumb">FileVocabularySource class</li>
   </ol>
   <div class="self-name">FileVocabularySource</div>
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
-  <div class="toggle" id="theme-button" title="Toggle brightness">
-    <label for="theme">
-      <input type="checkbox" id="theme" value="light-theme">
-      <span id="dark-theme-button" class="material-symbols-outlined">
-        dark_mode
-      </span>
-      <span id="light-theme-button" class="material-symbols-outlined">
-        light_mode
-      </span>
-    </label>
-  </div>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
 </header>
 <main>
 <div
@@ -88,8 +85,8 @@
   <section class="summary offset-anchor" id="constructors">
     <h2>Constructors</h2>
     <dl class="constructor-summary-list">
-        <dt id="FileVocabularySource" class="callable">
-          <span class="name"><a href="../rdf_vocabulary_to_dart/FileVocabularySource/FileVocabularySource.html">FileVocabularySource</a></span><span class="signature">(<span class="parameter" id="-param-filePath"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">filePath</span>, </span><span class="parameter" id="-param-namespace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">namespace</span>, {</span><span class="parameter" id="-param-parsingFlags"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span> <span class="parameter-name">parsingFlags</span>, </span><span class="parameter" id="-param-generate"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">generate</span> = <span class="default-value">true</span>, </span><span class="parameter" id="-param-explicitContentType"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">explicitContentType</span>, </span><span class="parameter" id="-param-skipDownload"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">skipDownload</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-skipDownloadReason"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">skipDownloadReason</span></span>})</span>
+        <dt id="FileVocabularySource.new" class="callable">
+          <span class="name"><a href="../rdf_vocabulary_to_dart/FileVocabularySource/FileVocabularySource.html">FileVocabularySource.new</a></span><span class="signature">(<span class="parameter" id="-param-filePath"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">filePath</span>, </span><span class="parameter" id="-param-namespace"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">namespace</span>, {</span><span class="parameter" id="-param-parsingFlags"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span>?</span> <span class="parameter-name">parsingFlags</span>, </span><span class="parameter" id="-param-generate"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">generate</span> = <span class="default-value">true</span>, </span><span class="parameter" id="-param-explicitContentType"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">explicitContentType</span>, </span><span class="parameter" id="-param-skipDownload"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">skipDownload</span> = <span class="default-value">false</span>, </span><span class="parameter" id="-param-skipDownloadReason"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a>?</span> <span class="parameter-name">skipDownloadReason</span></span>})</span>
         </dt>
         <dd>
           
@@ -320,7 +317,7 @@
 </header>
 <ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
     <li><a href="../index.html">rdf_vocabulary_to_dart</a></li>
-    <li><a href="../rdf_vocabulary_to_dart">rdf_vocabulary_to_dart</a></li>
+    <li><a href="../rdf_vocabulary_to_dart/">rdf_vocabulary_to_dart</a></li>
     <li class="self-crumb">FileVocabularySource class</li>
 </ol>
 
@@ -333,7 +330,7 @@
 <footer>
   <span class="no-break">
     rdf_vocabulary_to_dart
-      0.9.0
+      0.9.1
   </span>
   
 </footer>

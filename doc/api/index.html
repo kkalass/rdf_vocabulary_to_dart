@@ -30,17 +30,14 @@
   <form class="search navbar-right" role="search">
     <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
   </form>
-  <div class="toggle" id="theme-button" title="Toggle brightness">
-    <label for="theme">
-      <input type="checkbox" id="theme" value="light-theme">
-      <span id="dark-theme-button" class="material-symbols-outlined">
-        dark_mode
-      </span>
-      <span id="light-theme-button" class="material-symbols-outlined">
-        light_mode
-      </span>
-    </label>
-  </div>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
 </header>
 <main>
   <div id="dartdoc-main-content" class="main-content">
@@ -88,11 +85,11 @@
 <h3 id="installation">Installation</h3>
 <p>Add these dependencies to your <code>pubspec.yaml</code>:</p>
 <pre class="language-yaml"><code class="language-yaml">dependencies:
-  rdf_core: ^0.8.1  # Core library for working with RDF data
+  rdf_core: ^0.9.0  # Core library for working with RDF data
 
 dev_dependencies:
   build_runner: ^2.4.0  # Runs the code generator
-  rdf_vocabulary_to_dart: ^0.8.0  # The code generator
+  rdf_vocabulary_to_dart: ^0.9.0  # The code generator
 </code></pre>
 <h3 id="configuration">Configuration</h3>
 <ol>
@@ -343,7 +340,15 @@ for (final person in people) {
 <ul>
 <li>More and better tests</li>
 <li>Ensure that we stick to dart file name conventions for lowerCamelCase prefixes, e.g. do not write schemaHttp.dart files but schema_http.dart instead.</li>
-<li>Improve documentation</li>
+<li>Improve generated documentation
+<ul>
+<li>ensure that every predicate is linked to its original definition</li>
+<li>resolve referenced IRIs to their dart classes and reference them instead</li>
+<li>Be more precise in your wording (eg: expects IRI for a SchemaPerson)</li>
+<li>Better introductions / explanations to generated classes - maybe by allowing to include JSON files with additional docs that will be included</li>
+<li>other documentation improvements where applicable - maybe even generate usage examples if possible for every predicate?</li>
+</ul>
+</li>
 <li>Include an example</li>
 <li>Solve the issue with "unresolved doc reference" in the generated documentation</li>
 </ul>
@@ -365,7 +370,7 @@ for (final person in people) {
           <h2>Libraries</h2>
         <dl>
           <dt id="rdf_vocabulary_to_dart">
-  <span class="name"><a href="rdf_vocabulary_to_dart">rdf_vocabulary_to_dart</a></span> 
+  <span class="name"><a href="rdf_vocabulary_to_dart/">rdf_vocabulary_to_dart</a></span> 
 
 </dt>
 <dd>This library exposes the builder factory for generating Dart classes
@@ -389,7 +394,7 @@ from RDF vocabulary namespace IRIs.
     <h5 class="hidden-xs"><span class="package-name">rdf_vocabulary_to_dart</span> <span class="package-kind">package</span></h5>
     <ol>
       <li class="section-title">Libraries</li>
-      <li><a href="rdf_vocabulary_to_dart">rdf_vocabulary_to_dart</a></li>
+      <li><a href="rdf_vocabulary_to_dart/">rdf_vocabulary_to_dart</a></li>
 </ol>
 
   </div>
@@ -399,7 +404,7 @@ from RDF vocabulary namespace IRIs.
 <footer>
   <span class="no-break">
     rdf_vocabulary_to_dart
-      0.9.0
+      0.9.1
   </span>
   
 </footer>
