@@ -111,7 +111,7 @@ import 'package:your_package/src/vocab/generated/foaf.dart';
 
 // Create a triple using vocabulary constants
 final triple = Triple(
-  IriTerm('http://example.org/john'),
+  const IriTerm('http://example.org/john'),
   Schema.name,  // https://schema.org/name
   LiteralTerm.string('John Doe')
 );
@@ -159,10 +159,10 @@ class Schema {
   static const namespace = 'https://schema.org/';
   
   /// A person (alive, dead, undead, or fictional).
-  static const Person = IriTerm('https://schema.org/Person');
+  static const Person = const IriTerm('https://schema.org/Person');
   
   /// The name of the item.
-  static const name = IriTerm('https://schema.org/name');
+  static const name = const IriTerm('https://schema.org/name');
   
   // ... many more terms
 }

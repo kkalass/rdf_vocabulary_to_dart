@@ -21,75 +21,77 @@ void main() {
         triples: [
           // Define a test class
           Triple(
-            IriTerm('${testNamespace}Person'),
-            IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-            IriTerm('http://www.w3.org/2000/01/rdf-schema#Class'),
+            const IriTerm('${testNamespace}Person'),
+            const IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+            const IriTerm('http://www.w3.org/2000/01/rdf-schema#Class'),
           ),
           Triple(
-            IriTerm('${testNamespace}Person'),
-            IriTerm('http://www.w3.org/2000/01/rdf-schema#label'),
+            const IriTerm('${testNamespace}Person'),
+            const IriTerm('http://www.w3.org/2000/01/rdf-schema#label'),
             LiteralTerm.string('Person'),
           ),
           Triple(
-            IriTerm('${testNamespace}Person'),
-            IriTerm('http://www.w3.org/2000/01/rdf-schema#comment'),
+            const IriTerm('${testNamespace}Person'),
+            const IriTerm('http://www.w3.org/2000/01/rdf-schema#comment'),
             LiteralTerm.string('A person (alive, dead, undead, or fictional).'),
           ),
           Triple(
-            IriTerm('${testNamespace}Person'),
-            IriTerm('http://www.w3.org/2000/01/rdf-schema#subClassOf'),
-            IriTerm('${testNamespace}Agent'),
+            const IriTerm('${testNamespace}Person'),
+            const IriTerm('http://www.w3.org/2000/01/rdf-schema#subClassOf'),
+            const IriTerm('${testNamespace}Agent'),
           ),
 
           // Define a test property
           Triple(
-            IriTerm('${testNamespace}name'),
-            IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-            IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#Property'),
+            const IriTerm('${testNamespace}name'),
+            const IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+            const IriTerm(
+              'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property',
+            ),
           ),
           Triple(
-            IriTerm('${testNamespace}name'),
-            IriTerm('http://www.w3.org/2000/01/rdf-schema#label'),
+            const IriTerm('${testNamespace}name'),
+            const IriTerm('http://www.w3.org/2000/01/rdf-schema#label'),
             LiteralTerm.string('name'),
           ),
           Triple(
-            IriTerm('${testNamespace}name'),
-            IriTerm('http://www.w3.org/2000/01/rdf-schema#comment'),
+            const IriTerm('${testNamespace}name'),
+            const IriTerm('http://www.w3.org/2000/01/rdf-schema#comment'),
             LiteralTerm.string('The name of the entity.'),
           ),
           Triple(
-            IriTerm('${testNamespace}name'),
-            IriTerm('http://www.w3.org/2000/01/rdf-schema#domain'),
-            IriTerm('${testNamespace}Person'),
+            const IriTerm('${testNamespace}name'),
+            const IriTerm('http://www.w3.org/2000/01/rdf-schema#domain'),
+            const IriTerm('${testNamespace}Person'),
           ),
           Triple(
-            IriTerm('${testNamespace}name'),
-            IriTerm('http://www.w3.org/2000/01/rdf-schema#range'),
-            IriTerm('http://www.w3.org/2001/XMLSchema#string'),
+            const IriTerm('${testNamespace}name'),
+            const IriTerm('http://www.w3.org/2000/01/rdf-schema#range'),
+            const IriTerm('http://www.w3.org/2001/XMLSchema#string'),
           ),
 
           // Define a test datatype
           Triple(
-            IriTerm('${testNamespace}EmailAddress'),
-            IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-            IriTerm('http://www.w3.org/2000/01/rdf-schema#Datatype'),
+            const IriTerm('${testNamespace}EmailAddress'),
+            const IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+            const IriTerm('http://www.w3.org/2000/01/rdf-schema#Datatype'),
           ),
           Triple(
-            IriTerm('${testNamespace}EmailAddress'),
-            IriTerm('http://www.w3.org/2000/01/rdf-schema#label'),
+            const IriTerm('${testNamespace}EmailAddress'),
+            const IriTerm('http://www.w3.org/2000/01/rdf-schema#label'),
             LiteralTerm.string('Email Address'),
           ),
           Triple(
-            IriTerm('${testNamespace}EmailAddress'),
-            IriTerm('http://www.w3.org/2000/01/rdf-schema#comment'),
+            const IriTerm('${testNamespace}EmailAddress'),
+            const IriTerm('http://www.w3.org/2000/01/rdf-schema#comment'),
             LiteralTerm.string('An email address.'),
           ),
 
           // Define a reference using seeAlso
           Triple(
-            IriTerm('${testNamespace}Person'),
-            IriTerm('http://www.w3.org/2000/01/rdf-schema#seeAlso'),
-            IriTerm('http://example.org/docs/Person'),
+            const IriTerm('${testNamespace}Person'),
+            const IriTerm('http://www.w3.org/2000/01/rdf-schema#seeAlso'),
+            const IriTerm('http://example.org/docs/Person'),
           ),
         ],
       );
@@ -162,9 +164,9 @@ void main() {
         triples: [
           ...testGraph.triples,
           Triple(
-            IriTerm('${testNamespace}123-invalid'),
-            IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-            IriTerm('http://www.w3.org/2000/01/rdf-schema#Class'),
+            const IriTerm('${testNamespace}123-invalid'),
+            const IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+            const IriTerm('http://www.w3.org/2000/01/rdf-schema#Class'),
           ),
         ],
       );
@@ -193,14 +195,14 @@ void main() {
         triples: [
           ...testGraph.triples,
           Triple(
-            IriTerm('${testNamespace}#'),
-            IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-            IriTerm('http://www.w3.org/2000/01/rdf-schema#Class'),
+            const IriTerm('${testNamespace}#'),
+            const IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+            const IriTerm('http://www.w3.org/2000/01/rdf-schema#Class'),
           ),
           Triple(
-            IriTerm('${testNamespace}xml-syntax'),
-            IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-            IriTerm('http://www.w3.org/2000/01/rdf-schema#Class'),
+            const IriTerm('${testNamespace}xml-syntax'),
+            const IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
+            const IriTerm('http://www.w3.org/2000/01/rdf-schema#Class'),
           ),
         ],
       );

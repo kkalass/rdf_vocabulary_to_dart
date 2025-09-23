@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.2] - 2025-09-23
+
+### Changed
+- **Breaking Change**: Updated to use `const IriTerm()` constructor instead of deprecated `IriTerm.prevalidated()` in generated code and templates
+- Updated rdf_core dependency to ^0.9.15 (from ^0.9.11)
+- Updated rdf_xml dependency to ^0.4.6 (from ^0.4.5)
+- Migrated from deprecated `iri` property to `value` property on IriTerm throughout codebase
+- Updated all documentation examples to use the new `const IriTerm()` constructor
+
+### Fixed
+- All generated vocabulary classes now use the preferred `const IriTerm()` constructor for better performance and consistency with rdf_core library changes
+
 ## [0.9.1] - 2025-07-24
 
 ### Changed

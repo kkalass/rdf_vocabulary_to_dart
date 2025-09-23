@@ -381,18 +381,18 @@ packages:
     dependency: "direct main"
     description:
       name: rdf_core
-      sha256: "30245c9b2cb7ab42b4db9c6e5bc9a099fd7d870fe3b0f278998fb76260b48650"
+      sha256: cc208fdc51227d11d32ba82dd28c741637f006cdfbee99b27366317083efe4f6
       url: "https://pub.dev"
     source: hosted
-    version: "0.9.14"
+    version: "0.9.15"
   rdf_xml:
     dependency: "direct main"
     description:
       name: rdf_xml
-      sha256: "494107858a8f571cf15c8dfd1d5eead949d7079dafbaacee8aa4ae6fcfa1d343"
+      sha256: "8e70b69332ef7faa371666a5069ce84bc72c36b61bb7feae440b98e09de6a3b4"
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.5"
+    version: "0.4.6"
   shelf:
     dependency: transitive
     description:

@@ -41,7 +41,7 @@ class {{dartClassName}} {
 
   /// IRI term for the {{localName}} class
   /// Use this to specify that a resource is of this type.
-  static const classIri = IriTerm.prevalidated('{{{classIri}}}');
+  static const classIri = const IriTerm('{{{classIri}}}');
 
   {{#properties}}
   /// {{localName}}{{#externalPrefix}} from {{externalPrefix}} vocabulary{{/externalPrefix}}{{#hasRanges}} [Expects: {{#ranges}}{{{value}}}{{^last}}, {{/last}}{{/ranges}}]{{/hasRanges}}
@@ -60,7 +60,7 @@ class {{dartClassName}} {
   {{/seeAlso}}
   {{/hasSeeAlso}}
   ///
-  static const {{dartName}} = IriTerm.prevalidated('{{{iri}}}');
+  static const {{dartName}} = const IriTerm('{{{iri}}}');
 
   {{/properties}}
 }

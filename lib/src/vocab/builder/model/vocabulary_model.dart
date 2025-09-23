@@ -9,25 +9,19 @@ import 'package:rdf_vocabulary_to_dart/src/vocab/builder/vocabulary_source.dart'
 /// Logger for vocabulary model operations
 final _log = Logger('VocabularyModel');
 
-const _rdfsClass = const IriTerm.prevalidated(
-  'http://www.w3.org/2000/01/rdf-schema#Class',
-);
-const _rdfProperty = const IriTerm.prevalidated(
+const _rdfsClass = const IriTerm('http://www.w3.org/2000/01/rdf-schema#Class');
+const _rdfProperty = const IriTerm(
   'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property',
 );
-const _rdfsResource = const IriTerm.prevalidated(
+const _rdfsResource = const IriTerm(
   'http://www.w3.org/2000/01/rdf-schema#Resource',
 );
-const _rdfsSubClassOf = const IriTerm.prevalidated(
+const _rdfsSubClassOf = const IriTerm(
   'http://www.w3.org/2000/01/rdf-schema#subClassOf',
 );
-const _owlClass = const IriTerm.prevalidated(
-  'http://www.w3.org/2002/07/owl#Class',
-);
-const _owlThing = const IriTerm.prevalidated(
-  'http://www.w3.org/2002/07/owl#Thing',
-);
-const _rdfType = const IriTerm.prevalidated(
+const _owlClass = const IriTerm('http://www.w3.org/2002/07/owl#Class');
+const _owlThing = const IriTerm('http://www.w3.org/2002/07/owl#Thing');
+const _rdfType = const IriTerm(
   'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
 );
 
@@ -213,7 +207,7 @@ class VocabularyModelExtractor {
 
     for (final resource in vocabResources) {
       try {
-        final iri = resource.iri;
+        final iri = resource.value;
 
         // Skip excluded URIs that are not actual vocabulary terms
         if (_shouldExcludeUri(iri)) {
@@ -244,8 +238,8 @@ class VocabularyModelExtractor {
               superClasses:
                   {
                     // owl:Class implies rdfs:Class
-                    _rdfsResource.iri,
-                    if (owlClass) _owlThing.iri,
+                    _rdfsResource.value,
+                    if (owlClass) _owlThing.value,
                     ..._findSuperClasses(graph, resource),
                   }.toList(),
               equivalentClasses: _findEquivalentClasses(graph, resource),
@@ -313,7 +307,7 @@ class VocabularyModelExtractor {
     for (final triple in graph.triples) {
       if (triple.subject is IriTerm) {
         final subject = triple.subject as IriTerm;
-        if (subject.iri.startsWith(namespace)) {
+        if (subject.value.startsWith(namespace)) {
           resources.add(subject);
         }
       }
@@ -322,7 +316,7 @@ class VocabularyModelExtractor {
     // Find resources as predicates
     for (final triple in graph.triples) {
       IriTerm predicate = triple.predicate as IriTerm;
-      if (predicate.iri.startsWith(namespace)) {
+      if (predicate.value.startsWith(namespace)) {
         resources.add(predicate);
       }
     }
@@ -331,7 +325,7 @@ class VocabularyModelExtractor {
     for (final triple in graph.triples) {
       if (triple.object is IriTerm) {
         final object = triple.object as IriTerm;
-        if (object.iri.startsWith(namespace)) {
+        if (object.value.startsWith(namespace)) {
           resources.add(object);
         }
       }
@@ -419,17 +413,19 @@ class VocabularyModelExtractor {
   /// Determines if a resource is a property.
   static bool _isProperty(RdfGraph graph, IriTerm resource) {
     const propertyTypes = [
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#Property',
-      'http://www.w3.org/2002/07/owl#ObjectProperty',
-      'http://www.w3.org/2002/07/owl#DatatypeProperty',
-      'http://www.w3.org/2002/07/owl#AnnotationProperty',
+      const IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#Property'),
+      const IriTerm('http://www.w3.org/2002/07/owl#ObjectProperty'),
+      const IriTerm('http://www.w3.org/2002/07/owl#DatatypeProperty'),
+      const IriTerm('http://www.w3.org/2002/07/owl#AnnotationProperty'),
     ];
 
     for (final propertyType in propertyTypes) {
       final typeTriples = graph.findTriples(
         subject: resource,
-        predicate: IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-        object: IriTerm(propertyType),
+        predicate: const IriTerm(
+          'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+        ),
+        object: propertyType,
       );
 
       if (typeTriples.isNotEmpty) {
@@ -451,8 +447,10 @@ class VocabularyModelExtractor {
   static bool _isDatatype(RdfGraph graph, IriTerm resource) {
     final typeTriples = graph.findTriples(
       subject: resource,
-      predicate: IriTerm('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'),
-      object: IriTerm('http://www.w3.org/2000/01/rdf-schema#Datatype'),
+      predicate: const IriTerm(
+        'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
+      ),
+      object: const IriTerm('http://www.w3.org/2000/01/rdf-schema#Datatype'),
     );
 
     return typeTriples.isNotEmpty;
@@ -462,7 +460,7 @@ class VocabularyModelExtractor {
   static String? _findLabel(RdfGraph graph, IriTerm resource) {
     final labelTriples = graph.findTriples(
       subject: resource,
-      predicate: IriTerm('http://www.w3.org/2000/01/rdf-schema#label'),
+      predicate: const IriTerm('http://www.w3.org/2000/01/rdf-schema#label'),
     );
 
     if (labelTriples.isNotEmpty) {
@@ -479,7 +477,7 @@ class VocabularyModelExtractor {
   static String? _findComment(RdfGraph graph, IriTerm resource) {
     final commentTriples = graph.findTriples(
       subject: resource,
-      predicate: IriTerm('http://www.w3.org/2000/01/rdf-schema#comment'),
+      predicate: const IriTerm('http://www.w3.org/2000/01/rdf-schema#comment'),
     );
 
     if (commentTriples.isNotEmpty) {
@@ -496,12 +494,14 @@ class VocabularyModelExtractor {
   static List<String> _findSuperClasses(RdfGraph graph, IriTerm resource) {
     final superClassTriples = graph.findTriples(
       subject: resource,
-      predicate: IriTerm('http://www.w3.org/2000/01/rdf-schema#subClassOf'),
+      predicate: const IriTerm(
+        'http://www.w3.org/2000/01/rdf-schema#subClassOf',
+      ),
     );
 
     return superClassTriples
         .where((triple) => triple.object is IriTerm)
-        .map((triple) => (triple.object as IriTerm).iri)
+        .map((triple) => (triple.object as IriTerm).value)
         .toList();
   }
 
@@ -510,13 +510,13 @@ class VocabularyModelExtractor {
     // Look for subject equivalentClass object triples
     final equivalentClassTriples = graph.findTriples(
       subject: resource,
-      predicate: IriTerm('http://www.w3.org/2002/07/owl#equivalentClass'),
+      predicate: const IriTerm('http://www.w3.org/2002/07/owl#equivalentClass'),
     );
 
     // Also look for object equivalentClass subject triples (equivalentClass is symmetric)
     final reverseEquivalentClassTriples = graph.findTriples(
       object: resource,
-      predicate: IriTerm('http://www.w3.org/2002/07/owl#equivalentClass'),
+      predicate: const IriTerm('http://www.w3.org/2002/07/owl#equivalentClass'),
     );
 
     final result = <String>[];
@@ -525,14 +525,14 @@ class VocabularyModelExtractor {
     result.addAll(
       equivalentClassTriples
           .where((triple) => triple.object is IriTerm)
-          .map((triple) => (triple.object as IriTerm).iri),
+          .map((triple) => (triple.object as IriTerm).value),
     );
 
     // Add reverse equivalentClass relationships (where this class is the object)
     result.addAll(
       reverseEquivalentClassTriples
           .where((triple) => triple.subject is IriTerm)
-          .map((triple) => (triple.subject as IriTerm).iri),
+          .map((triple) => (triple.subject as IriTerm).value),
     );
 
     return result;
@@ -543,29 +543,29 @@ class VocabularyModelExtractor {
     // Standard rdfs:domain
     final domainTriples = graph.findTriples(
       subject: resource,
-      predicate: IriTerm('http://www.w3.org/2000/01/rdf-schema#domain'),
+      predicate: const IriTerm('http://www.w3.org/2000/01/rdf-schema#domain'),
     );
 
     // Schema.org http domainIncludes
     final schemaOrgHttpDomainTriples = graph.findTriples(
       subject: resource,
-      predicate: IriTerm('http://schema.org/domainIncludes'),
+      predicate: const IriTerm('http://schema.org/domainIncludes'),
     );
     final schemaOrgDomainTriples = graph.findTriples(
       subject: resource,
-      predicate: IriTerm('https://schema.org/domainIncludes'),
+      predicate: const IriTerm('https://schema.org/domainIncludes'),
     );
 
     final domains = [
       ...domainTriples
           .where((triple) => triple.object is IriTerm)
-          .map((triple) => (triple.object as IriTerm).iri),
+          .map((triple) => (triple.object as IriTerm).value),
       ...schemaOrgDomainTriples
           .where((triple) => triple.object is IriTerm)
-          .map((triple) => (triple.object as IriTerm).iri),
+          .map((triple) => (triple.object as IriTerm).value),
       ...schemaOrgHttpDomainTriples
           .where((triple) => triple.object is IriTerm)
-          .map((triple) => (triple.object as IriTerm).iri),
+          .map((triple) => (triple.object as IriTerm).value),
     ];
 
     return domains;
@@ -576,30 +576,30 @@ class VocabularyModelExtractor {
     // Standard rdfs:range
     final rangeTriples = graph.findTriples(
       subject: resource,
-      predicate: IriTerm('http://www.w3.org/2000/01/rdf-schema#range'),
+      predicate: const IriTerm('http://www.w3.org/2000/01/rdf-schema#range'),
     );
 
     // Schema.org rangeIncludes
     final schemaOrgRangeTriples = graph.findTriples(
       subject: resource,
-      predicate: IriTerm('https://schema.org/rangeIncludes'),
+      predicate: const IriTerm('https://schema.org/rangeIncludes'),
     );
     // Schema.org http rangeIncludes
     final schemaOrgHttpRangeTriples = graph.findTriples(
       subject: resource,
-      predicate: IriTerm('http://schema.org/rangeIncludes'),
+      predicate: const IriTerm('http://schema.org/rangeIncludes'),
     );
 
     final ranges = [
       ...rangeTriples
           .where((triple) => triple.object is IriTerm)
-          .map((triple) => (triple.object as IriTerm).iri),
+          .map((triple) => (triple.object as IriTerm).value),
       ...schemaOrgRangeTriples
           .where((triple) => triple.object is IriTerm)
-          .map((triple) => (triple.object as IriTerm).iri),
+          .map((triple) => (triple.object as IriTerm).value),
       ...schemaOrgHttpRangeTriples
           .where((triple) => triple.object is IriTerm)
-          .map((triple) => (triple.object as IriTerm).iri),
+          .map((triple) => (triple.object as IriTerm).value),
     ];
 
     return ranges;
@@ -609,12 +609,12 @@ class VocabularyModelExtractor {
   static List<String> _findSeeAlso(RdfGraph graph, IriTerm resource) {
     final seeAlsoTriples = graph.findTriples(
       subject: resource,
-      predicate: IriTerm('http://www.w3.org/2000/01/rdf-schema#seeAlso'),
+      predicate: const IriTerm('http://www.w3.org/2000/01/rdf-schema#seeAlso'),
     );
 
     return seeAlsoTriples
         .where((triple) => triple.object is IriTerm)
-        .map((triple) => (triple.object as IriTerm).iri)
+        .map((triple) => (triple.object as IriTerm).value)
         .toList();
   }
 

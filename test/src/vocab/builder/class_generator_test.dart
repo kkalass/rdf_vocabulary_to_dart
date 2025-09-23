@@ -133,7 +133,7 @@ void main() {
       expect(
         code,
         contains(
-          "static const Person = IriTerm.prevalidated('http://example.org/test#Person')",
+          "static const Person = const IriTerm('http://example.org/test#Person')",
         ),
       );
 
@@ -141,7 +141,7 @@ void main() {
       expect(
         code,
         contains(
-          "static const name = IriTerm.prevalidated('http://example.org/test#name')",
+          "static const name = const IriTerm('http://example.org/test#name')",
         ),
       );
 
@@ -149,7 +149,7 @@ void main() {
       expect(
         code,
         contains(
-          "static const EmailAddress = IriTerm.prevalidated('http://example.org/test#EmailAddress')",
+          "static const EmailAddress = const IriTerm('http://example.org/test#EmailAddress')",
         ),
       );
 
@@ -157,7 +157,7 @@ void main() {
       expect(
         code,
         contains(
-          "static const OtherTerm = IriTerm.prevalidated('http://example.org/test#OtherTerm')",
+          "static const OtherTerm = const IriTerm('http://example.org/test#OtherTerm')",
         ),
       );
     });
@@ -170,7 +170,7 @@ void main() {
       expect(
         code,
         contains(
-          "static const classIri = IriTerm.prevalidated('http://example.org/test#Person');",
+          "static const classIri = const IriTerm('http://example.org/test#Person');",
         ),
       );
 
@@ -178,7 +178,7 @@ void main() {
       expect(
         code,
         contains(
-          "static const name = IriTerm.prevalidated('http://example.org/test#name');",
+          "static const name = const IriTerm('http://example.org/test#name');",
         ),
       );
 
@@ -201,7 +201,7 @@ void main() {
         expect(
           code,
           contains(
-            "static const universalProp = IriTerm.prevalidated('http://example.org/test#universalProp');",
+            "static const universalProp = const IriTerm('http://example.org/test#universalProp');",
           ),
         );
       },
