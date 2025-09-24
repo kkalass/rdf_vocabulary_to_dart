@@ -133,23 +133,21 @@ void main() {
       expect(
         code,
         contains(
-          "static const Person = const IriTerm('http://example.org/test#Person')",
+          "static const Person = IriTerm('http://example.org/test#Person')",
         ),
       );
 
       // Verify property constants
       expect(
         code,
-        contains(
-          "static const name = const IriTerm('http://example.org/test#name')",
-        ),
+        contains("static const name = IriTerm('http://example.org/test#name')"),
       );
 
       // Verify datatype constants
       expect(
         code,
         contains(
-          "static const EmailAddress = const IriTerm('http://example.org/test#EmailAddress')",
+          "static const EmailAddress = IriTerm('http://example.org/test#EmailAddress')",
         ),
       );
 
@@ -157,7 +155,7 @@ void main() {
       expect(
         code,
         contains(
-          "static const OtherTerm = const IriTerm('http://example.org/test#OtherTerm')",
+          "static const OtherTerm = IriTerm('http://example.org/test#OtherTerm')",
         ),
       );
     });
@@ -170,7 +168,7 @@ void main() {
       expect(
         code,
         contains(
-          "static const classIri = const IriTerm('http://example.org/test#Person');",
+          "static const classIri = IriTerm('http://example.org/test#Person');",
         ),
       );
 
@@ -178,7 +176,7 @@ void main() {
       expect(
         code,
         contains(
-          "static const name = const IriTerm('http://example.org/test#name');",
+          "static const name = IriTerm('http://example.org/test#name');",
         ),
       );
 
@@ -201,7 +199,7 @@ void main() {
         expect(
           code,
           contains(
-            "static const universalProp = const IriTerm('http://example.org/test#universalProp');",
+            "static const universalProp = IriTerm('http://example.org/test#universalProp');",
           ),
         );
       },
