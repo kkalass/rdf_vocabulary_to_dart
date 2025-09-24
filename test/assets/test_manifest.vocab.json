@@ -3,7 +3,14 @@
     "test": {
       "type": "file",
       "namespace": "http://example.org/test#",
-      "filePath": "test/assets/test_vocab.ttl"
+      "source": "test/assets/test_vocab.ttl",
+      "generate": true
+    },
+    "stest": {
+      "type": "file",
+      "namespace": "http://example.org/stest#",
+      "source": "test/assets/simple_test_vocab.ttl",
+      "generate": true
     }
   }
 }

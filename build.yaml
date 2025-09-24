@@ -14,6 +14,19 @@ targets:
           vocabulary_config_path: "lib/src/vocab/all.vocabulary_sources.vocab.json"
           # Directory where generated Dart files will be output
           output_dir: "lib/src/vocab/generated"
+      
+  test_vocab:
+    sources:
+      include:
+        - "test/assets/*.vocab.json"
+    builders:
+      rdf_vocabulary_to_dart|rdf_to_dart_generator:
+        enabled: true
+        options:
+          vocabulary_config_path: "test/assets/test_manifest.vocab.json"
+          output_dir: "test/src/generated"
+      mockito|mockBuilder:
+        enabled: false
 
 builders:
   # Builder name, referenced in the targets section above
