@@ -34,6 +34,14 @@ class TestPerson {
   ///
   static const name = IriTerm('http://example.org/test#name');
 
+  /// name from stest vocabulary [Expects: http://www.w3.org/2001/XMLSchema#string]
+  ///
+  /// The name of a resource
+  ///
+  /// Can be used on: http://www.w3.org/2000/01/rdf-schema#Resource
+  ///
+  static const stestName = IriTerm('http://example.org/simple_test#name');
+
   /// comment from rdfs vocabulary [Expects: http://www.w3.org/2000/01/rdf-schema#Literal]
   ///
   /// A description of the subject resource.

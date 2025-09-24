@@ -8,7 +8,7 @@
     },
     "stest": {
       "type": "file",
-      "namespace": "http://example.org/stest#",
+      "namespace": "http://example.org/simple_test#",
       "source": "test/assets/simple_test_vocab.ttl",
       "generate": true
     }
