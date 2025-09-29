@@ -4,12 +4,9 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'package:build/build.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart' as path;
-import 'package:logging/logging.dart';
-
-/// Logger for vocabulary sources
-final _log = Logger('rdf.vocab.source');
 
 /// Base class for vocabulary sources.
 ///
@@ -128,7 +125,7 @@ class UrlVocabularySource extends VocabularySource {
         'User-Agent': 'RDF Vocabulary Builder (Dart/HTTP Client)',
       };
 
-      _log.info(
+      log.info(
         'Loading vocabulary from URL: $sourceUrl (namespace: $namespace)',
       );
 
@@ -144,7 +141,7 @@ class UrlVocabularySource extends VocabularySource {
       if (response.isRedirect && maxRedirects > 0) {
         final redirectUrl = response.headers['location'];
         if (redirectUrl != null) {
-          _log.info('Following redirect to: $redirectUrl');
+          log.info('Following redirect to: $redirectUrl');
           client.close();
           return await UrlVocabularySource(
             namespace,
@@ -180,12 +177,12 @@ class UrlVocabularySource extends VocabularySource {
       if (response.headers.containsKey('content-type')) {
         final contentType = response.headers['content-type']!.toLowerCase();
         if (contentType.contains('turtle')) {
-          _log.info('Detected Turtle format from Content-Type');
+          log.info('Detected Turtle format from Content-Type');
         } else if (contentType.contains('rdf+xml') ||
             contentType.contains('xml')) {
-          _log.info('Detected RDF/XML format from Content-Type');
+          log.info('Detected RDF/XML format from Content-Type');
         } else if (contentType.contains('json')) {
-          _log.info('Detected JSON format from Content-Type');
+          log.info('Detected JSON format from Content-Type');
         }
       }
 
@@ -198,7 +195,7 @@ class UrlVocabularySource extends VocabularySource {
         }
       } catch (e) {
         // Fallback to Latin-1 (ISO-8859-1) if UTF-8 decoding fails
-        _log.warning('UTF-8 decoding failed, trying ISO-8859-1: $e');
+        log.warning('UTF-8 decoding failed, trying ISO-8859-1: $e');
         return latin1.decode(bytes);
       }
     } catch (e) {

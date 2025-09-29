@@ -14,7 +14,6 @@ targets:
           vocabulary_config_path: "lib/src/vocab/all.vocabulary_sources.vocab.json"
           # Directory where generated Dart files will be output
           output_dir: "lib/src/vocab/generated"
-      
   test_vocab:
     sources:
       include:

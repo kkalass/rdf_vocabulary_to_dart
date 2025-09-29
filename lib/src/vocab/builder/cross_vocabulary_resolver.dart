@@ -2,13 +2,12 @@
 // All rights reserved. Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import 'package:logging/logging.dart';
+import 'package:build/build.dart';
 import 'package:rdf_core/rdf_core.dart';
 
 import 'model/vocabulary_model.dart';
 
 /// Logger for cross-vocabulary operations
-final _log = Logger('CrossVocabularyResolver');
 
 /// Manages the global class hierarchy and property applicability across vocabulary boundaries.
 ///
@@ -84,7 +83,7 @@ class CrossVocabularyResolver {
   /// from the provided vocabulary model and integrates them into
   /// the global resolution context.
   void registerVocabulary(VocabularyModel model) {
-    _log.info('Registering vocabulary: ${model.name} (${model.namespace})');
+    log.info('Registering vocabulary: ${model.name} (${model.namespace})');
 
     // Store the vocabulary model
     _vocabularyModels[model.name] = model;
@@ -106,9 +105,7 @@ class CrossVocabularyResolver {
               superNamespace != model.namespace &&
               !_registeredNamespaces.contains(superNamespace)) {
             _pendingNamespaces.add(superNamespace);
-            _log.info(
-              'Found reference to external vocabulary: $superNamespace',
-            );
+            log.info('Found reference to external vocabulary: $superNamespace');
           }
         }
       } else {
@@ -128,7 +125,7 @@ class CrossVocabularyResolver {
               equivNamespace != model.namespace &&
               !_registeredNamespaces.contains(equivNamespace)) {
             _pendingNamespaces.add(equivNamespace);
-            _log.info(
+            log.info(
               'Found reference to external vocabulary through equivalentClass: $equivNamespace',
             );
           }
@@ -151,7 +148,7 @@ class CrossVocabularyResolver {
               domainNamespace != model.namespace &&
               !_registeredNamespaces.contains(domainNamespace)) {
             _pendingNamespaces.add(domainNamespace);
-            _log.info(
+            log.info(
               'Found reference to external vocabulary: $domainNamespace',
             );
           }
@@ -161,7 +158,7 @@ class CrossVocabularyResolver {
         // This ensures that namespace-specific predicates stay within their namespace
         _propertyDomains[property.iri] = <String>{};
 
-        _log.fine(
+        log.fine(
           'Property ${property.iri} has no explicit domain, ' +
               'will only be available within ${model.name} vocabulary',
         );
@@ -201,7 +198,7 @@ class CrossVocabularyResolver {
       return;
     }
 
-    _log.info(
+    log.info(
       'Attempting to load ${_pendingNamespaces.length} pending vocabularies',
     );
 
@@ -217,7 +214,7 @@ class CrossVocabularyResolver {
       // Determine the vocabulary name
       final name = _determineVocabularyName(namespace);
 
-      _log.info(
+      log.info(
         'Attempting to load vocabulary "$name" from namespace $namespace',
       );
 
@@ -228,7 +225,7 @@ class CrossVocabularyResolver {
       if (model != null) {
         registerVocabulary(model);
       } else {
-        _log.warning(
+        log.warning(
           'Skipped or failed to load implied vocabulary from namespace: $namespace',
         );
       }
@@ -242,7 +239,7 @@ class CrossVocabularyResolver {
 
   /// Rebuilds the transitive closure of the class hierarchy.
   void _rebuildClassHierarchy() {
-    _log.fine('Rebuilding class hierarchy');
+    log.fine('Rebuilding class hierarchy');
     _allSuperClasses.clear();
     _allEquivalentClasses.clear();
 
@@ -364,16 +361,16 @@ class CrossVocabularyResolver {
 
     // Debug output
     for (final entry in _allSuperClasses.entries) {
-      _log.fine('Class ${entry.key} inherits from: ${entry.value.join(', ')}');
+      log.fine('Class ${entry.key} inherits from: ${entry.value.join(', ')}');
     }
 
     for (final entry in _allEquivalentClasses.entries) {
-      _log.fine(
+      log.fine(
         'Class ${entry.key} is equivalent to: ${entry.value.join(', ')}',
       );
     }
 
-    _log.info(
+    log.info(
       'Completed class hierarchy computation (total classes: ${_allSuperClasses.length}, ' +
           'with ${_allEquivalentClasses.length} having equivalent classes)',
     );
@@ -396,8 +393,8 @@ class CrossVocabularyResolver {
     // Get the full set of classes (this class and all its superclasses)
     final allClassTypes = getAllClassTypes(classIri);
 
-    _log.fine('Getting properties for $classIri in namespace $vocabNamespace');
-    _log.fine('Class hierarchy: ${allClassTypes.join(', ')}');
+    log.fine('Getting properties for $classIri in namespace $vocabNamespace');
+    log.fine('Class hierarchy: ${allClassTypes.join(', ')}');
 
     // First add properties from this vocabulary namespace
     final vocabProperties = _vocabularyProperties[vocabNamespace] ?? {};
@@ -406,7 +403,7 @@ class CrossVocabularyResolver {
       if (_propertyDomains[property.iri] == null ||
           _propertyDomains[property.iri]!.isEmpty) {
         result.add(property);
-        _log.fine(
+        log.fine(
           'Added universal property ${property.iri} from same namespace',
         );
         continue;
@@ -417,7 +414,7 @@ class CrossVocabularyResolver {
       for (final domain in domains) {
         if (allClassTypes.contains(domain)) {
           result.add(property);
-          _log.fine('Added property ${property.iri} due to domain $domain');
+          log.fine('Added property ${property.iri} due to domain $domain');
           break;
         }
       }
@@ -518,7 +515,7 @@ class CrossVocabularyResolver {
         for (final domain in domains) {
           if (allClassTypes.contains(domain)) {
             result.add(property);
-            _log.fine(
+            log.fine(
               'Added external property ${property.iri} due to domain $domain',
             );
             break;

@@ -3,16 +3,12 @@
 // license that can be found in the LICENSE file.
 
 import 'package:build/build.dart';
-import 'package:logging/logging.dart';
 import 'package:mustache_template/mustache.dart';
 import 'package:path/path.dart' as path;
 import 'package:rdf_core/rdf_core.dart';
 
 import 'cross_vocabulary_resolver.dart';
 import 'model/vocabulary_model.dart';
-
-/// Logger for class generator operations
-final _log = Logger('VocabularyClassGenerator');
 
 /// Generator for creating Dart classes from vocabulary models.
 ///
@@ -132,10 +128,10 @@ class VocabularyClassGenerator {
 
     // Debug log to help identify issues with test failures
     for (final rdfClass in model.classes) {
-      _log.info('Class: ${rdfClass.localName}, SeeAlso: ${rdfClass.seeAlso}');
+      log.info('Class: ${rdfClass.localName}, SeeAlso: ${rdfClass.seeAlso}');
     }
     for (final prop in model.properties) {
-      _log.info('Property: ${prop.localName}, Ranges: ${prop.ranges}');
+      log.info('Property: ${prop.localName}, Ranges: ${prop.ranges}');
     }
 
     final files = await generateFiles(model, assetReader, customMappings);

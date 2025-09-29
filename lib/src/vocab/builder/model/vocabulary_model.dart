@@ -2,12 +2,9 @@
 // All rights reserved. Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-import 'package:logging/logging.dart';
+import 'package:build/build.dart';
 import 'package:rdf_core/rdf_core.dart';
 import 'package:rdf_vocabulary_to_dart/src/vocab/builder/vocabulary_source.dart';
-
-/// Logger for vocabulary model operations
-final _log = Logger('VocabularyModel');
 
 const _rdfsClass = const IriTerm('http://www.w3.org/2000/01/rdf-schema#Class');
 const _rdfProperty = const IriTerm(
@@ -211,7 +208,7 @@ class VocabularyModelExtractor {
 
         // Skip excluded URIs that are not actual vocabulary terms
         if (_shouldExcludeUri(iri)) {
-          _log.fine('Skipping excluded URI: $iri');
+          log.fine('Skipping excluded URI: $iri');
           continue;
         }
 
@@ -219,7 +216,7 @@ class VocabularyModelExtractor {
 
         // Skip if the local name is invalid or couldn't be sanitized properly
         if (localName.isEmpty || !_isValidDartIdentifier(localName)) {
-          _log.warning('Skipping invalid identifier: $localName from $iri');
+          log.warning('Skipping invalid identifier: $localName from $iri');
           continue;
         }
 
@@ -280,7 +277,7 @@ class VocabularyModelExtractor {
           );
         }
       } catch (e, stackTrace) {
-        _log.warning('Error processing resource $resource: $e\n$stackTrace');
+        log.warning('Error processing resource $resource: $e\n$stackTrace');
       }
     }
 
@@ -644,7 +641,7 @@ class VocabularyModelExtractor {
     }
 
     // Couldn't determine a reasonable local name
-    _log.warning('Could not extract local name from IRI: $iri');
+    log.warning('Could not extract local name from IRI: $iri');
     return '';
   }
 

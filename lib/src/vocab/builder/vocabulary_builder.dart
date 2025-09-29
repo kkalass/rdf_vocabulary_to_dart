@@ -10,10 +10,10 @@ import 'dart:math';
 import 'package:build/build.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:http/http.dart' as http;
-import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:pub_semver/pub_semver.dart';
 import 'package:rdf_core/rdf_core.dart';
+
 import 'package:rdf_xml/rdf_xml.dart';
 
 import 'class_generator.dart';
@@ -22,7 +22,6 @@ import 'model/vocabulary_model.dart';
 import 'vocabulary_source.dart';
 
 /// Logger for the vocabulary builder
-final log = Logger('rdf.vocab.builder');
 
 class MutableVocabularyLoader {
   Future<VocabularyModel?> Function(String namespace, String name)? _loader;
@@ -75,7 +74,6 @@ class VocabularyBuilder implements Builder {
   }) {
     // Create a mutable vocabulary loader that will be configured during build
     final loader = MutableVocabularyLoader();
-
     return VocabularyBuilder._inner(
       manifestAssetPath: manifestAssetPath,
       outputDir: outputDir,
