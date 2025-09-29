@@ -177,6 +177,7 @@ class VocabularyModelExtractor {
   // URIs that should be excluded from generation
   static final _excludedUriPatterns = [
     RegExp(r'#$'), // IRIs ending with just a hash
+    RegExp(r'/$'), // IRIs ending with just a slash
     RegExp(r'[\-#]\d+$'), // IRIs ending with dash or hash followed by numbers
     RegExp(r'xml-syntax'), // XML-Syntax-related IRIs, but allow rdf-syntax
   ];

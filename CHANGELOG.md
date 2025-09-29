@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.4] - 2025-09-29
+
+### Fixed
+- Fixed logging output by switching from direct logger usage to build package's log field to ensure log messages are properly displayed during build process
+- Added exclusion pattern for IRIs ending with just a slash to prevent generation of invalid vocabulary terms
+
 ## [0.9.3] - 2025-09-24
 
 ### Changed
