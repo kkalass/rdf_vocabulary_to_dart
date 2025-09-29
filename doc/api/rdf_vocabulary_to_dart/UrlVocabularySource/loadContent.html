@@ -91,7 +91,7 @@ Future&lt;String&gt; loadContent() async {
       &#39;User-Agent&#39;: &#39;RDF Vocabulary Builder (Dart&#47;HTTP Client)&#39;,
     };
 
-    _log.info(
+    log.info(
       &#39;Loading vocabulary from URL: $sourceUrl (namespace: $namespace)&#39;,
     );
 
@@ -107,7 +107,7 @@ Future&lt;String&gt; loadContent() async {
     if (response.isRedirect &amp;&amp; maxRedirects &gt; 0) {
       final redirectUrl = response.headers[&#39;location&#39;];
       if (redirectUrl != null) {
-        _log.info(&#39;Following redirect to: $redirectUrl&#39;);
+        log.info(&#39;Following redirect to: $redirectUrl&#39;);
         client.close();
         return await UrlVocabularySource(
           namespace,
@@ -143,12 +143,12 @@ Future&lt;String&gt; loadContent() async {
     if (response.headers.containsKey(&#39;content-type&#39;)) {
       final contentType = response.headers[&#39;content-type&#39;]!.toLowerCase();
       if (contentType.contains(&#39;turtle&#39;)) {
-        _log.info(&#39;Detected Turtle format from Content-Type&#39;);
+        log.info(&#39;Detected Turtle format from Content-Type&#39;);
       } else if (contentType.contains(&#39;rdf+xml&#39;) ||
           contentType.contains(&#39;xml&#39;)) {
-        _log.info(&#39;Detected RDF&#47;XML format from Content-Type&#39;);
+        log.info(&#39;Detected RDF&#47;XML format from Content-Type&#39;);
       } else if (contentType.contains(&#39;json&#39;)) {
-        _log.info(&#39;Detected JSON format from Content-Type&#39;);
+        log.info(&#39;Detected JSON format from Content-Type&#39;);
       }
     }
 
@@ -161,7 +161,7 @@ Future&lt;String&gt; loadContent() async {
       }
     } catch (e) {
       &#47;&#47; Fallback to Latin-1 (ISO-8859-1) if UTF-8 decoding fails
-      _log.warning(&#39;UTF-8 decoding failed, trying ISO-8859-1: $e&#39;);
+      log.warning(&#39;UTF-8 decoding failed, trying ISO-8859-1: $e&#39;);
       return latin1.decode(bytes);
     }
   } catch (e) {
@@ -197,7 +197,7 @@ Future&lt;String&gt; loadContent() async {
 <footer>
   <span class="no-break">
     rdf_vocabulary_to_dart
-      0.9.3
+      0.9.4
   </span>
   
 </footer>
