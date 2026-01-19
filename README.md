@@ -1,3 +1,17 @@
+> # ⚠️ DEPRECATED - This package has moved!
+> 
+> **This package is no longer maintained.** It has been integrated into the [locorda](https://github.com/locorda) project's monorepo and **renamed**.
+> 
+> **Please migrate to:** [`locorda_rdf_terms_generator`](https://pub.dev/packages/locorda_rdf_terms_generator)
+> 
+> ⚠️ **Note the name change:** `rdf_vocabulary_to_dart` → `locorda_rdf_terms_generator`
+> 
+> All future development and support will happen in the new package. This repository will be archived.
+> 
+> **Migration:** Replace `rdf_vocabulary_to_dart` with `locorda_rdf_terms_generator` in your `pubspec.yaml` and update your imports accordingly.
+> 
+> **⚠️ Important:** This package depends on `rdf_core`. You must also migrate to [`locorda_rdf_core`](https://pub.dev/packages/locorda_rdf_core) as all rdf_* packages have been moved to the locorda project.
+
 # RDF Vocabulary to Dart - Type-safe RDF for Dart
 
 [![pub package](https://img.shields.io/pub/v/rdf_vocabulary_to_dart.svg)](https://pub.dev/packages/rdf_vocabulary_to_dart)
