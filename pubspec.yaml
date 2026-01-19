@@ -25,7 +25,7 @@ dependencies:
   build: ">=3.0.0 <5.0.0"
   build_config: ^1.1.1
   build_runner: ^2.5.3
-  dart_style: '>=2.3.7 <4.0.0'
+  dart_style: ">=2.3.7 <4.0.0"
   pub_semver: ^2.2.0
   package_config: ^2.2.0
   mustache_template: ^2.0.0
